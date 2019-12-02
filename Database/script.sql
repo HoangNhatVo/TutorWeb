@@ -16,7 +16,9 @@ create table account
     avatar varchar(255) default null,
     baigioithieu text not null,
     chuyennganh int(11) not null default 1,
-    tiendaymotgio int(11) not null default 0    
+    tiendaymotgio int(11) not null default 0,
+	xacthuc boolean not null default false,
+	chuoixacthuc varchar(255) default null    
 );
 
 create table danhgia
