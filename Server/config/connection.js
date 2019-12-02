@@ -9,7 +9,7 @@ else {
         host: 'sql12.freemysqlhosting.net',
         user: 'sql12314047',
         password: 'hLPCyBgzmC',
-        database: 'sql12314047'        // Ví dụ tồn tại db apiadmin
+        database: 'sql12314047'        
     });
     connection.connect(function(err) {
         if (err) throw err;
