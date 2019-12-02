@@ -6,10 +6,10 @@ if (process.env.JAWSDB_URL) {
 }
 else {
     connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '12345678',
-        database: 'apiadmin'        // Ví dụ tồn tại db apiadmin
+        host: 'sql12.freemysqlhosting.net',
+        user: 'sql12314047',
+        password: 'hLPCyBgzmC',
+        database: 'sql12314047'        // Ví dụ tồn tại db apiadmin
     });
     connection.connect(function(err) {
         if (err) throw err;
