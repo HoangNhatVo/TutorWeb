@@ -30,7 +30,7 @@ module.exports = function (passport) {
         //     if (err)
         //         console.log("save error");
         // })
-        done(null, userData);
+        // done(null, userData);
     })
 )
 };
