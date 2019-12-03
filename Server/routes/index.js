@@ -33,8 +33,17 @@ router.post('/login', passport.authenticate('local-login', {
 );
 
 
-//router dang ky
-router.post('/register', passport.authenticate('local-signup', {
+//router dang ky học sinh
+router.post('/studentregister', passport.authenticate('local-signup', {
+  failureRedirect: '/failed',
+  successRedirect: '/success',
+  failureFlash: true
+}),
+  function (req, res) {}
+);
+
+//router dang ky giáo viên
+router.post('/teacherregister', passport.authenticate('teacher-local-signup', {
   failureRedirect: '/failed',
   successRedirect: '/success',
   failureFlash: true

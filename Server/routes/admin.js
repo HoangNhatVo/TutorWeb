@@ -10,14 +10,7 @@ router.get('/', function(req, res, next) {
   res.send('Api admin');
 });
 
-//router dang ky
-router.post('/register', passport.authenticate('teacher-local-signup', {
-  failureRedirect: '/failed',
-  successRedirect: '/success',
-  failureFlash: true
-}),
-  function (req, res) {}
-);
+
 
 router.post('/createadmin', passport.authenticate('admin-local-signup', {
   failureRedirect: '/failed',
