@@ -86,11 +86,11 @@ function(req, username, password, done) {
                     return done(null, false,req.flash('accountMsg', 'Email đã tồn tại.'));
                 }
                 else{
-                    accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
-                        if(r3.length){
-                            return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
-                        }
-                        else{                          
+                    // accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
+                    //     if(r3.length){
+                    //         return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
+                    //     }
+                    //     else{                          
                             var account = {
                               Username: username,
                               Password: bCrypt.hashSync(password, bCrypt.genSaltSync(saltRounds)),
@@ -135,11 +135,11 @@ function(req, username, password, done) {
                                     return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
                                 })
                         }
-                    }).catch(err=>{
-                        console.log(err);
-                        return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-                    })
-                }
+                    // }).catch(err=>{
+                    //     console.log(err);
+                    //     return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+                    // })
+                // }
             }).catch(err=>{
                 console.log(err);
                 return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
@@ -169,11 +169,11 @@ function(req, username, password, done) {
                     return done(null, false,req.flash('accountMsg', 'Email đã tồn tại.'));
                 }
                 else{
-                    accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
-                        if(r3.length){
-                            return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
-                        }
-                        else{                          
+                    // accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
+                    //     if(r3.length){
+                    //         return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
+                    //     }
+                    //     else{                          
                             var account = {
                               Username: username,
                               Password: bCrypt.hashSync(password, bCrypt.genSaltSync(saltRounds)),
@@ -225,11 +225,11 @@ function(req, username, password, done) {
                                     return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
                                 })
                         }
-                    }).catch(err=>{
-                        console.log(err);
-                        return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-                    })
-                }
+                //     }).catch(err=>{
+                //         console.log(err);
+                //         return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+                //     })
+                // }
             }).catch(err=>{
                 console.log(err);
                 return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
@@ -258,11 +258,11 @@ function(req, username, password, done) {
                     return done(null, false,req.flash('accountMsg', 'Email đã tồn tại.'));
                 }
                 else{
-                    accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
-                        if(r3.length){
-                            return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
-                        }
-                        else{                          
+                    // accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
+                    //     if(r3.length){
+                    //         return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
+                    //     }
+                    //     else{                          
                             var account = {
                               Username: username,
                               Password: bCrypt.hashSync(password, bCrypt.genSaltSync(saltRounds)),
@@ -275,29 +275,6 @@ function(req, username, password, done) {
                               SDT: req.body.sdt,
                             }
                             console.log(account);
-                            // var transporter = nodemailer.createTransport({
-                            //   service: 'Gmail',
-                            //   auth: {
-                            //     user: configAuth.email,
-                            //     pass: configAuth.pass
-                            //   }
-                            // });
-                            // var message = {
-                            //   from: configAuth.from,
-                            //   to: req.body.email,
-                            //   subject: 'Xác thực đăng nhập từ TutorWeb',
-                            //   test: 'Plaintext version of the message',
-                            //   html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3000/verify/'+account.ChuoiXacThuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
-                            // };
-                            // transporter.sendMail(message, (err, info) => {
-                            //   if (err) {
-                            //     console.log('err', err);
-                            //     return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi khi gửi mail xác thực.'))
-                            //   }
-                            //   console.log('Message sent: %s', info.messageId);
-                            //   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-                            // });
-                            
                             accountModel.addAdmin(account.Username, account.Password, account.HoTen, account.Email, account.NgaySinh,
                                 account.GioiTinh, account.DiaChi, account.ThanhPho, account.SDT).then(r=>{
                                     return done(null, true);
@@ -306,11 +283,11 @@ function(req, username, password, done) {
                                     return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
                                 })
                         }
-                    }).catch(err=>{
-                        console.log(err);
-                        return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-                    })
-                }
+                //     }).catch(err=>{
+                //         console.log(err);
+                //         return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+                //     })
+                // }
             }).catch(err=>{
                 console.log(err);
                 return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));

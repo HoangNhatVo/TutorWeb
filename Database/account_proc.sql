@@ -79,3 +79,10 @@ BEGIN
 END;$$
 DELIMITER ;
 
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE Add_Loaigiaodich(in ten varchar(50))
+BEGIN	
+        insert into loaigiaodich values(null,ten);
+END;$$
+DELIMITER ;
