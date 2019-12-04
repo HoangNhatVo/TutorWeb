@@ -56,6 +56,9 @@ function(req, username, password, done) {
       }
       if(user[0].xacthuc==false){
         return done(null, false,req.flash('accountMsg', 'Tài khoản chưa được xác thực.'));
+      }
+      if(user[0].tinhtrang != 'active'){
+        return done(null, false,req.flash('accountMsg', 'Tài khoản không còn hoạt động.'));
       }           
       if(!bCrypt.compareSync(password, user[0].password)){
           return done(null, false, req.flash('accountMsg', 'Mật khẩu không đúng.'));
