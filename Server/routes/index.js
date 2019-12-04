@@ -17,9 +17,10 @@ failureRedirect:'/'
 
 
 router.post('/login', passport.authenticate('local-login', {
-  failureRedirect: '/failed',
-  successRedirect: '/loginsuccess',
-  failureFlash: true
+  //failureRedirect: '/failed',
+  failWithError: true
+  //successRedirect: '',
+  //failureFlash: true
 }),
   function (req, res) {
     if (req.body.remember) {
@@ -28,62 +29,99 @@ router.post('/login', passport.authenticate('local-login', {
     else {
       req.session.cookie.expires = false;
     }
-    res.redirect('/');
+      res.send(req.user);
+  },
+  function (err,req, res, next) {
+    if(req.flash){
+    res.send(req.flash('accountMsg'));
+    }
   }
 );
 
 
 //router dang ky học sinh
 router.post('/studentregister', passport.authenticate('local-signup', {
-  failureRedirect: '/failed',
-  successRedirect: '/success',
-  failureFlash: true
+  // failureRedirect: '/failed',
+  // successRedirect: '/success',
+  // failureFlash: true
+  failWithError: true
 }),
-  function (req, res) {}
+  function (req, res) {
+    res.send('Thành công');
+  },
+  function (err,req, res, next) {
+    if(req.flash){
+    res.send(req.flash('accountMsg'));
+    }
+  }
 );
 
 //router dang ky giáo viên
 router.post('/teacherregister', passport.authenticate('teacher-local-signup', {
-  failureRedirect: '/failed',
-  successRedirect: '/success',
-  failureFlash: true
+  // failureRedirect: '/failed',
+  // successRedirect: '/success',
+  // failureFlash: true
+  failWithError: true
 }),
-  function (req, res) {}
+  function (req, res) {
+    res.send('Thành công');
+  },
+  function (err,req, res, next) {
+    if(req.flash){
+    res.send(req.flash('accountMsg'));
+    }
+  }
 );
+
+router.post('/admin/createadmin', passport.authenticate('admin-local-signup', {
+  // failureRedirect: '/failed',
+  // successRedirect: '/success',
+  // failureFlash: true
+  failWithError: true
+}),
+function (req, res) {
+  res.send('Thành công');
+},
+function (err,req, res, next) {
+    if(req.flash){
+    res.send(req.flash('accountMsg'));
+    }
+  }
+);
+
 
 router.post('/verify', function(req, res, next){
   console.log(req.body.verify);
   accountModel.getAccountVerify(req.body.verify).then(r=>{
-    console.log(r[0]);
     if(r.length){
       accountModel.updateAccountVerify(r[0].id).then(r1=>{
-        res.redirect('/success');
+        res.send('Thành công')
       }).catch(err=>{
         console.log(err);
-        req.flash('accountMsg', 'Lỗi khi xác thực');
-        res.redirect('/failed');
+        //req.flash('accountMsg', 'Lỗi khi xác thực');
+        res.send('Lỗi khi xác thực')
       })
     }
     else{
-      req.flash('accountMsg', 'Xác thực không đúng.');
-      res.redirect('/failed');
+      //req.flash('accountMsg', 'Xác thực không đúng.');
+      res.send('Xác thực không đúng.');
     }
   }).catch(err=>{
     console.log(err);
-    req.flash('accountMsg', 'Lỗi khi xác thực');
-    res.redirect('/failed');
+    //req.flash('accountMsg', 'Lỗi khi xác thực');
+    res.send('Lỗi khi xác thực');
   })
 });
 
-router.get('/failed', function(req, res, next){
-  res.send(req.flash('accountMsg'));
-});
-router.get('/success', function(req, res, next){
-  res.send('Thành công');
-});
-router.get('/loginsuccess', function(req, res, next){
-  res.send(req.user);
-});
+// router.get('/failed', function(req, res, next){
+//   res.send(req.flash('accountMsg'));
+// });
+// router.get('/success', function(req, res, next){
+//   res.send('Thành công');
+// });
+// router.get('/loginsuccess', function(req, res, next){
+//   res.send(req.user);
+// });
 
 router.get('/chuyennganh', function(req, res, next){
   accountModel.getAllChuyenNganh().then(r=>{
@@ -91,13 +129,13 @@ router.get('/chuyennganh', function(req, res, next){
       res.send(r);
     }
     else{
-      req.flash('accountMsg', 'Không có chuyên ngành nào.');
-      res.redirect('/failed');
+      // req.flash('accountMsg', 'Không có chuyên ngành nào.');
+      res.send('Không có chuyên ngành nào.')
     }
   }).catch(err=>{
       console.log(err);
-      req.flash('accountMsg', 'Lỗi khi xác thực');
-      res.redirect('/failed');
+      //req.flash('accountMsg', 'Lỗi khi xác thực');
+      res.send('Lỗi')
   })
 });
 
