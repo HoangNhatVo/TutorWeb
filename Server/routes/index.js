@@ -45,13 +45,24 @@ router.post('/login', passport.authenticate('local-login', {
     else {
       req.session.cookie.expires = false;
     }
-      res.send(req.user);
-  },
-  function (err,req, res, next) {
+    if(req.user.id){
+      var arr = new Array();
+      arr[0]=req.user;
+      // res.send(req.user);
+      res.send(arr);
+    }
     if(req.flash){
-    res.send(req.flash('accountMsg'));
+      var msg = ""+req.flash('accountMsg');
+      res.send(msg);
     }
   }
+  // function (err,req, res, next) {
+  //   if(req.flash){
+  //     var msg = ""+req.flash('accountMsg');
+  //   //res.send(req.flash('accountMsg'));
+  //   res.send(msg);
+  //   }
+  // }
 );
 
 
@@ -63,13 +74,21 @@ router.post('/studentregister', passport.authenticate('local-signup', {
   failWithError: true
 }),
   function (req, res) {
-    res.send('Thành công');
-  },
-  function (err,req, res, next) {
-    if(req.flash){
-    res.send(req.flash('accountMsg'));
+    var msg = ""+req.flash('accountMsg');
+    if(msg == 'Thành công'){
+      res.send('Thành công');
+    }
+      else{
+      res.send(msg);
     }
   }
+  // function (err,req, res, next) {
+  //   if(req.flash){
+  //     var msg = ""+req.flash('accountMsg');
+  //     //res.send(req.flash('accountMsg'));
+  //     res.send(msg);
+  //   }
+  // }
 );
 
 //router dang ky giáo viên
@@ -80,13 +99,21 @@ router.post('/teacherregister', passport.authenticate('teacher-local-signup', {
   failWithError: true
 }),
   function (req, res) {
-    res.send('Thành công');
-  },
-  function (err,req, res, next) {
-    if(req.flash){
-    res.send(req.flash('accountMsg'));
+    var msg = ""+req.flash('accountMsg');
+    if(msg == 'Thành công'){
+      res.send('Thành công');
+    }
+      else{
+      res.send(msg);
     }
   }
+  // function (err,req, res, next) {
+  //   if(req.flash){
+  //     var msg = ""+req.flash('accountMsg');
+  //     //res.send(req.flash('accountMsg'));
+  //     res.send(msg);
+  //   }
+  // }
 );
 
 router.post('/admin/createadmin', passport.authenticate('admin-local-signup', {
@@ -96,13 +123,21 @@ router.post('/admin/createadmin', passport.authenticate('admin-local-signup', {
   failWithError: true
 }),
 function (req, res) {
-  res.send('Thành công');
-},
-function (err,req, res, next) {
-    if(req.flash){
-    res.send(req.flash('accountMsg'));
+  var msg = ""+req.flash('accountMsg');
+    if(msg == 'Thành công'){
+      res.send('Thành công');
     }
-  }
+      else{
+      res.send(msg);
+    }
+}
+// function (err,req, res, next) {
+//     if(req.flash){
+//       var msg = ""+req.flash('accountMsg');
+//       //res.send(req.flash('accountMsg'));
+//       res.send(msg);
+//     }
+//   }
 );
 
 
@@ -143,6 +178,7 @@ router.get('/chuyennganh', function(req, res, next){
   accountModel.getAllChuyenNganh().then(r=>{
     if(r.length){
       res.send(r);
+      //res.send('avc');
     }
     else{
       // req.flash('accountMsg', 'Không có chuyên ngành nào.');
