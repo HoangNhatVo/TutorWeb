@@ -12,12 +12,20 @@ router.get('/', function(req, res, next) {
 
 
 
-router.post('/createadmin', passport.authenticate('admin-local-signup', {
-  failureRedirect: '/failed',
-  successRedirect: '/success',
-  failureFlash: true
-}),
-  function (req, res) {}
-);
+// router.post('/createadmin', passport.authenticate('admin-local-signup', {
+//   // failureRedirect: '/failed',
+//   // successRedirect: '/success',
+//   // failureFlash: true
+//   failWithError: true
+// }),
+// function (req, res) {
+//   res.send('Thành công');
+// },
+// function (err,req, res, next) {
+//     if(req.flash){
+//     res.send(req.flash('accountMsg'));
+//     }
+//   }
+// );
 
 module.exports = router;
