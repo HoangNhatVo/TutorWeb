@@ -5,19 +5,24 @@ import {
   TeacherHome,
   UserSignUp,
   UserSignIn,
-  AdminSignIn
+  AdminSignIn,
+  Verify,
+  Home
 } from "../pages";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Router, Switch, Route } from "react-router-dom";
 import { withAuth } from "../utils";
+import history from "../utils/history";
 
 class Routers extends Component {
   render() {
     return (
-      <Router>
+      <Router history={history}>
         <Switch>
           <Route path="/admin/sign-in" component={AdminSignIn} />
           <Route path="/sign-up" component={UserSignUp} />
+          <Route path="/verify/:token" component={Verify} />
           <Route path="/sign-in" component={UserSignIn} />
+          <Route path="/" component={Home} />
           <Route path="/student" component={withAuth(StudentHome)} />
           <Route path="/admin" component={withAuth(AdminHome)} />
           <Route path="/teacher" component={withAuth(TeacherHome)} />

@@ -13,8 +13,8 @@ import { Face, Work } from "@material-ui/icons";
 import { styled } from "@material-ui/core/styles";
 import moment from "moment";
 import { HeaderOut, Footer } from "../components";
-
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
+import { getSpecializes, signUpStudent, signUpTeacher } from "../actions";
 
 const MyChip = styled(Chip)({
   padding: "3rem",
@@ -45,10 +45,16 @@ class UserSignUp extends Component {
       gender: "",
       dob: moment().format("YYYY-MM-DD"),
       address: "",
+      city: "",
+      subject: "",
       description: "",
-      specialization: "",
+      specialization: 1,
       wage: 0
     };
+  }
+
+  componentDidMount() {
+    if (!this.props.wasSpecializesCalled) this.props.getSpecializes();
   }
 
   changeState = field => event => {
@@ -69,10 +75,19 @@ class UserSignUp extends Component {
       dob,
       gender,
       address,
+      city,
+      subject,
       description,
       specialization,
       wage
     } = this.state;
+
+    const {
+      signUpStudent,
+      signUpTeacher,
+      isSigningUp,
+      specializes
+    } = this.props;
 
     return (
       <div className="df fc" style={{ minHeight: "100vh" }}>
@@ -212,13 +227,47 @@ class UserSignUp extends Component {
                 onChange={this.changeState("address")}
                 className="mt1"
               />
-
+              <TextField
+                fullWidth
+                label="Thành phố"
+                variant="outlined"
+                value={city}
+                onChange={this.changeState("city")}
+                className="mt1"
+              />
               <Button
                 variant="contained"
                 color="primary"
                 className="mt1"
                 style={{ marginBottom: "2rem", padding: "1rem 0" }}
                 fullWidth
+                disabled={isSigningUp}
+                onClick={() => {
+                  if (
+                    !username ||
+                    !password ||
+                    !fullname ||
+                    !email ||
+                    !dob ||
+                    !gender ||
+                    !address ||
+                    !city ||
+                    !phone
+                  )
+                    return;
+
+                  signUpStudent(
+                    username,
+                    password,
+                    fullname,
+                    email,
+                    moment(dob).format("DD/MM/YYYY"),
+                    gender,
+                    address,
+                    city,
+                    phone
+                  );
+                }}
               >
                 Đăng ký
               </Button>
@@ -304,10 +353,17 @@ class UserSignUp extends Component {
               <TextField
                 label="Địa chỉ"
                 variant="outlined"
-                value={email}
+                value={address}
                 fullWidth
-                type="email"
-                onChange={this.changeState("email")}
+                onChange={this.changeState("address")}
+                className="mt1"
+              />
+              <TextField
+                fullWidth
+                label="Thành phố"
+                variant="outlined"
+                value={city}
+                onChange={this.changeState("city")}
                 className="mt1"
               />
               <TextField
@@ -326,18 +382,36 @@ class UserSignUp extends Component {
                 Chuyên môn
               </Typography>
               <TextField
-                fullWidth
                 label="Chuyên ngành"
                 variant="outlined"
                 value={specialization}
+                select
+                fullWidth
                 onChange={this.changeState("specialization")}
+                className="mt1"
+              >
+                {specializes &&
+                  specializes.map(option => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.ten}
+                    </MenuItem>
+                  ))}
+              </TextField>
+              <TextField
+                fullWidth
+                label="Môn học"
+                variant="outlined"
+                value={subject}
+                onChange={this.changeState("subject")}
                 className="mt1"
               />
               <TextField
                 fullWidth
-                endAdornment={
-                  <InputAdornment position="end">VND</InputAdornment>
-                }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">VND</InputAdornment>
+                  )
+                }}
                 label="Tiền dạy 1 giờ"
                 variant="outlined"
                 type="number"
@@ -351,6 +425,41 @@ class UserSignUp extends Component {
                 className="mt1"
                 style={{ marginBottom: "2rem", padding: "1rem 0" }}
                 fullWidth
+                disabled={isSigningUp}
+                onClick={() => {
+                  if (
+                    !username ||
+                    !password ||
+                    !fullname ||
+                    !email ||
+                    !dob ||
+                    !gender ||
+                    !address ||
+                    !city ||
+                    !phone ||
+                    !description ||
+                    !subject ||
+                    specialization === 1 ||
+                    !wage
+                  )
+                    return;
+
+                  signUpTeacher(
+                    username,
+                    password,
+                    fullname,
+                    email,
+                    moment(dob).format("DD/MM/YYYY"),
+                    gender,
+                    address,
+                    city,
+                    phone,
+                    description,
+                    subject,
+                    specialization,
+                    wage
+                  );
+                }}
               >
                 Đăng ký
               </Button>
@@ -363,4 +472,12 @@ class UserSignUp extends Component {
   }
 }
 
-export default UserSignUp;
+export default connect(
+  ({ utils, auth }) => ({
+    specializes: utils.specializes && utils.specializes.specializes,
+    wasSpecializesCalled: utils.specializes && utils.specializes.isOk,
+    isSigningUp: auth.signUp.isSigningUp,
+    message: auth.signUp.message
+  }),
+  { getSpecializes, signUpStudent, signUpTeacher }
+)(UserSignUp);

@@ -6,10 +6,11 @@ import {
   Button,
   Container
 } from "@material-ui/core";
+import history from "../utils/history";
 
 class HeaderOut extends Component {
   render() {
-    const { hasAccount } = this.props;
+    const { hasAccount, hasNoAccount } = this.props;
     return (
       <AppBar position="sticky">
         <Container maxWidth="lg">
@@ -23,10 +24,24 @@ class HeaderOut extends Component {
               <Typography variant="body2" className="f1">
                 Đã có tài khoản?
               </Typography>
-              {hasAccount ? (
-                <Button color="inherit">Đăng nhập</Button>
-              ) : (
-                <Button color="inherit">Đăng ký</Button>
+              {hasAccount && (
+                <Button
+                  style={{ marginLeft: "1rem" }}
+                  color="inherit"
+                  onClick={() => history.push("/sign-in")}
+                >
+                  Đăng nhập
+                </Button>
+              )}
+
+              {hasNoAccount && (
+                <Button
+                  style={{ marginLeft: "1rem" }}
+                  color="inherit"
+                  onClick={() => history.push("/sign-up")}
+                >
+                  Đăng ký
+                </Button>
               )}
             </div>
           </Toolbar>

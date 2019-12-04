@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Container, Typography, TextField, Button } from "@material-ui/core";
+import { connect } from "react-redux";
+import { signIn } from "../../actions";
 
 class AdminSignIn extends Component {
   constructor(props) {
@@ -14,6 +16,7 @@ class AdminSignIn extends Component {
   changeState = field => event => {
     this.setState({ [field]: event.target.value });
   };
+
   render() {
     const { username, password } = this.state;
 
@@ -34,6 +37,8 @@ class AdminSignIn extends Component {
             fullWidth
             label="Tài khoản"
             variant="outlined"
+            autoFocus
+            required
             value={username}
             onChange={this.changeState("username")}
             className="mt1"
@@ -54,8 +59,14 @@ class AdminSignIn extends Component {
             color="primary"
             type="submit"
             className="mt1"
+            disabled={this.props.isSigningIn}
             style={{ marginBottom: "2rem", padding: "1rem 0" }}
             fullWidth
+            onClick={e => {
+              e.preventDefault();
+              if (!username || !password) return;
+              this.props.signIn(username, password);
+            }}
           >
             Đăng nhập
           </Button>
@@ -65,4 +76,9 @@ class AdminSignIn extends Component {
   }
 }
 
-export default AdminSignIn;
+export default connect(
+  ({ auth }) => ({
+    isSigningIn: auth.signIn.isSigningIn
+  }),
+  { signIn }
+)(AdminSignIn);

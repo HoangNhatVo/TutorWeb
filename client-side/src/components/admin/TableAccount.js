@@ -6,24 +6,24 @@ export class TableAccount extends Component {
     super(props);
     this.state = {
       columns: [
-        { title: "Name", field: "name" },
+        { title: "Tên", field: "name" },
         {
-          title: "Surname",
+          title: "Họ",
           field: "surname",
-          initialEditValue: "initial edit value"
+          initialEditValue: "Lê"
         },
-        { title: "Birth Year", field: "birthYear", type: "numeric" },
+        { title: "Năm sinh", field: "birthYear", type: "numeric" },
         {
-          title: "Birth Place",
+          title: "Nơi sinh",
           field: "birthCity",
-          lookup: { 34: "İstanbul", 63: "Şanlıurfa" }
+          lookup: { 34: "Hồ Chí Minh", 63: "Hà Nội" }
         }
       ],
       data: [
-        { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 },
+        { name: "Lan", surname: "Lê", birthYear: 1987, birthCity: 63 },
         {
-          name: "Zerya Betül",
-          surname: "Baran",
+          name: "Anh",
+          surname: "Nguyễn",
           birthYear: 2017,
           birthCity: 34
         }
@@ -39,7 +39,6 @@ export class TableAccount extends Component {
         data={this.state.data}
         editable={{
           onRowAdd: newData => {
-            console.log(newData);
             return new Promise((resolve, reject) => {
               setTimeout(() => {
                 {

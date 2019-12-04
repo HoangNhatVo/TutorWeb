@@ -5,6 +5,8 @@ import TeacherHome from "./teacher-home";
 
 import AdminHome from "./admin/home";
 import AdminSignIn from "./admin/sign-in";
+import Verify from "./verify";
+import Home from "./home";
 
 export {
   UserSignUp,
@@ -12,5 +14,7 @@ export {
   UserSignIn,
   TeacherHome,
   StudentHome,
-  AdminHome
+  AdminHome,
+  Verify,
+  Home
 };
