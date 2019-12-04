@@ -58,10 +58,10 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAll_ChuyenNganh()
 BEGIN
-	select * from chuyennganh;
+	select * from chuyennganh order by id asc;
 END;$$
 DELIMITER ;
-
+call GetAll_ChuyenNganh();
 
 DELIMITER $$
 USE `sql12314047`$$
