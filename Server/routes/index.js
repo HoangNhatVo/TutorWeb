@@ -27,6 +27,11 @@ router.get('/facebook/callback', passport.authenticate('facebook',
     failureRedirect: '/'
   }))
 
+router.get('/home', function(req, res, next) {
+    // adminModel.getAdmin();
+  res.send('home');
+});
+
 router.post('/login', passport.authenticate('local-login', {
   failureRedirect: '/failed',
   successRedirect: '/loginsuccess',

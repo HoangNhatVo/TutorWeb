@@ -29,6 +29,81 @@ module.exports = function (passport) {
     }, (accessToken, refreshToken, profile, done) => {
       process.nextTick(function () {
         console.log(profile)
+        var userData = {
+          Email: profile.emails[0].value,
+          Username:profile.emails[0].value,
+          Password: bCrypt.hashSync('12345678', bCrypt.genSaltSync(saltRounds)),
+          HoTen: profile.displayName,
+          ChuoiXacThuc: accessToken,
+          NgaySinh:null,
+          GioiTinh:null,
+          DiaChi:null,
+          ThanhPho:null,
+          SDT:null
+      };
+      accountModel.getAccountByEmail(userData.Email).then(r => {
+        if(r.length){
+          return done(null,userData)
+        }
+        else {
+          accountModel.addStudent(userData.Username, userData.Password, userData.HoTen, userData.Email, userData.NgaySinh,
+            userData.GioiTinh, userData.DiaChi, userData.ThanhPho, userData.SDT, userData.ChuoiXacThuc)
+        }
+      })
+      .catch(err =>{
+        console.log(err)
+        return done(err)
+      })
+      })
+      // var userData = {
+      //     email: profile.emails[0].value,
+      //     name: profile.displayName,
+      //     token: accessToken
+      // };
+      // var user = new User();
+      // user.username = profile.emails[0].value;
+      // user.password = '123123';
+      // user.save(err => {
+      //     if (err)
+      //         console.log("save error");
+      // })
+      // done(null, userData);
+    })
+  )
+
+  passport.use(
+    new FacebookStrategy({
+      callbackURL: '/facebook/callback',
+      clientID: '1464234670419951',
+      clientSecret: 'dcc06902219a07c889fd7ec6d78bd38c'
+    }, (accessToken, refreshToken, profile, done) => {
+      process.nextTick(function () {
+        console.log(profile)
+      //   var userData = {
+      //     Email: profile.emails[0].value,
+      //     Username:profile.emails[0].value,
+      //     Password: bCrypt.hashSync('12345678', bCrypt.genSaltSync(saltRounds)),
+      //     HoTen: profile.displayName,
+      //     ChuoiXacThuc: accessToken,
+      //     NgaySinh:null,
+      //     GioiTinh:null,
+      //     DiaChi:null,
+      //     ThanhPho:null,
+      //     SDT:null
+      // };
+      // accountModel.getAccountByEmail(userData.Email).then(r => {
+      //   if(r.length){
+      //     return done(null,userData)
+      //   }
+      //   else {
+      //     accountModel.addStudent(userData.Username, userData.Password, userData.HoTen, userData.Email, userData.NgaySinh,
+      //       userData.GioiTinh, userData.DiaChi, userData.ThanhPho, userData.SDT, userData.ChuoiXacThuc)
+      //   }
+      // })
+      // .catch(err =>{
+      //   console.log(err)
+      //   return done(err)
+      // })
       })
       // var userData = {
       //     email: profile.emails[0].value,
