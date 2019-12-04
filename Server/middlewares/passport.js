@@ -81,7 +81,7 @@ function(req, username, password, done) {
   function(req, username, password, done) {
     accountModel.getAccountByUsername(username).then(r1=>{
         if(r1.length){
-            return done(null, false,req.flash('accountMsg', 'Tài khoản đã tồn tại.'));
+            return done(null, false,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
         }
         else{
             accountModel.getAccountByEmail(req.body.email).then(r2=>{
@@ -164,7 +164,7 @@ function(req, username, password, done) {
   function(req, username, password, done) {
     accountModel.getAccountByUsername(username).then(r1=>{
         if(r1.length){
-            return done(null, false,req.flash('accountMsg', 'Tài khoản đã tồn tại.'));
+            return done(null, false,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
         }
         else{
             accountModel.getAccountByEmail(req.body.email).then(r2=>{
@@ -253,7 +253,7 @@ function(req, username, password, done) {
   function(req, username, password, done) {
     accountModel.getAccountByUsername(username).then(r1=>{
         if(r1.length){
-            return done(null, false,req.flash('accountMsg', 'Tài khoản đã tồn tại.'));
+            return done(null, false,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
         }
         else{
             accountModel.getAccountByEmail(req.body.email).then(r2=>{
