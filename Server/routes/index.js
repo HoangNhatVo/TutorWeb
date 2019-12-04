@@ -3,18 +3,34 @@ var router = express.Router();
 const passport = require('passport');
 var accountModel = require('../model/account.model');
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/google',passport.authenticate('google',{
-  scope: ['profile','email']
+router.get('/google', passport.authenticate('google', {
+  scope: ['profile', 'email']
 }));
 
-router.get('/google/callback', passport.authenticate('google',{successRedirect:'/home',
-failureRedirect:'/'
-}))
+router.get('/google/callback', passport.authenticate('google',
+  {
+    successRedirect: '/home',
+    failureRedirect: '/'
+  }))
 
+router.get('/facebook', passport.authenticate('facebook', {
+  scope: ['profile', 'email']
+}));
+
+router.get('/facebook/callback', passport.authenticate('facebook',
+  {
+    successRedirect: '/home',
+    failureRedirect: '/'
+  }))
+
+router.get('/home', function(req, res, next) {
+    // adminModel.getAdmin();
+  res.send('home');
+});
 
 router.post('/login', passport.authenticate('local-login', {
   //failureRedirect: '/failed',

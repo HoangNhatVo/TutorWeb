@@ -23,34 +23,112 @@ module.exports = function (passport) {
 
   passport.use(
     new GoogleStrategy({
-        callbackURL: '/user/google/redirect',
-        clientID: '583261927649-u20u1jiuefhor9nvjgjrkghr1p667v9t.apps.googleusercontent.com',
-        clientSecret: 'hlwVayAfydhSN--ffpP06XYw'
+      callbackURL: '/google/callback',
+      clientID: '583261927649-u20u1jiuefhor9nvjgjrkghr1p667v9t.apps.googleusercontent.com',
+      clientSecret: 'hlwVayAfydhSN--ffpP06XYw'
     }, (accessToken, refreshToken, profile, done) => {
-        // var userData = {
-        //     email: profile.emails[0].value,
-        //     name: profile.displayName,
-        //     token: accessToken
-        // };
-        // var user = new User();
-        // user.username = profile.emails[0].value;
-        // user.password = '123123';
-        // user.save(err => {
-        //     if (err)
-        //         console.log("save error");
-        // })
-        // done(null, userData);
+      process.nextTick(function () {
+        console.log(profile)
+        var userData = {
+          Email: profile.emails[0].value,
+          Username:profile.emails[0].value,
+          Password: bCrypt.hashSync('12345678', bCrypt.genSaltSync(saltRounds)),
+          HoTen: profile.displayName,
+          ChuoiXacThuc: accessToken,
+          NgaySinh:null,
+          GioiTinh:null,
+          DiaChi:null,
+          ThanhPho:null,
+          SDT:null
+      };
+      accountModel.getAccountByEmail(userData.Email).then(r => {
+        if(r.length){
+          return done(null,userData)
+        }
+        else {
+          accountModel.addStudent(userData.Username, userData.Password, userData.HoTen, userData.Email, userData.NgaySinh,
+            userData.GioiTinh, userData.DiaChi, userData.ThanhPho, userData.SDT, userData.ChuoiXacThuc)
+        }
+      })
+      .catch(err =>{
+        console.log(err)
+        return done(err)
+      })
+      })
+      // var userData = {
+      //     email: profile.emails[0].value,
+      //     name: profile.displayName,
+      //     token: accessToken
+      // };
+      // var user = new User();
+      // user.username = profile.emails[0].value;
+      // user.password = '123123';
+      // user.save(err => {
+      //     if (err)
+      //         console.log("save error");
+      // })
+      // done(null, userData);
     })
-)
+  )
 
-passport.use('local-login', new LocalStrategy({
-  usernameField : 'username',
-  passwordField : 'password',
-  passReqToCallback : true
-},
-function(req, username, password, done) {
-  accountModel.getAccountByUsername(username).then(user => {
-      if(!user.length){
+  passport.use(
+    new FacebookStrategy({
+      callbackURL: '/facebook/callback',
+      clientID: '1464234670419951',
+      clientSecret: 'dcc06902219a07c889fd7ec6d78bd38c'
+    }, (accessToken, refreshToken, profile, done) => {
+      process.nextTick(function () {
+        console.log(profile)
+      //   var userData = {
+      //     Email: profile.emails[0].value,
+      //     Username:profile.emails[0].value,
+      //     Password: bCrypt.hashSync('12345678', bCrypt.genSaltSync(saltRounds)),
+      //     HoTen: profile.displayName,
+      //     ChuoiXacThuc: accessToken,
+      //     NgaySinh:null,
+      //     GioiTinh:null,
+      //     DiaChi:null,
+      //     ThanhPho:null,
+      //     SDT:null
+      // };
+      // accountModel.getAccountByEmail(userData.Email).then(r => {
+      //   if(r.length){
+      //     return done(null,userData)
+      //   }
+      //   else {
+      //     accountModel.addStudent(userData.Username, userData.Password, userData.HoTen, userData.Email, userData.NgaySinh,
+      //       userData.GioiTinh, userData.DiaChi, userData.ThanhPho, userData.SDT, userData.ChuoiXacThuc)
+      //   }
+      // })
+      // .catch(err =>{
+      //   console.log(err)
+      //   return done(err)
+      // })
+      })
+      // var userData = {
+      //     email: profile.emails[0].value,
+      //     name: profile.displayName,
+      //     token: accessToken
+      // };
+      // var user = new User();
+      // user.username = profile.emails[0].value;
+      // user.password = '123123';
+      // user.save(err => {
+      //     if (err)
+      //         console.log("save error");
+      // })
+      // done(null, userData);
+    })
+  )
+
+  passport.use('local-login', new LocalStrategy({
+    usernameField: 'username',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+    function (req, username, password, done) {
+      accountModel.getAccountByUsername(username).then(user => {
+        if (!user.length) {
           console.log('abcd');
           return done(null, false,req.flash('accountMsg', 'Tài khoản không tồn tại.'));
       }
@@ -62,31 +140,36 @@ function(req, username, password, done) {
       }           
       if(!bCrypt.compareSync(password, user[0].password)){
           return done(null, false, req.flash('accountMsg', 'Mật khẩu không đúng.'));
-      }     
-      return done(null, user[0]);
+        }
+        return done(null, user[0]);
 
-  }).catch(err =>{
-      console.log(err);
-      return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-  });
+      }).catch(err => {
+        console.log(err);
+        return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+      });
 
-}));
+    }));
 
 
   passport.use('local-signup', new LocalStrategy({
-    usernameField : 'username',
-    passwordField : 'password',
-    passReqToCallback : true 
+    usernameField: 'username',
+    passwordField: 'password',
+    passReqToCallback: true
   },
   function(req, username, password, done) {
     accountModel.getAccountByUsername(username).then(r1=>{
         if(r1.length){
             return done(null, false,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
         }
-        else{
-            accountModel.getAccountByEmail(req.body.email).then(r2=>{
-                if(r2.length){
-                    return done(null, false,req.flash('accountMsg', 'Email đã tồn tại.'));
+        else {
+          accountModel.getAccountByEmail(req.body.email).then(r2 => {
+            if (r2.length) {
+              return done(null, false, req.flash('accountMsg', 'Email đã tồn tại.'));
+            }
+            else {
+              accountModel.getAccountByPhone(req.body.sdt).then(r3 => {
+                if (r3.length) {
+                  return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
                 }
                 else{
                     // accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
@@ -146,30 +229,40 @@ function(req, username, password, done) {
             }).catch(err=>{
                 console.log(err);
                 return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-            })
+              })
+            }
+          }).catch(err => {
+            console.log(err);
+            return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+          })
         }
-    }).catch(err=>{
+      }).catch(err => {
         console.log(err);
         return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-        })
+      })
     }
   ));
 
 
   passport.use('teacher-local-signup', new LocalStrategy({
-    usernameField : 'username',
-    passwordField : 'password',
-    passReqToCallback : true 
+    usernameField: 'username',
+    passwordField: 'password',
+    passReqToCallback: true
   },
   function(req, username, password, done) {
     accountModel.getAccountByUsername(username).then(r1=>{
         if(r1.length){
             return done(null, false,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
         }
-        else{
-            accountModel.getAccountByEmail(req.body.email).then(r2=>{
-                if(r2.length){
-                    return done(null, false,req.flash('accountMsg', 'Email đã tồn tại.'));
+        else {
+          accountModel.getAccountByEmail(req.body.email).then(r2 => {
+            if (r2.length) {
+              return done(null, false, req.flash('accountMsg', 'Email đã tồn tại.'));
+            }
+            else {
+              accountModel.getAccountByPhone(req.body.sdt).then(r3 => {
+                if (r3.length) {
+                  return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
                 }
                 else{
                     // accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
@@ -236,29 +329,39 @@ function(req, username, password, done) {
             }).catch(err=>{
                 console.log(err);
                 return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-            })
+              })
+            }
+          }).catch(err => {
+            console.log(err);
+            return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+          })
         }
-    }).catch(err=>{
+      }).catch(err => {
         console.log(err);
         return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-        })
+      })
     }
   ));
 
   passport.use('admin-local-signup', new LocalStrategy({
-    usernameField : 'username',
-    passwordField : 'password',
-    passReqToCallback : true 
+    usernameField: 'username',
+    passwordField: 'password',
+    passReqToCallback: true
   },
   function(req, username, password, done) {
     accountModel.getAccountByUsername(username).then(r1=>{
         if(r1.length){
             return done(null, false,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
         }
-        else{
-            accountModel.getAccountByEmail(req.body.email).then(r2=>{
-                if(r2.length){
-                    return done(null, false,req.flash('accountMsg', 'Email đã tồn tại.'));
+        else {
+          accountModel.getAccountByEmail(req.body.email).then(r2 => {
+            if (r2.length) {
+              return done(null, false, req.flash('accountMsg', 'Email đã tồn tại.'));
+            }
+            else {
+              accountModel.getAccountByPhone(req.body.sdt).then(r3 => {
+                if (r3.length) {
+                  return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
                 }
                 else{
                     // accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
@@ -294,12 +397,17 @@ function(req, username, password, done) {
             }).catch(err=>{
                 console.log(err);
                 return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-            })
+              })
+            }
+          }).catch(err => {
+            console.log(err);
+            return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+          })
         }
-    }).catch(err=>{
+      }).catch(err => {
         console.log(err);
         return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
-        })
+      })
     }
   ));
 
