@@ -86,3 +86,165 @@ BEGIN
         insert into loaigiaodich values(null,ten);
 END;$$
 DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE UpdateInfoAccount(in i int(11), in ht varchar(100), in dc varchar(100) )
+BEGIN
+	update account set hoten = ht, diachi = dc where id = i;    
+END;$$
+DELIMITER ;
+
+call UpdateInfoAccount(36, 'Nguyễn Nhật','Huế');
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE Update_baigioithieu_Account(in i int(11), in bgt text )
+BEGIN
+	update account set baigioithieu = bgt where id = i;    
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE UpdateAvatar(in i int(11), in avt varchar(255) )
+BEGIN
+	update account set avatar = avt where id = i;    
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAccountByID(in i int(11))
+BEGIN
+	select * from account where id = i;
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllAccount()
+BEGIN
+	select * from account;
+END;$$
+DELIMITER ;
+call GetAllTeacher();
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllTeacher()
+BEGIN
+	select * from account where vaitro = 2;
+END;$$
+DELIMITER ;
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddTag (in TagName varchar(50) )
+BEGIN
+	declare count1 int;
+    declare TagNameNew varchar(50);
+    if( substring(TagName,1,1)='#')
+    then
+		set TagNameNew = TagName;
+	end if;
+	if( substring(TagName,1,1)!='#')
+	then
+    set TagNameNew = (select concat('#',TagName));
+    end if;
+	set count1 =( select count(*) from tag where tentag = TagNameNew);
+	if( count1=0 )
+			then 			
+			 insert into tag values( null,TagNameNew);
+			 select id from tag where tentag = TagNameNew;
+	end if;
+	if( count1>0 )
+	then 
+    select id from tag where tentag = TagNameNew;
+	end if;
+END;$$
+DELIMITER ;
+
+call AddTag('abc');
+select * from tag;
+
+#----------------- add tag account
+DELIMITER $$
+USE `sql12314047`$$
+create procedure AddTagAccount(in idtag int(11), in idaccount int(11))
+begin
+if exists( select * from tag_account where id_tag=idtag and id_account=idaccount)
+then
+select 0 as temp;
+else
+	insert into tag_account values (idtag,idaccount);
+	select 1 as temp;
+end if;
+end;$$
+DELIMITER ;
+call AddTagAccount(2,33);
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetTagByID(in i int(11))
+BEGIN
+	select * from tag where id =i;
+END;$$
+DELIMITER ;
+call GetTagByID(2);
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE DeleteTag(in i int(11))
+BEGIN
+	delete from tag_account where id_tag=i;
+	delete from tag where id=i;
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllTag()
+BEGIN
+	select * from tag order by id asc;
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE UpdateTagName(in i int(11), in TagNameUpdate varchar(50))
+BEGIN
+	declare TagNameNew varchar(50);
+    declare count1 int;
+	 if( substring(TagNameUpdate,1,1)!='#')
+    then
+		set TagNameNew =(select concat('#',TagNameUpdate));
+        set count1 = (select count(*) from tag where tentag = TagNameNew);
+        if(count1 >0)
+        then
+        select 0 as temp;
+        end if;
+        if(count1 =0)
+        then
+        update tag set tentag=TagNameNew where id=i;
+        select 1 as temp;
+        end if;
+    end if;
+    if(substring(TagNameUpdate,1,1)='#')
+		then
+        set count1 = (select count(*) from tag where tentag = TagNameUpdate);
+        if(count1 >0)
+        then
+        select 0 as temp;
+        end if;
+        if(count1 =0)
+        then
+        update tag set tentag=TagNameUpdate where id=i;
+        select 1 as temp;
+        end if;
+	end if;
+END;$$
+DELIMITER ;
+
+call UpdateTagName(1,'#hahahhahahahahhahahhahahahhaa');
