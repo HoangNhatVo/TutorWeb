@@ -130,22 +130,23 @@ module.exports = function (passport) {
       accountModel.getAccountByUsername(username).then(user => {
         if (!user.length) {
           console.log('abcd');
-          return done(null, false,req.flash('accountMsg', 'Tài khoản không tồn tại.'));
+          return done(null, true,req.flash('accountMsg', 'Tài khoản không tồn tại.'));
       }
       if(user[0].xacthuc==false){
-        return done(null, false,req.flash('accountMsg', 'Tài khoản chưa được xác thực.'));
+        return done(null, true,req.flash('accountMsg', 'Tài khoản chưa được xác thực.'));
       }
       if(user[0].tinhtrang != 'active'){
-        return done(null, false,req.flash('accountMsg', 'Tài khoản không còn hoạt động.'));
+        return done(null, true,req.flash('accountMsg', 'Tài khoản không còn hoạt động.'));
       }           
       if(!bCrypt.compareSync(password, user[0].password)){
-          return done(null, false, req.flash('accountMsg', 'Mật khẩu không đúng.'));
+          return done(null, true, req.flash('accountMsg', 'Mật khẩu không đúng.'));
         }
+        console.log('abc');
         return done(null, user[0]);
 
       }).catch(err => {
         console.log(err);
-        return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+        return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
       });
 
     }));
@@ -159,17 +160,17 @@ module.exports = function (passport) {
   function(req, username, password, done) {
     accountModel.getAccountByUsername(username).then(r1=>{
         if(r1.length){
-            return done(null, false,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
+            return done(null, true,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
         }
         else {
           accountModel.getAccountByEmail(req.body.email).then(r2 => {
             if (r2.length) {
-              return done(null, false, req.flash('accountMsg', 'Email đã tồn tại.'));
+              return done(null, true, req.flash('accountMsg', 'Email đã tồn tại.'));
             }
             else {
               accountModel.getAccountByPhone(req.body.sdt).then(r3 => {
                 if (r3.length) {
-                  return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
+                  return done(null, true, req.flash('accountMsg', 'SĐT đã tồn tại.'));
                 }
                 else{
                     // accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
@@ -202,12 +203,12 @@ module.exports = function (passport) {
                               to: req.body.email,
                               subject: 'Xác thực đăng nhập từ TutorWeb',
                               test: 'Plaintext version of the message',
-                              html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3000/verify/'+account.ChuoiXacThuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
+                              html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3001/verify/'+account.ChuoiXacThuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
                             };
                             transporter.sendMail(message, (err, info) => {
                               if (err) {
                                 console.log('err', err);
-                                return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi khi gửi mail xác thực.'))
+                                return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi khi gửi mail xác thực.'))
                               }
                               console.log('Message sent: %s', info.messageId);
                               console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
@@ -215,10 +216,10 @@ module.exports = function (passport) {
                             
                             accountModel.addStudent(account.Username, account.Password, account.HoTen, account.Email, account.NgaySinh,
                                 account.GioiTinh, account.DiaChi, account.ThanhPho, account.SDT, account.ChuoiXacThuc).then(r=>{
-                                    return done(null, true);
+                                    return done(null, true, req.flash('accountMsg', 'Thành công'));
                                 }).catch(err=>{
                                     console.log(err);
-                                    return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+                                    return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
                                 })
                         }
                     // }).catch(err=>{
@@ -228,17 +229,17 @@ module.exports = function (passport) {
                 // }
             }).catch(err=>{
                 console.log(err);
-                return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+                return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
               })
             }
           }).catch(err => {
             console.log(err);
-            return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+            return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
           })
         }
       }).catch(err => {
         console.log(err);
-        return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+        return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
       })
     }
   ));
@@ -252,17 +253,17 @@ module.exports = function (passport) {
   function(req, username, password, done) {
     accountModel.getAccountByUsername(username).then(r1=>{
         if(r1.length){
-            return done(null, false,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
+            return done(null, true,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
         }
         else {
           accountModel.getAccountByEmail(req.body.email).then(r2 => {
             if (r2.length) {
-              return done(null, false, req.flash('accountMsg', 'Email đã tồn tại.'));
+              return done(null, true, req.flash('accountMsg', 'Email đã tồn tại.'));
             }
             else {
               accountModel.getAccountByPhone(req.body.sdt).then(r3 => {
                 if (r3.length) {
-                  return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
+                  return done(null, true, req.flash('accountMsg', 'SĐT đã tồn tại.'));
                 }
                 else{
                     // accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
@@ -301,12 +302,12 @@ module.exports = function (passport) {
                               to: req.body.email,
                               subject: 'Xác thực đăng nhập từ TutorWeb',
                               test: 'Plaintext version of the message',
-                              html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3000/verify/'+account.ChuoiXacThuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
+                              html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3001/verify/'+account.ChuoiXacThuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
                             };
                             transporter.sendMail(message, (err, info) => {
                               if (err) {
                                 console.log('err', err);
-                                return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi khi gửi mail xác thực.'))
+                                return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi khi gửi mail xác thực.'))
                               }
                               console.log('Message sent: %s', info.messageId);
                               console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
@@ -315,10 +316,10 @@ module.exports = function (passport) {
                             accountModel.addTeacher(account.Username, account.Password, account.HoTen, account.Email, account.NgaySinh,
                                 account.GioiTinh, account.DiaChi, account.ThanhPho, account.SDT,
                                 account.BaiGioiThieu, account.MonHoc, account.ChuyenNganh, account.TienDay, account.ChuoiXacThuc).then(r=>{
-                                    return done(null, true);
+                                    return done(null, true, req.flash('accountMsg', 'Thành công'));
                                 }).catch(err=>{
                                     console.log(err);
-                                    return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+                                    return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
                                 })
                         }
                 //     }).catch(err=>{
@@ -328,17 +329,17 @@ module.exports = function (passport) {
                 // }
             }).catch(err=>{
                 console.log(err);
-                return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+                return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
               })
             }
           }).catch(err => {
             console.log(err);
-            return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+            return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
           })
         }
       }).catch(err => {
         console.log(err);
-        return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+        return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
       })
     }
   ));
@@ -351,17 +352,17 @@ module.exports = function (passport) {
   function(req, username, password, done) {
     accountModel.getAccountByUsername(username).then(r1=>{
         if(r1.length){
-            return done(null, false,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
+            return done(null, true,req.flash('accountMsg', 'Tên đăng nhập đã tồn tại.'));
         }
         else {
           accountModel.getAccountByEmail(req.body.email).then(r2 => {
             if (r2.length) {
-              return done(null, false, req.flash('accountMsg', 'Email đã tồn tại.'));
+              return done(null, true, req.flash('accountMsg', 'Email đã tồn tại.'));
             }
             else {
               accountModel.getAccountByPhone(req.body.sdt).then(r3 => {
                 if (r3.length) {
-                  return done(null, false, req.flash('accountMsg', 'SĐT đã tồn tại.'));
+                  return done(null, true, req.flash('accountMsg', 'SĐT đã tồn tại.'));
                 }
                 else{
                     // accountModel.getAccountByPhone(req.body.sdt).then(r3=>{
@@ -383,10 +384,10 @@ module.exports = function (passport) {
                             console.log(account);
                             accountModel.addAdmin(account.Username, account.Password, account.HoTen, account.Email, account.NgaySinh,
                                 account.GioiTinh, account.DiaChi, account.ThanhPho, account.SDT).then(r=>{
-                                    return done(null, true);
+                                    return done(null, true, req.flash('accountMsg', 'Thành công'));
                                 }).catch(err=>{
                                     console.log(err);
-                                    return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+                                    return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
                                 })
                         }
                 //     }).catch(err=>{
@@ -396,17 +397,17 @@ module.exports = function (passport) {
                 // }
             }).catch(err=>{
                 console.log(err);
-                return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+                return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
               })
             }
           }).catch(err => {
             console.log(err);
-            return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+            return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
           })
         }
       }).catch(err => {
         console.log(err);
-        return done(null, false, req.flash('accountMsg', 'Xảy ra lỗi.'));
+        return done(null, true, req.flash('accountMsg', 'Xảy ra lỗi.'));
       })
     }
   ));
