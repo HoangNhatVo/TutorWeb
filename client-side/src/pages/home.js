@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { HeaderOut, Footer } from "../components";
+import { HeaderOut, Footer, Menu, Banner,TeacherCard } from "../components";
 import { Container, Typography } from "@material-ui/core";
 
 class Home extends Component {
@@ -7,6 +7,8 @@ class Home extends Component {
     return (
       <div className="df fc" style={{ minHeight: "100vh" }}>
         <HeaderOut hasNoAccount hasAccount />
+        <Menu></Menu>
+        <Banner></Banner>
         <Container maxWidth="lg" className="df fc f1">
           <Typography
             variant="h4"
@@ -14,8 +16,9 @@ class Home extends Component {
             align="center"
             component="h4"
           >
-            Hello Home page
+            Gia sư tiêu biểu
           </Typography>
+        <TeacherCard />
         </Container>
         <Footer />
       </div>

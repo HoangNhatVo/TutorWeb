@@ -27,8 +27,8 @@ router.get('/facebook/callback', passport.authenticate('facebook',
     failureRedirect: '/'
   }))
 
-router.get('/home', function(req, res, next) {
-    // adminModel.getAdmin();
+router.get('/home', function (req, res, next) {
+  // adminModel.getAdmin();
   res.send('home');
 });
 
@@ -45,11 +45,11 @@ router.post('/login', passport.authenticate('local-login', {
     else {
       req.session.cookie.expires = false;
     }
-      res.send(req.user);
+    res.send(req.user);
   },
-  function (err,req, res, next) {
-    if(req.flash){
-    res.send(req.flash('accountMsg'));
+  function (err, req, res, next) {
+    if (req.flash) {
+      res.send(req.flash('accountMsg'));
     }
   }
 );
@@ -65,9 +65,9 @@ router.post('/studentregister', passport.authenticate('local-signup', {
   function (req, res) {
     res.send('Thành công');
   },
-  function (err,req, res, next) {
-    if(req.flash){
-    res.send(req.flash('accountMsg'));
+  function (err, req, res, next) {
+    if (req.flash) {
+      res.send(req.flash('accountMsg'));
     }
   }
 );
@@ -82,9 +82,9 @@ router.post('/teacherregister', passport.authenticate('teacher-local-signup', {
   function (req, res) {
     res.send('Thành công');
   },
-  function (err,req, res, next) {
-    if(req.flash){
-    res.send(req.flash('accountMsg'));
+  function (err, req, res, next) {
+    if (req.flash) {
+      res.send(req.flash('accountMsg'));
     }
   }
 );
@@ -95,34 +95,34 @@ router.post('/admin/createadmin', passport.authenticate('admin-local-signup', {
   // failureFlash: true
   failWithError: true
 }),
-function (req, res) {
-  res.send('Thành công');
-},
-function (err,req, res, next) {
-    if(req.flash){
-    res.send(req.flash('accountMsg'));
+  function (req, res) {
+    res.send('Thành công');
+  },
+  function (err, req, res, next) {
+    if (req.flash) {
+      res.send(req.flash('accountMsg'));
     }
   }
 );
 
 
-router.post('/verify', function(req, res, next){
+router.post('/verify', function (req, res, next) {
   console.log(req.body.verify);
-  accountModel.getAccountVerify(req.body.verify).then(r=>{
-    if(r.length){
-      accountModel.updateAccountVerify(r[0].id).then(r1=>{
+  accountModel.getAccountVerify(req.body.verify).then(r => {
+    if (r.length) {
+      accountModel.updateAccountVerify(r[0].id).then(r1 => {
         res.send('Thành công')
-      }).catch(err=>{
+      }).catch(err => {
         console.log(err);
         //req.flash('accountMsg', 'Lỗi khi xác thực');
         res.send('Lỗi khi xác thực')
       })
     }
-    else{
+    else {
       //req.flash('accountMsg', 'Xác thực không đúng.');
       res.send('Xác thực không đúng.');
     }
-  }).catch(err=>{
+  }).catch(err => {
     console.log(err);
     //req.flash('accountMsg', 'Lỗi khi xác thực');
     res.send('Lỗi khi xác thực');
@@ -139,20 +139,33 @@ router.post('/verify', function(req, res, next){
 //   res.send(req.user);
 // });
 
-router.get('/chuyennganh', function(req, res, next){
-  accountModel.getAllChuyenNganh().then(r=>{
-    if(r.length){
+router.get('/chuyennganh', function (req, res, next) {
+  accountModel.getAllChuyenNganh().then(r => {
+    if (r.length) {
       res.send(r);
     }
-    else{
+    else {
       // req.flash('accountMsg', 'Không có chuyên ngành nào.');
       res.send('Không có chuyên ngành nào.')
     }
-  }).catch(err=>{
-      console.log(err);
-      //req.flash('accountMsg', 'Lỗi khi xác thực');
-      res.send('Lỗi')
+  }).catch(err => {
+    console.log(err);
+    //req.flash('accountMsg', 'Lỗi khi xác thực');
+    res.send('Lỗi')
   })
 });
+
+router.get('/allTeacher', async function (req, res, next) {
+  try {
+    var allTeacher = await accountModel.getAllteacher()
+    if (allTeacher.length)
+      res.send(allTeacher)
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
 
 module.exports = router;
