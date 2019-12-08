@@ -3,6 +3,8 @@ var router = express.Router();
 const passport = require('passport');
 var accountModel = require('../model/account.model');
 var tagModel = require('../model/tag.model');
+var bCrypt = require('bcrypt');
+const saltRounds = 10;
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
@@ -310,6 +312,55 @@ router.get('/tagdetail/:ID',function(req, res, next){
         res.send('Tag không tồn tại.');
       }
     }).catch(err=>{
+    console.log(err);
+    res.send('Đã xảy ra lỗi.');
+  })
+})
+
+
+router.post('/changepassword', function(req,res,next){
+  var ID = req.body.id;
+  var newPass = bCrypt.hashSync(req.body.newpassword, bCrypt.genSaltSync(saltRounds));
+  accountModel.getAccountByID(ID).then(r=>{
+    if(!r.length){
+      res.send('Không tìm thấy người dùng.');
+    }
+    else{
+      if(!bCrypt.compareSync(req.body.curpassword, r[0].password)){
+        res.send('Nhập mật khẩu hiện tại không đúng.');
+      }
+      else{
+        accountModel.updatePasswordAccountByID(ID, newPass).then(r1=>{
+          res.send('Thành công');
+        }).catch(err=>{
+          console.log(err);
+          res.send('Đã xảy ra lỗi.');
+        })
+      }
+    }
+  }).catch(err=>{
+    console.log(err);
+    res.send('Đã xảy ra lỗi.');
+  })
+})
+
+
+router.post('/resetpassword', function(req,res,next){
+  var verify = req.body.verify;
+  var newPass = bCrypt.hashSync(req.body.newpassword, bCrypt.genSaltSync(saltRounds));
+  accountModel.getAccountVerify(verify).then(r=>{
+    if(r.length){
+      accountModel.updatePasswordAccountByID(r[0].id, newPass).then(r1=>{
+        res.send('Thành công');
+      }).catch(err=>{
+        console.log(err);
+        res.send('Đã xảy ra lỗi.');
+      })
+    }
+    else{
+      res.send('Xác thực không đúng.');
+    }
+  }).catch(err=>{
     console.log(err);
     res.send('Đã xảy ra lỗi.');
   })

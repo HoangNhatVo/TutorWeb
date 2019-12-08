@@ -248,3 +248,24 @@ END;$$
 DELIMITER ;
 
 call UpdateTagName(1,'#hahahhahahahahhahahhahahahhaa');
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE UpdatePasswordAccountByID(in ID int(11), in newPass varchar(100))
+BEGIN
+	update account a
+    set a.password = newPass
+    where a.id = ID;
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE ResetPassword(in verify varchar(255), in newPass varchar(100))
+BEGIN
+	update account a
+    set a.password = newPass
+    where a.chuoixacthuc = verify;
+END;$$
+DELIMITER ;
+
