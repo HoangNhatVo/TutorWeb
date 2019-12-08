@@ -27,7 +27,6 @@ module.exports = {
     updatePasswordAccountByID:(ID, newPass)=>{
         return orm.selectAll(`call UpdatePasswordAccountByID(${ID},'${newPass}')`);
     },
-
     getAccountVerify: (verify) => {
         return orm.selectAll(`call GetAccountVerify('${verify}')`);
     },
@@ -36,5 +35,11 @@ module.exports = {
     },
     updateAccountVerify: (ID) => {
         return orm.selectAll(`call UpdateAccountVerify(${ID})`);
+    },
+    getAllAccount: () => {
+        return orm.selectAll(`call GetAllAccount()`);
+    },
+    resetPassword:(verify, newPass)=>{
+        return orm.selectAll(`call ResetPassword('${verify}','${newPass}')`);
     },
 }

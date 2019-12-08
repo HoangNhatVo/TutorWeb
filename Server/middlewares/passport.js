@@ -203,7 +203,7 @@ module.exports = function (passport) {
                               to: req.body.email,
                               subject: 'Xác thực đăng nhập từ TutorWeb',
                               test: 'Plaintext version of the message',
-                              html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3000/verify/'+account.ChuoiXacThuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
+                              html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3001/verify/'+account.ChuoiXacThuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
                             };
                             transporter.sendMail(message, (err, info) => {
                               if (err) {
@@ -302,7 +302,7 @@ module.exports = function (passport) {
                               to: req.body.email,
                               subject: 'Xác thực đăng nhập từ TutorWeb',
                               test: 'Plaintext version of the message',
-                              html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3000/verify/'+account.ChuoiXacThuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
+                              html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3001/verify/'+account.ChuoiXacThuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
                             };
                             transporter.sendMail(message, (err, info) => {
                               if (err) {
