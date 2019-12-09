@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import {
   StudentHome,
-  AdminHome,
+  Moderators,
   TeacherHome,
   UserSignUp,
   UserSignIn,
   AdminSignIn,
   Verify,
+  Users,
+  Tags,
   Home
 } from "../pages";
 import { Router, Switch, Route } from "react-router-dom";
@@ -22,10 +24,12 @@ class Routers extends Component {
           <Route path="/sign-up" component={UserSignUp} />
           <Route path="/verify/:token" component={Verify} />
           <Route path="/sign-in" component={UserSignIn} />
-          <Route path="/" component={Home} />
           <Route path="/student" component={withAuth(StudentHome)} />
-          <Route path="/admin" component={withAuth(AdminHome)} />
+          <Route path="/admin/moderators" component={withAuth(Moderators)} />
+          <Route path="/admin/tags" component={withAuth(Tags)} />
+          <Route path="/admin/users" component={withAuth(Users)} />
           <Route path="/teacher" component={withAuth(TeacherHome)} />
+          <Route path="/" component={Home} />
           <Route path="*">404 - Not Found!</Route>
         </Switch>
       </Router>
