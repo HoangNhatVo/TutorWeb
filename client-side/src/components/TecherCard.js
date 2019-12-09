@@ -7,7 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
+import './style/TeacherCard.css'
 const useStyles = makeStyles({
   card: {
     maxWidth: 345,
@@ -28,11 +28,11 @@ export default function TeacherCard() {
           title="Contemplative Reptile"
         />
         <CardContent>
-          <div style={{display:'flex',justifyContent:'space-between'}}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography gutterBottom variant="h5" component="h2">
               Don .B
           </Typography>
-          <Typography gutterBottom variant="h5" component="h2">
+            <Typography gutterBottom variant="h5" component="h2">
               $60/h
           </Typography>
           </div>
@@ -43,8 +43,13 @@ export default function TeacherCard() {
             HCMC, Vietnam
           </Typography>
         </CardContent>
-        <div></div>
       </CardActionArea>
+      <div className='tag'>
+        <span>PHP</span>
+        <span>Javascript</span>
+        <span>SQL</span>
+        <span>CSS</span>
+      </div>
       <CardActions>
         <Button size="small" color="primary">
           view profile

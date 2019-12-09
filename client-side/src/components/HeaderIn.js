@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { AppBar, Toolbar, Typography, Container } from "@material-ui/core";
-
 class HeaderIn extends Component {
   render() {
     return (
