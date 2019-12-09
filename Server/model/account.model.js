@@ -36,6 +36,21 @@ module.exports = {
     updateAccountVerify: (ID) => {
         return orm.selectAll(`call UpdateAccountVerify(${ID})`);
     },
+    getAllteacher : () => {
+        return orm.selectAll(`call GetAllTeacher()`);
+    },
+    updateAvatar: (iduser,ava) => {
+        return orm.selectAll(`call UpdateAvatar(${iduser},'${ava}')`)
+    },
+    updateInformation: (iduser,name,address) => {
+        return orm.selectAll(`call UpdateInfoAccount(${iduser},'${name}','${address}')`)
+    },
+    updateTagname: (iduser,TagNameUpdate) =>{
+        return orm.selectAll(`call UpdateTagName(${iduser},'${TagNameUpdate}')`)
+    },
+    updateIntroduce: (iduser,content) => {
+        return orm.selectAll(`call Update_baigioithieu_Account(${iduser},'${content}')`)
+    },
     getAllAccount: () => {
         return orm.selectAll(`call GetAllAccount()`);
     },
