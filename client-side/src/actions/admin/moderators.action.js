@@ -1,5 +1,5 @@
-import * as types from "../types";
-import api from "../utils/axios";
+import * as types from "../../types";
+import api from "../../utils/axios";
 
 const isSigningUp = value => ({
   type: types.SIGNING_UP,

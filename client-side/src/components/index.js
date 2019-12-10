@@ -8,6 +8,7 @@ import Menu from "./Menu";
 import Banner from "./Banner";
 import TeacherCard from "./TecherCard";
 
+export * from "./common";
 export {
   BreadCrums,
   Routers,

@@ -1,37 +1,20 @@
 import React, { Component } from "react";
 import { LayoutAdmin } from "../../layouts";
 import MaterialTable from "material-table";
-import { BreadCrums } from "../../components";
-
-const data = [
-  {
-    avatar:
-      "https://scontent.fsgn3-1.fna.fbcdn.net/v/t1.0-1/p60x60/76726992_990240608011361_2342947373417758720_o.jpg?_nc_cat=107&_nc_ohc=y12eVPSVq2kAQk3cwZdMAWjxsSOykxSTmSgkC3N57eFoLoym6jeSBxTLg&_nc_ht=scontent.fsgn3-1.fna&oh=74ff8fec35918b30c3d18480febaa72f&oe=5E8CD24F",
-    name: "Tu",
-    surname: "Le",
-    birth_year: 1998,
-    birth_city: 34
-  },
-  {
-    avatar:
-      "https://scontent.fsgn3-1.fna.fbcdn.net/v/t1.0-1/p60x60/76726992_990240608011361_2342947373417758720_o.jpg?_nc_cat=107&_nc_ohc=y12eVPSVq2kAQk3cwZdMAWjxsSOykxSTmSgkC3N57eFoLoym6jeSBxTLg&_nc_ht=scontent.fsgn3-1.fna&oh=74ff8fec35918b30c3d18480febaa72f&oe=5E8CD24F",
-    name: "Tu",
-    surname: "Le",
-    birth_year: 1998,
-    birth_city: 34
-  },
-  {
-    avatar:
-      "https://scontent.fsgn3-1.fna.fbcdn.net/v/t1.0-1/p60x60/76726992_990240608011361_2342947373417758720_o.jpg?_nc_cat=107&_nc_ohc=y12eVPSVq2kAQk3cwZdMAWjxsSOykxSTmSgkC3N57eFoLoym6jeSBxTLg&_nc_ht=scontent.fsgn3-1.fna&oh=74ff8fec35918b30c3d18480febaa72f&oe=5E8CD24F",
-    name: "Tu",
-    surname: "Le",
-    birth_year: 1998,
-    birth_city: 34
-  }
-];
+import { BreadCrums, Avatar } from "../../components";
+import { getAllUsers } from "../../actions";
+import { connect } from "react-redux";
+import moment from "moment";
 
 class Users extends Component {
+  componentDidMount() {
+    this.props.getAllUsers();
+  }
+
   render() {
+    const { users, isLoadingUsers } = this.props;
+    if (isLoadingUsers) return <div>Loading...</div>;
+
     return (
       <LayoutAdmin>
         <BreadCrums navs={[{ text: "Người dùng" }]} />
@@ -43,27 +26,42 @@ class Users extends Component {
               title: "Avatar",
               field: "avatar",
               render: rowData => (
-                <img
+                <Avatar
                   src={rowData.avatar}
-                  alt={rowData.name}
-                  style={{ width: 40, borderRadius: "50%" }}
+                  name={rowData.hoten}
+                  alt={rowData.hoten}
                 />
               )
             },
-            { title: "Tên", field: "name" },
-            { title: "Họ", field: "surname" },
-            { title: "Năm sinh", field: "birth_year", type: "numeric" },
+            { title: "Tên", field: "hoten" },
             {
-              title: "Nơi sinh",
-              field: "birth_city",
-              lookup: { 34: "İstanbul", 63: "Şanlıurfa" }
+              title: "Năm sinh",
+              field: "birthday",
+              type: "numeric",
+              render: rowData => moment(rowData.birthday).format("YYYY")
+            },
+            {
+              title: "Giới tính",
+              field: "gioitinh"
+            },
+            {
+              title: "Vai trò",
+              field: "vaitro",
+              lookup: { 1: "Học sinh", 2: "Gia sư", 3: "Admin" }
             }
           ]}
-          data={data}
+          data={users}
           onRowClick={(event, selectedRow) => {}}
         />
       </LayoutAdmin>
     );
   }
 }
-export default Users;
+
+export default connect(
+  ({ admin }) => ({
+    isLoadingUsers: admin.users.isOk,
+    users: admin.users.users
+  }),
+  { getAllUsers }
+)(Users);
