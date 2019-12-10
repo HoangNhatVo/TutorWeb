@@ -4,7 +4,7 @@ import HeaderIn from "./HeaderIn";
 import Footer from "./Footer";
 import BreadCrums from "./BreadCrums";
 
-import Menu from "./meunu";
+import Menu from "./Menu";
 import Banner from "./Banner";
 import TeacherCard from "./TecherCard";
 

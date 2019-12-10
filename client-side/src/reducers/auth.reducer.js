@@ -2,7 +2,13 @@ import * as types from "../types";
 
 const initState = {
   signIn: { isSigningIn: false, message: "" },
-  signUp: { isSigningUp: false, message: "" }
+  signUp: { isSigningUp: false, message: "" },
+  userData: {
+    hoten: "",
+    chuoixacthuc: "",
+    avatar: "",
+    vaitro: ""
+  }
 };
 
 export default (state = initState, { type, payload }) => {
@@ -37,6 +43,13 @@ export default (state = initState, { type, payload }) => {
         signUp: {
           message: payload,
           isSigningUp: false
+        }
+      };
+    case types.SIGN_IN_SUCCESSFULLY:
+      return {
+        ...state,
+        userData: {
+          ...payload
         }
       };
     default:

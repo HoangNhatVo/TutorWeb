@@ -3,11 +3,7 @@ import { HeaderOut, Footer, Menu, Banner, TeacherCard } from "../components";
 import { Container, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import browser from "../img/browser.svg";
-import postjob from "../img/postjob.jpg";
-import find from "../img/find.png";
-import chat from "../img/chat.png";
-import pay from "../img/pay.png";
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
@@ -23,8 +19,8 @@ function Home() {
   return (
     <div className="df fc" style={{ minHeight: "100vh" }}>
       <HeaderOut hasNoAccount hasAccount />
-      <Menu></Menu>
-      <Banner></Banner>
+      <Menu />
+      <Banner />
       <Container maxWidth="lg" className="df fc f1">
         <Typography
           variant="h4"
@@ -33,7 +29,7 @@ function Home() {
           component="h4"
           style={{ marginBottom: 20, fontWeight: 700 }}
         >
-          Freelancers tiêu biểu
+          Gia sư đáng tin cậy
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={3}>
@@ -89,7 +85,7 @@ function Home() {
             <Grid item xs={2}>
               <div style={{ textAlign: "center" }}>
                 <img
-                  src={browser}
+                  src="/images/browser.svg"
                   alt="svg"
                   style={{ width: 50, height: 50 }}
                 />
@@ -101,7 +97,7 @@ function Home() {
             <Grid item xs={2}>
               <div style={{ textAlign: "center" }}>
                 <img
-                  src={browser}
+                  src="/images/browser.svg"
                   alt="svg"
                   style={{ width: 50, height: 50 }}
                 />
@@ -113,7 +109,7 @@ function Home() {
             <Grid item xs={2}>
               <div style={{ textAlign: "center" }}>
                 <img
-                  src={browser}
+                  src="/images/browser.svg"
                   alt="svg"
                   style={{ width: 50, height: 50 }}
                 />
@@ -125,7 +121,7 @@ function Home() {
             <Grid item xs={2}>
               <div style={{ textAlign: "center" }}>
                 <img
-                  src={browser}
+                  src="/images/browser.svg"
                   alt="svg"
                   style={{ width: 50, height: 50 }}
                 />
@@ -137,7 +133,7 @@ function Home() {
             <Grid item xs={2}>
               <div style={{ textAlign: "center" }}>
                 <img
-                  src={browser}
+                  src="/images/browser.svg"
                   alt="svg"
                   style={{ width: 50, height: 50 }}
                 />
@@ -149,7 +145,7 @@ function Home() {
             <Grid item xs={2}>
               <div style={{ textAlign: "center" }}>
                 <img
-                  src={browser}
+                  src="/images/browser.svg"
                   alt="svg"
                   style={{ width: 50, height: 50 }}
                 />
@@ -176,7 +172,7 @@ function Home() {
             <Grid item xs={3}>
               <div style={{ textAlign: "center", fontSize: 16 }}>
                 <img
-                  src={postjob}
+                  src="/images/postjob.jpg"
                   alt="svg"
                   style={{ width: 100, height: 100 }}
                 />
@@ -191,7 +187,11 @@ function Home() {
             </Grid>
             <Grid item xs={3}>
               <div style={{ textAlign: "center", fontSize: 16 }}>
-                <img src={find} alt="svg" style={{ width: 100, height: 100 }} />
+                <img
+                  src="/images/find.png"
+                  alt="svg"
+                  style={{ width: 100, height: 100 }}
+                />
                 <p style={{ fontSize: 17, fontWeight: 700, marginTop: 15 }}>
                   Freelancers come to you
                 </p>
@@ -204,7 +204,11 @@ function Home() {
             </Grid>
             <Grid item xs={3}>
               <div style={{ textAlign: "center", fontSize: 16 }}>
-                <img src={chat} alt="svg" style={{ width: 100, height: 100 }} />
+                <img
+                  src="/images/chat.png"
+                  alt="svg"
+                  style={{ width: 100, height: 100 }}
+                />
                 <p style={{ fontSize: 17, fontWeight: 700, marginTop: 15 }}>
                   Collaborate easily
                 </p>
@@ -216,7 +220,11 @@ function Home() {
             </Grid>
             <Grid item xs={3}>
               <div style={{ textAlign: "center", fontSize: 16 }}>
-                <img src={pay} alt="svg" style={{ width: 100, height: 100 }} />
+                <img
+                  src="/images/pay.png"
+                  alt="svg"
+                  style={{ width: 100, height: 100 }}
+                />
                 <p style={{ fontSize: 17, fontWeight: 700, marginTop: 15 }}>
                   Payment simplified
                 </p>
