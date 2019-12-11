@@ -20,13 +20,17 @@ const data = [
 
 function TagItem({ data }) {
   const [isOnEdit, setisOnEdit] = useState(false);
+  const [tagValue, settagValue] = useState(data.label);
 
   return (
-    <Paper className="df jsb ac p1">
+    <Paper className="df jcsb ac p1">
       <div className="df ac">
         <Label color="inherit" className="mr1" />
         {isOnEdit ? (
-          <TextField value={data.label} />
+          <TextField
+            value={tagValue}
+            onChange={event => settagValue(event.target.value)}
+          />
         ) : (
           <Typography>{data.label}</Typography>
         )}
@@ -71,7 +75,7 @@ class Tags extends Component {
 
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <div className="df jsb ac p1">
+            <div className="df jcsb ac p1">
               <div className="df ac f1">
                 <Label color="inherit" className="mr1" />
                 <TextField

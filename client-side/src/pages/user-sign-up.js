@@ -184,7 +184,7 @@ class UserSignUp extends Component {
                 onChange={this.changeState("email")}
                 className="mt1"
               />
-              <div className="df jsb">
+              <div className="df jcsb">
                 <TextField
                   label="Ngày sinh"
                   variant="outlined"
@@ -328,7 +328,7 @@ class UserSignUp extends Component {
                 onChange={this.changeState("email")}
                 className="mt1"
               />
-              <div className="df jsb">
+              <div className="df jcsb">
                 <TextField
                   label="Ngày sinh"
                   variant="outlined"

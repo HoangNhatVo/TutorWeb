@@ -7,11 +7,12 @@ import {
   Avatar,
   MenuItem,
   Menu,
-  ListItemIcon,
+  ListItemIcon
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import { signOut } from "../actions";
 import { AccountCircle, Person, CallMissedOutgoing } from "@material-ui/icons";
+import history from "../utils/history";
 
 class HeaderIn extends Component {
   constructor(props) {
@@ -58,7 +59,7 @@ class HeaderIn extends Component {
           open={Boolean(open)}
           onClose={this.handleCloseMenu}
         >
-          <MenuItem onClick={this.handleCloseMenu}>
+          <MenuItem onClick={() => history.push("/profile")}>
             <ListItemIcon>
               <Person fontSize="small" />
             </ListItemIcon>

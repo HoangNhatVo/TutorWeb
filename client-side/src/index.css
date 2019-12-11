@@ -27,11 +27,15 @@ code {
     display: flex;
 }
 
+.fdc {
+    flex-direction: column;
+}
+
 .jc {
     justify-content: center;
 }
 
-.jsb {
+.jcsb {
     justify-content: space-between;
 }
 

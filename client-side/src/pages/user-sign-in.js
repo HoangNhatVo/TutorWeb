@@ -105,7 +105,7 @@ class UserSignIn extends Component {
             Hoặc
           </Typography>
 
-          <div className="df jsb mb1">
+          <div className="df jcsb mb1">
             <Button
               variant="contained"
               className="mt1"
