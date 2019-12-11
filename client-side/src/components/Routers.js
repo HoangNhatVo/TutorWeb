@@ -10,7 +10,8 @@ import {
   Users,
   Tags,
   Home,
-  ListTeacher
+  ListTeacher,
+  Detailteacher
 } from "../pages";
 import { Router, Switch, Route } from "react-router-dom";
 import { withAuth } from "../utils";
