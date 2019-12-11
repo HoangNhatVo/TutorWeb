@@ -9,6 +9,7 @@ import {
   TextField
 } from "@material-ui/core";
 import { Label, Edit, Delete, Clear, Check } from "@material-ui/icons";
+import { connect } from "react-redux";
 
 const data = [
   { value: "hello", label: "Xin chao" },
@@ -54,7 +55,16 @@ function TagItem({ data }) {
 }
 
 class Tags extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      newTagValue: ""
+    };
+  }
+
   render() {
+    const { newTagValue } = this.state;
+
     return (
       <LayoutAdmin>
         <BreadCrums navs={[{ text: "Tag kỹ năng" }]} />
@@ -67,7 +77,10 @@ class Tags extends Component {
                 <TextField
                   fullWidth
                   placeholder="Nhập tên tag mới..."
-                  value={""}
+                  onChange={event =>
+                    this.setState({ newTagValue: event.target.value })
+                  }
+                  value={newTagValue}
                 />
               </div>
               <IconButton>
@@ -86,4 +99,11 @@ class Tags extends Component {
     );
   }
 }
-export default Tags;
+
+export default connect(
+  ({ admin }) => ({
+    isLoadingTags: admin.tags.isOk,
+    tags: admin.tags.tags
+  }),
+  {}
+)(Tags);

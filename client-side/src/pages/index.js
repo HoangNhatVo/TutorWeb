@@ -9,11 +9,13 @@ import Tags from "./admin/tags";
 import AdminSignIn from "./admin/sign-in";
 import Verify from "./verify";
 import Home from "./home";
+import ListTeacher from "./list-teacher";
 
 export {
   UserSignUp,
   AdminSignIn,
   UserSignIn,
+  ListTeacher,
   TeacherHome,
   StudentHome,
   Moderators,

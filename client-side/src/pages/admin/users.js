@@ -13,46 +13,46 @@ class Users extends Component {
 
   render() {
     const { users, isLoadingUsers } = this.props;
-    if (isLoadingUsers) return <div>Loading...</div>;
 
     return (
       <LayoutAdmin>
         <BreadCrums navs={[{ text: "Người dùng" }]} />
 
-        <MaterialTable
-          title=""
-          columns={[
-            {
-              title: "Avatar",
-              field: "avatar",
-              render: rowData => (
-                <Avatar
-                  src={rowData.avatar}
-                  name={rowData.hoten}
-                  alt={rowData.hoten}
-                />
-              )
-            },
-            { title: "Tên", field: "hoten" },
-            {
-              title: "Năm sinh",
-              field: "birthday",
-              type: "numeric",
-              render: rowData => moment(rowData.birthday).format("YYYY")
-            },
-            {
-              title: "Giới tính",
-              field: "gioitinh"
-            },
-            {
-              title: "Vai trò",
-              field: "vaitro",
-              lookup: { 1: "Học sinh", 2: "Gia sư", 3: "Admin" }
-            }
-          ]}
-          data={users}
-          onRowClick={(event, selectedRow) => {}}
-        />
+        {isLoadingUsers ? (
+          <div>Đang tải...</div>
+        ) : (
+          <MaterialTable
+            title=""
+            columns={[
+              {
+                title: "Avatar",
+                field: "avatar",
+                render: rowData => (
+                  <Avatar
+                    src={rowData.avatar}
+                    name={rowData.hoten}
+                    alt={rowData.hoten}
+                  />
+                )
+              },
+              { title: "Tên", field: "hoten" },
+              {
+                title: "Năm sinh",
+                field: "birthday",
+                type: "numeric",
+                render: rowData => moment(rowData.birthday).format("YYYY")
+              },
+              { title: "Giới tính", field: "gioitinh" },
+              {
+                title: "Vai trò",
+                field: "vaitro",
+                lookup: { 1: "Học sinh", 2: "Gia sư", 3: "Admin" }
+              }
+            ]}
+            data={users}
+            onRowClick={(event, selectedRow) => {}}
+          />
+        )}
       </LayoutAdmin>
     );
   }
