@@ -3,7 +3,9 @@ import UserSignIn from "./user-sign-in";
 import StudentHome from "./student-home";
 import TeacherHome from "./teacher-home";
 
-import AdminHome from "./admin/home";
+import Moderators from "./admin/moderators";
+import Users from "./admin/users";
+import Tags from "./admin/tags";
 import AdminSignIn from "./admin/sign-in";
 import Verify from "./verify";
 import Home from "./home";
@@ -13,11 +15,15 @@ export {
   UserSignUp,
   AdminSignIn,
   UserSignIn,
+  ListTeacher,
   TeacherHome,
   StudentHome,
-  AdminHome,
+  Moderators,
   Verify,
   Home,
   ListTeacher,
-  Detailteacher
+  Detailteacher,
+  Users,
+  Tags,
+  Home
 };

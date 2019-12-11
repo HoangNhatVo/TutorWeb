@@ -74,7 +74,12 @@ class UserSignIn extends Component {
             />
 
             {message && (
-              <Typography variant="body2" color="secondary" align="center">
+              <Typography
+                variant="body2"
+                color="secondary"
+                className="mt1"
+                align="center"
+              >
                 {message}
               </Typography>
             )}

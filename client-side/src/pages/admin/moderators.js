@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { LayoutAdmin } from "../../layouts";
 import { TableAccount } from "../../components/admin/TableAccount";
 
-class StudentHome extends Component {
+class Moderators extends Component {
   render() {
     return (
       <LayoutAdmin>
@@ -11,4 +11,4 @@ class StudentHome extends Component {
     );
   }
 }
-export default StudentHome;
+export default Moderators;

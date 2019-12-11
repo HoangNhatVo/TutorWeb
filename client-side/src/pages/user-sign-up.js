@@ -86,7 +86,8 @@ class UserSignUp extends Component {
       signUpStudent,
       signUpTeacher,
       isSigningUp,
-      specializes
+      specializes,
+      message
     } = this.props;
 
     return (
@@ -235,6 +236,18 @@ class UserSignUp extends Component {
                 onChange={this.changeState("city")}
                 className="mt1"
               />
+
+              {message && (
+                <Typography
+                  variant="body2"
+                  color="secondary"
+                  className="mt1"
+                  align="center"
+                >
+                  {message}
+                </Typography>
+              )}
+
               <Button
                 variant="contained"
                 color="primary"
@@ -419,6 +432,18 @@ class UserSignUp extends Component {
                 onChange={this.changeState("wage")}
                 className="mt1"
               />
+
+              {message && (
+                <Typography
+                  variant="body2"
+                  color="secondary"
+                  className="mt1"
+                  align="center"
+                >
+                  {message}
+                </Typography>
+              )}
+
               <Button
                 variant="contained"
                 color="primary"
