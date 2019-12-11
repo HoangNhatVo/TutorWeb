@@ -1,14 +1,20 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { Person } from "@material-ui/icons";
+import {
+  ListItemText,
+  ListItemIcon,
+  Typography,
+  ListItem,
+  List,
+  AppBar,
+  Toolbar,
+  Drawer
+} from "@material-ui/core";
+import {
+  StarBorder,
+  PersonOutlineOutlined,
+  GroupOutlined
+} from "@material-ui/icons";
 
 const drawerWidth = 240;
 
@@ -29,7 +35,8 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
+    marginTop: 60
   },
   toolbar: theme.mixins.toolbar
 }));
@@ -57,7 +64,11 @@ export default function LayoutAdmin(props) {
       >
         <div className={classes.toolbar} />
         <List>
-          {[{ icon: <Person />, text: "Thành viên" }].map(tab => (
+          {[
+            { icon: <PersonOutlineOutlined />, text: "Thành viên" },
+            { icon: <GroupOutlined />, text: "Người dùng" },
+            { icon: <StarBorder />, text: "Tag kỹ năng" }
+          ].map(tab => (
             <ListItem button key={tab.text}>
               <ListItemIcon>{tab.icon}</ListItemIcon>
               <ListItemText primary={tab.text} />
@@ -65,10 +76,7 @@ export default function LayoutAdmin(props) {
           ))}
         </List>
       </Drawer>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        {props.children}
-      </main>
+      <main className={classes.content}>{props.children}</main>
     </div>
   );
 }

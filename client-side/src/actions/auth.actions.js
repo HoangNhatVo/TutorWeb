@@ -1,5 +1,7 @@
 import * as types from "../types";
 import api from "../utils/axios";
+import cookies from "../utils/cookies";
+import history from "../utils/history";
 
 const isSigningUp = value => ({
   type: types.SIGNING_UP,
@@ -19,6 +21,11 @@ const isSigningIn = value => ({
 const signInResponse = message => ({
   type: types.SIGN_IN_RESPONSE,
   payload: message
+});
+
+const signInSuccessfully = data => ({
+  type: types.SIGN_IN_SUCCESSFULLY,
+  payload: data
 });
 
 export const signUpStudent = (
@@ -93,7 +100,29 @@ export const signIn = (username, password) => async dispatch => {
     password
   });
 
-  console.log(response);
   dispatch(isSigningIn(false));
-  dispatch(signInResponse(response && response.data));
+
+  if (response) {
+    if (typeof response.data === "string")
+      dispatch(signInResponse(response.data));
+    //success
+    else {
+      const userData = response.data[0];
+      dispatch(signInSuccessfully(userData));
+      cookies.set("token", userData.chuoixacthuc);
+      cookies.set("role", userData.vaitro);
+
+      const role = userData.vaitro;
+      if (role === 1) history.push("/student");
+      else if (role === 2) history.push("/teacher");
+      else if (role === 3) history.push("/admin/moderators");
+    }
+  }
+};
+
+export const signOut = () => async dispatch => {
+  dispatch(signInSuccessfully(null));
+  cookies.remove("token");
+  cookies.remove("role");
+  history.push("/sign-in");
 };
