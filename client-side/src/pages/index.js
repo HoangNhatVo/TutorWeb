@@ -7,7 +7,8 @@ import AdminHome from "./admin/home";
 import AdminSignIn from "./admin/sign-in";
 import Verify from "./verify";
 import Home from "./home";
-import ListTeacher from "./list-teacher"
+import ListTeacher from "./list-teacher";
+import Detailteacher from "./detail-teacher";
 export {
   UserSignUp,
   AdminSignIn,
@@ -17,5 +18,6 @@ export {
   AdminHome,
   Verify,
   Home,
-  ListTeacher
+  ListTeacher,
+  Detailteacher
 };

@@ -8,7 +8,8 @@ import {
   AdminSignIn,
   Verify,
   Home,
-  ListTeacher
+  ListTeacher,
+  Detailteacher
 } from "../pages";
 import { Router, Switch, Route } from "react-router-dom";
 import { withAuth } from "../utils";
@@ -23,7 +24,7 @@ class Routers extends Component {
           <Route path="/sign-up" component={UserSignUp} />
           <Route path="/verify/:token" component={Verify} />
           <Route path="/sign-in" component={UserSignIn} />
-          <Route path="/" component={TeacherHome} />
+          <Route path="/" component={Detailteacher} />
           <Route path="/list-teacher" component={ListTeacher} />
           <Route path="/student" component={withAuth(StudentHome)} />
           <Route path="/admin" component={withAuth(AdminHome)} />
