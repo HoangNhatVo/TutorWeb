@@ -25,7 +25,7 @@ export {
   StudentHome,
   Moderators,
   Verify,
+  Home,
   Users,
-  Tags,
-  Home
+  Tags
 };

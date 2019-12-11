@@ -1,78 +1,20 @@
 import React, { Component } from "react";
 import { LayoutUser } from "../layouts";
-import Avatar from "react-avatar-edit";
-import {
-  Typography,
-  Paper,
-  Grid,
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  OutlinedInput,
-  Chip,
-  MenuItem
-} from "@material-ui/core";
-import "./style/teacher-home.css";
+import { Typography, Paper, Grid, Button, Chip } from "@material-ui/core";
+import { Rating } from "@material-ui/lab";
+import { color } from "../utils";
+import { Avatar } from "../components";
 
 const avatarDefault =
   "https://scontent.fsgn1-1.fna.fbcdn.net/v/t1.0-1/p100x100/67735731_499113454230617_7180310859275567104_n.jpg?_nc_cat=106&_nc_ohc=wfZV2GtbX2AAQm8sVDklsINg5iUsow-WVWd6c0Gpi1Xpr0n149MUjItfA&_nc_ht=scontent.fsgn1-1.fna&oh=5c9b9f5223c8b7808fc4bc4afe1e7004&oe=5E8832C5";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-};
-
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder"
-];
-
-class UserProfileEdit extends Component {
+class UserProfileShow extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      preview: null,
-      src: "",
-      isChangeAvatar: false,
-
-      fullname: "",
-      address: "",
-      tags: [],
-      description: ""
-    };
+    this.state = {};
   }
 
-  onCrop = preview => {
-    this.setState({ preview });
-  };
-
-  onClose = () => {
-    this.setState({ preview: null });
-  };
-
-  changeState = field => event => {
-    this.setState({ [field]: event.target.value });
-  };
-
   render() {
-    const { isChangeAvatar, description, fullname, tags, address } = this.state;
-
     return (
       <LayoutUser>
         <Grid container spacing={2} className="mt2">
@@ -86,15 +28,6 @@ class UserProfileEdit extends Component {
               }}
               elevation={2}
             >
-              {isChangeAvatar && (
-                <Avatar
-                  width={200}
-                  height={200}
-                  onCrop={this.onCrop}
-                  onClose={this.onClose}
-                  src={this.state.src}
-                />
-              )}
               <img
                 src={this.state.preview || avatarDefault}
                 alt="Avatar"
@@ -107,11 +40,6 @@ class UserProfileEdit extends Component {
                   objectFit: "cover",
                   cursor: "pointer"
                 }}
-                onClick={() =>
-                  this.setState(prevState => ({
-                    isChangeAvatar: !prevState.isChangeAvatar
-                  }))
-                }
               />
               <Typography
                 variant="h5"
@@ -132,7 +60,58 @@ class UserProfileEdit extends Component {
               >
                 Giáo viên
               </Typography>
+
+              <div
+                className="df mt1 jcsb ac"
+                style={{ padding: "0 2rem", width: "100%" }}
+              >
+                <div className="df fdc">
+                  <Typography
+                    variant="h3"
+                    component="p"
+                    style={{ fontWeight: 400, color: color.main }}
+                  >
+                    30
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    giờ dạy
+                  </Typography>
+                </div>
+                <div className="df fdc">
+                  <Typography
+                    variant="h3"
+                    component="p"
+                    style={{ fontWeight: 400, color: color.main }}
+                  >
+                    4
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    học sinh
+                  </Typography>
+                </div>
+                <div className="df fdc">
+                  <Typography
+                    variant="h3"
+                    component="p"
+                    style={{ fontWeight: 400, color: color.main }}
+                  >
+                    47
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    đánh giá
+                  </Typography>
+                </div>
+              </div>
             </Paper>
+            <Button
+              variant="contained"
+              color="primary"
+              className="mt1 p1"
+              fullWidth
+              // disabled={isSigningUp}
+            >
+              Đặt lịch
+            </Button>
           </Grid>
           <Grid item xs={8}>
             <Paper
@@ -147,28 +126,17 @@ class UserProfileEdit extends Component {
                 variant="body2"
                 className="mb1"
               >
-                Cá nhân
+                Một chút về bản thân
               </Typography>
-              <TextField
-                fullWidth
-                label="Giới thiệu bản thân"
-                variant="outlined"
-                multiline
-                rows={4}
-                rowsMax={4}
-                value={description}
-                onChange={this.changeState("description")}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                className="mt1"
-                size="small"
-                // fullWidth
-                // disabled={isSigningUp}
-              >
-                Cập nhật
-              </Button>
+              <Typography color="textSecondary" component="p" variant="body1">
+                Copywriter and professional translator (English to Arabic and
+                vice versa). Over the last fours years, I have provided great
+                content and translations for a large number of websites and
+                publishing houses. Copywriter and professional translator
+                (English to Arabic and vice versa). Over the last fours years, I
+                have provided great content and translations for a large number
+                of websites and publishing houses.
+              </Typography>
             </Paper>
 
             <Paper
@@ -186,31 +154,93 @@ class UserProfileEdit extends Component {
               >
                 Thông tin cơ bản
               </Typography>
-              <TextField
-                fullWidth
-                label="Họ tên"
-                variant="outlined"
-                value={fullname}
-                onChange={this.changeState("fullname")}
-              />
-              <TextField
-                fullWidth
-                label="Địa chỉ"
-                variant="outlined"
-                className="mt1"
-                value={address}
-                onChange={this.changeState("address")}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                className="mt1"
-                size="small"
-                // fullWidth
-                // disabled={isSigningUp}
-              >
-                Cập nhật
-              </Button>
+              <Grid container spacing={2}>
+                <Grid item style={{ alignSelf: "center" }} xs={2}>
+                  <Typography
+                    style={{ fontWeight: 400, color: "black" }}
+                    variant="body1"
+                  >
+                    Địa chỉ
+                  </Typography>
+                </Grid>
+                <Grid item style={{ alignSelf: "center" }} xs={10}>
+                  <Typography variant="body1" color="textSecondary">
+                    123 Hồ Chí Minh xyz
+                  </Typography>
+                </Grid>
+
+                <Grid item style={{ alignSelf: "center" }} xs={2}>
+                  <Typography
+                    style={{ fontWeight: 400, color: "black" }}
+                    variant="body1"
+                  >
+                    Email
+                  </Typography>
+                </Grid>
+                <Grid item style={{ alignSelf: "center" }} xs={10}>
+                  <Typography variant="body1" color="textSecondary">
+                    hoaloan@gmail.com
+                  </Typography>
+                </Grid>
+
+                <Grid item style={{ alignSelf: "center" }} xs={2}>
+                  <Typography
+                    style={{ fontWeight: 400, color: "black" }}
+                    variant="body1"
+                  >
+                    Điện thoại
+                  </Typography>
+                </Grid>
+                <Grid item style={{ alignSelf: "center" }} xs={10}>
+                  <Typography variant="body1" color="textSecondary">
+                    099329219
+                  </Typography>
+                </Grid>
+
+                <Grid item style={{ alignSelf: "center" }} xs={2}>
+                  <Typography
+                    style={{ fontWeight: 400, color: "black" }}
+                    variant="body1"
+                  >
+                    Chuyên ngành
+                  </Typography>
+                </Grid>
+                <Grid item style={{ alignSelf: "center" }} xs={10}>
+                  <Typography variant="body1" color="textSecondary">
+                    Công nghệ thông tin
+                  </Typography>
+                </Grid>
+
+                <Grid item style={{ alignSelf: "center" }} xs={2}>
+                  <Typography
+                    style={{ fontWeight: 400, color: "black" }}
+                    variant="body1"
+                  >
+                    Môn học
+                  </Typography>
+                </Grid>
+                <Grid item style={{ alignSelf: "center" }} xs={10}>
+                  <Typography variant="body1" color="textSecondary">
+                    Toán, lý, hóa
+                  </Typography>
+                </Grid>
+
+                <Grid item style={{ alignSelf: "center" }} xs={2}>
+                  <Typography
+                    style={{ fontWeight: 400, color: "black" }}
+                    variant="body1"
+                  >
+                    Kỹ năng
+                  </Typography>
+                </Grid>
+                <Grid item style={{ alignSelf: "center" }} xs={10}>
+                  <Typography variant="body1" color="textSecondary">
+                    {["Tin hoc", "photoshop"].map(tag => (
+                      <Chip className="mr1" key={tag} label={tag} />
+                    ))}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Paper>
 
             <Paper
@@ -226,49 +256,27 @@ class UserProfileEdit extends Component {
                 variant="body2"
                 className="mb1"
               >
-                Tag kỹ năng
+                Lịch sử dạy học
               </Typography>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel id="demo-mutiple-chip-label">
-                  Tags của bạn
-                </InputLabel>
-                <Select
-                  labelId="demo-mutiple-chip-label"
-                  id="demo-mutiple-chip"
-                  multiple
-                  value={tags}
-                  onChange={event => {
-                    this.setState({ tags: event.target.value });
-                  }}
-                  input={
-                    <OutlinedInput labelWidth={90} id="select-multiple-chip" />
-                  }
-                  renderValue={selected => (
-                    <div>
-                      {selected.map(value => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </div>
-                  )}
-                  MenuProps={MenuProps}
-                >
-                  {names.map(name => (
-                    <MenuItem key={name} value={name}>
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <Button
-                variant="contained"
-                color="primary"
-                className="mt1"
-                size="small"
-                // fullWidth
-                // disabled={isSigningUp}
-              >
-                Cập nhật
-              </Button>
+
+              {[1, 2, 3, 4, 5].map(list => (
+                <div className="df mb1">
+                  <Avatar src="" alt="" />
+                  <div className="f1 ml1">
+                    <Typography
+                      style={{ fontWeight: 400, color: "black" }}
+                      variant="body1"
+                      gutterBottom
+                    >
+                      Hoàng An Văn
+                    </Typography>
+                    <Typography color="textSecondary" variant="body2">
+                      Nhận xét: Rất tốt
+                    </Typography>
+                  </div>
+                  <Rating name="read-only" value={3} readOnly />
+                </div>
+              ))}
             </Paper>
           </Grid>
         </Grid>
@@ -276,4 +284,4 @@ class UserProfileEdit extends Component {
     );
   }
 }
-export default UserProfileEdit;
+export default UserProfileShow;
