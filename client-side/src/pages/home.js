@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { HeaderOut, Footer, Menu, Banner, TeacherCard } from "../components";
 import { Container, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
+import { getTeachers } from "../actions";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,44 +16,46 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary
   }
 }));
-function Home() {
+
+function Home({ teachers, getTeachers }) {
   const classes = useStyles();
+
+  useEffect(() => {
+    getTeachers();
+  }, []);
+
+  const { isLoading } = teachers;
+
   return (
     <div className="df fc" style={{ minHeight: "100vh" }}>
       <HeaderOut hasNoAccount hasAccount />
       <Menu />
       <Banner />
+
       <Container maxWidth="lg" className="df fc f1">
         <Typography
-          variant="h4"
-          className="mt2"
+          variant="h5"
+          className="mt2 mb2"
           align="center"
-          component="h4"
-          style={{ marginBottom: 20, fontWeight: 700 }}
+          component="h5"
+          style={{ fontWeight: 600 }}
         >
           Gia sư đáng tin cậy
         </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={3}>
-            <TeacherCard className={classes.paper} />
+
+        {isLoading ? (
+          <div>Đang tải...</div>
+        ) : (
+          <Grid container justify="center" spacing={2}>
+            {teachers.teachers.slice(0, 10).map((teacher, index) => (
+              <Grid key={index} item xs={3}>
+                <TeacherCard data={teacher} className={classes.paper} />
+              </Grid>
+            ))}
           </Grid>
-          <Grid item xs={3}>
-            <TeacherCard className={classes.paper} />
-          </Grid>
-          <Grid item xs={3}>
-            <TeacherCard className={classes.paper} />
-          </Grid>
-          <Grid item xs={3}>
-            <TeacherCard className={classes.paper} />
-          </Grid>
-          <Grid item xs={3}>
-            <TeacherCard className={classes.paper} />
-          </Grid>
-          <Grid item xs={3}>
-            <TeacherCard className={classes.paper} />
-          </Grid>
-        </Grid>
+        )}
       </Container>
+
       <div
         style={{
           backgroundColor: "#312d2d",
@@ -241,4 +245,10 @@ function Home() {
     </div>
   );
 }
-export default Home;
+
+export default connect(
+  ({ teacher }) => ({
+    teachers: teacher.teachers
+  }),
+  { getTeachers }
+)(Home);

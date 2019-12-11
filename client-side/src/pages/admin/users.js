@@ -5,6 +5,7 @@ import { BreadCrums, Avatar } from "../../components";
 import { getAllUsers } from "../../actions";
 import { connect } from "react-redux";
 import moment from "moment";
+import history from "../../utils/history";
 
 class Users extends Component {
   componentDidMount() {
@@ -50,7 +51,9 @@ class Users extends Component {
               }
             ]}
             data={users}
-            onRowClick={(event, selectedRow) => {}}
+            onRowClick={(event, selectedRow) =>
+              history.push(`/profile/${selectedRow.id}`)
+            }
           />
         )}
       </LayoutAdmin>
