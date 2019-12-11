@@ -1,0 +1,25 @@
+.form-item{
+    border-bottom: 1px solid #ccc;
+    padding:25px 10px;
+}
+.form-item .label {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.form-item .label h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+.form-item .label p{
+    font-size: 14px;
+}
+.form-item .item input {
+    padding:10px;
+    width: 250px;
+}
+.btn-submit{
+    padding: 30px 0;
+}
+.btn-submit button{
+    background-color: #efa434;
+}
