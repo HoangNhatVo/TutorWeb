@@ -30,16 +30,15 @@ class Routers extends Component {
 
           <Route path="/admin/moderators" component={withAuth(Moderators)} />
           <Route path="/admin/tags" component={withAuth(Tags)} />
-          <Route path="/admin/users" component={withAuth(Users)} />
+          {/* <Route path="/admin/users" component={withAuth(Users)} /> */}
+          <Route path="/admin/users" component={Users} />
 
           <Route path="/list-teacher" component={ListTeacher} />
           <Route path="/teacher" component={withAuth(TeacherHome)} />
+          <Route path="/student" component={withAuth(StudentHome)} />
 
-          {/* <Route path="/student" component={withAuth(StudentHome)} /> */}
-          <Route path="/student" component={StudentHome} />
-
-          <Route path="/profile/:id" component={UserProfileShow} />
-          <Route path="/profile" component={UserProfileEdit} />
+          <Route path="/profile/:id" component={withAuth(UserProfileShow)} />
+          <Route path="/profile" component={withAuth(UserProfileEdit)} />
           <Route path="/" component={Home} />
           <Route path="*">404 - Not Found!</Route>
         </Switch>

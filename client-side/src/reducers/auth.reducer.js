@@ -4,6 +4,7 @@ const initState = {
   signIn: { isSigningIn: false, message: "" },
   signUp: { isSigningUp: false, message: "" },
   userData: {
+    isGetting: false,
     hoten: "",
     chuoixacthuc: "",
     avatar: "",
@@ -50,6 +51,22 @@ export default (state = initState, { type, payload }) => {
         ...state,
         userData: {
           ...payload
+        }
+      };
+    case types.IS_GETTING_PROFILE:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          isGetting: true
+        }
+      };
+    case types.GET_PROFILE_SUCCESSFULLY:
+      return {
+        ...state,
+        userData: {
+          ...payload,
+          isGetting: false
         }
       };
     default:

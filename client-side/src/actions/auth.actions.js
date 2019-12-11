@@ -3,9 +3,8 @@ import api from "../utils/axios";
 import cookies from "../utils/cookies";
 import history from "../utils/history";
 
-const isSigningUp = value => ({
-  type: types.SIGNING_UP,
-  payload: value
+const isSigningUp = () => ({
+  type: types.SIGNING_UP
 });
 
 const signUpResponse = message => ({
@@ -13,9 +12,8 @@ const signUpResponse = message => ({
   payload: message
 });
 
-const isSigningIn = value => ({
-  type: types.SIGNING_IN,
-  payload: value
+const isSigningIn = () => ({
+  type: types.SIGNING_IN
 });
 
 const signInResponse = message => ({
@@ -25,6 +23,15 @@ const signInResponse = message => ({
 
 const signInSuccessfully = data => ({
   type: types.SIGN_IN_SUCCESSFULLY,
+  payload: data
+});
+
+const isGettingProfile = () => ({
+  type: types.IS_GETTING_PROFILE
+});
+
+const getProfileSuccessfully = data => ({
+  type: types.GET_PROFILE_SUCCESSFULLY,
   payload: data
 });
 
@@ -39,7 +46,7 @@ export const signUpStudent = (
   thanhpho,
   sdt
 ) => async dispatch => {
-  dispatch(isSigningUp(true));
+  dispatch(isSigningUp());
 
   const response = await api.post("/studentregister", {
     username,
@@ -52,7 +59,7 @@ export const signUpStudent = (
     thanhpho,
     sdt
   });
-  dispatch(isSigningUp(false));
+
   dispatch(signUpResponse(response && response.data));
 };
 
@@ -71,7 +78,7 @@ export const signUpTeacher = (
   chuyennganh,
   tienday
 ) => async dispatch => {
-  dispatch(isSigningUp(true));
+  dispatch(isSigningUp());
 
   const response = await api.post("/teacherregister", {
     username,
@@ -88,19 +95,17 @@ export const signUpTeacher = (
     chuyennganh,
     tienday
   });
-  dispatch(isSigningUp(false));
+
   dispatch(signUpResponse(response && response.data));
 };
 
 export const signIn = (username, password) => async dispatch => {
-  dispatch(isSigningIn(true));
+  dispatch(isSigningIn());
 
   const response = await api.post("/login", {
     username,
     password
   });
-
-  dispatch(isSigningIn(false));
 
   if (response) {
     if (typeof response.data === "string")
@@ -111,6 +116,7 @@ export const signIn = (username, password) => async dispatch => {
       dispatch(signInSuccessfully(userData));
       cookies.set("token", userData.chuoixacthuc);
       cookies.set("role", userData.vaitro);
+      cookies.set("id", userData.id);
 
       const role = userData.vaitro;
       if (role === 1) history.push("/student");
@@ -120,9 +126,26 @@ export const signIn = (username, password) => async dispatch => {
   }
 };
 
+export const getProfile = () => async dispatch => {
+  dispatch(isGettingProfile());
+
+  const response = await api.get(`/profile/${cookies.get("id")}`);
+
+  if (response) {
+    if (typeof response.data === "string")
+      dispatch(getProfileSuccessfully(response.data));
+    //success
+    else {
+      const userData = response.data;
+      dispatch(getProfileSuccessfully(userData));
+    }
+  }
+};
+
 export const signOut = () => async dispatch => {
   dispatch(signInSuccessfully(null));
   cookies.remove("token");
   cookies.remove("role");
+  cookies.remove("id");
   history.push("/sign-in");
 };

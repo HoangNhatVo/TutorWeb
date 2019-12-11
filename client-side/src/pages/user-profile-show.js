@@ -261,7 +261,7 @@ class UserProfileShow extends Component {
 
               {[1, 2, 3, 4, 5].map(list => (
                 <div className="df mb1">
-                  <Avatar src="" alt="" />
+                  <Avatar src={null} name="Hao" alt="" />
                   <div className="f1 ml1">
                     <Typography
                       style={{ fontWeight: 400, color: "black" }}

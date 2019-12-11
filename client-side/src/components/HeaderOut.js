@@ -7,10 +7,14 @@ import {
   Container
 } from "@material-ui/core";
 import history from "../utils/history";
+import cookies from "../utils/cookies";
+import HeaderUserProfile from "./HeaderUserProfile";
+import { connect } from "react-redux";
 
 class HeaderOut extends Component {
   render() {
-    const { hasAccount, hasNoAccount } = this.props;
+    const { hasAccount, hasNoAccount, isSignedIn } = this.props;
+
     return (
       <AppBar position="sticky">
         <Container maxWidth="lg">
@@ -20,34 +24,41 @@ class HeaderOut extends Component {
             <Typography variant="h6" className="f1">
               XTutor
             </Typography>
-            <div className="df ac">
-              <Typography variant="body2" className="f1">
-                Đã có tài khoản?
-              </Typography>
-              {hasAccount && (
-                <Button
-                  style={{ marginLeft: "1rem" }}
-                  color="inherit"
-                  onClick={() => history.push("/sign-in")}
-                >
-                  Đăng nhập
-                </Button>
-              )}
+            {isSignedIn ? (
+              <HeaderUserProfile />
+            ) : (
+              <div className="df ac">
+                <Typography variant="body2" className="f1">
+                  Đã có tài khoản?
+                </Typography>
+                {hasAccount && (
+                  <Button
+                    style={{ marginLeft: "1rem" }}
+                    color="inherit"
+                    onClick={() => history.push("/sign-in")}
+                  >
+                    Đăng nhập
+                  </Button>
+                )}
 
-              {hasNoAccount && (
-                <Button
-                  style={{ marginLeft: "1rem" }}
-                  color="inherit"
-                  onClick={() => history.push("/sign-up")}
-                >
-                  Đăng ký
-                </Button>
-              )}
-            </div>
+                {hasNoAccount && (
+                  <Button
+                    style={{ marginLeft: "1rem" }}
+                    color="inherit"
+                    onClick={() => history.push("/sign-up")}
+                  >
+                    Đăng ký
+                  </Button>
+                )}
+              </div>
+            )}
           </Toolbar>
         </Container>
       </AppBar>
     );
   }
 }
-export default HeaderOut;
+
+export default connect(({ auth }) => ({
+  isSignedIn: auth.userData.chuoixacthuc || cookies.get("token")
+}))(HeaderOut);
