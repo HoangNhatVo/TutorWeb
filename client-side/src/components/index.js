@@ -6,7 +6,7 @@ import BreadCrums from "./BreadCrums";
 
 import Menu from "./Menu";
 import Banner from "./Banner";
-import TeacherCard from "./TecherCard";
+import TeacherCard from "./TeacherCard";
 
 export * from "./common";
 export {

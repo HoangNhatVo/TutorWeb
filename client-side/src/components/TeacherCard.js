@@ -7,9 +7,11 @@ import {
   CardContent,
   CardActions,
   CardActionArea,
-  Card
+  Card,
+  Chip
 } from "@material-ui/core";
 import "./style/TeacherCard.css";
+import history from "../utils/history";
 
 const useStyles = makeStyles({
   card: {
@@ -17,12 +19,14 @@ const useStyles = makeStyles({
   }
 });
 
+const tags = ["photoshop", "HMVC", "Helloworld", "LyDaiCuong"];
+
 const avatarDefault =
   "https://scontent.fsgn1-1.fna.fbcdn.net/v/t1.0-1/p100x100/67735731_499113454230617_7180310859275567104_n.jpg?_nc_cat=106&_nc_ohc=wfZV2GtbX2AAQm8sVDklsINg5iUsow-WVWd6c0Gpi1Xpr0n149MUjItfA&_nc_ht=scontent.fsgn1-1.fna&oh=5c9b9f5223c8b7808fc4bc4afe1e7004&oe=5E8832C5";
 
-export default function TeacherCard({ data }) {
+function TeacherCard({ data }) {
   const classes = useStyles();
-  const { avatar, hoten, tiendaymotgio, thanhpho, diachi } = data;
+  const { id, avatar, hoten, tiendaymotgio, thanhpho, diachi } = data;
 
   return (
     <Card className={classes.card}>
@@ -35,15 +39,25 @@ export default function TeacherCard({ data }) {
           title="Contemplative Reptile"
         />
         <CardContent>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography gutterBottom variant="h5" component="h2">
+          <div className="df jcsb">
+            <Typography
+              gutterBottom
+              variant="body1"
+              style={{ fontWeight: 600 }}
+              component="p"
+            >
               {hoten}
             </Typography>
-            <Typography gutterBottom variant="h5" component="h2">
+            <Typography
+              gutterBottom
+              variant="body1"
+              style={{ color: "green" }}
+              component="p"
+            >
               {tiendaymotgio}VND/h
             </Typography>
           </div>
-          <Typography variant="h6" color="textSecondary" component="h4">
+          <Typography variant="body1" color="textSecondary" component="p">
             IT Consultant, DBA, Developer and
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
@@ -51,17 +65,28 @@ export default function TeacherCard({ data }) {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <div className="tag">
-        <span>PHP</span>
-        <span>Javascript</span>
-        <span>SQL</span>
-        <span>CSS</span>
+
+      <div
+        className="p1 df jcsb"
+        style={{ flexWrap: "wrap", height: 106, overflow: "hidden" }}
+      >
+        {tags.map(tag => (
+          <Chip style={{ margin: ".25rem 0" }} label={tag} key={tag} />
+        ))}
       </div>
+
       <CardActions>
-        <Button size="small" variant="outlined" color="primary">
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() => history.push(`profile/${id}`)}
+          color="primary"
+        >
           Xem chi tiết
         </Button>
       </CardActions>
     </Card>
   );
 }
+
+export default TeacherCard;

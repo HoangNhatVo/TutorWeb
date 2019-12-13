@@ -35,6 +35,24 @@ const getProfileSuccessfully = data => ({
   payload: data
 });
 
+const updatingDescription = () => ({
+  type: types.UPDATING_DESCTIPTION
+});
+
+const updateDescriptionResponse = data => ({
+  type: types.UPDATE_DESCTIPTION_RESPONSE,
+  payload: data
+});
+
+const updatingBasicInfo = () => ({
+  type: types.UPDATING_BASIC_INFO
+});
+
+const updateBasicInfoResponse = (name, address) => ({
+  type: types.UPDATE_BASIC_INFO_RESPONSE,
+  payload: { hoten: name, diachi: address }
+});
+
 export const signUpStudent = (
   username,
   password,
@@ -126,7 +144,7 @@ export const signIn = (username, password) => async dispatch => {
   }
 };
 
-export const getProfile = () => async dispatch => {
+export const getProfile = cb => async dispatch => {
   dispatch(isGettingProfile());
 
   const response = await api.get(`/profile/${cookies.get("id")}`);
@@ -140,6 +158,31 @@ export const getProfile = () => async dispatch => {
       dispatch(getProfileSuccessfully(userData));
     }
   }
+  if (cb) cb();
+};
+
+export const updateDescription = content => async dispatch => {
+  dispatch(updatingDescription());
+
+  const response = await api.post("/user/updateIntroduce", {
+    iduser: cookies.get("id"),
+    content
+  });
+
+  if (response && response.data === "Cập nhật thành công")
+    dispatch(updateDescriptionResponse(content));
+};
+
+export const updateBasicInfo = (name, address) => async dispatch => {
+  dispatch(updatingBasicInfo());
+
+  const response = await api.post("/user/updateInfor", {
+    iduser: cookies.get("id"),
+    name,
+    address
+  });
+  if (response && response.data === "Cập nhật thành công")
+    dispatch(updateBasicInfoResponse(name, address));
 };
 
 export const signOut = () => async dispatch => {

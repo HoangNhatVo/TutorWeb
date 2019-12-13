@@ -15,6 +15,8 @@ import {
   MenuItem
 } from "@material-ui/core";
 import "./style/teacher-home.css";
+import { connect } from "react-redux";
+import { getProfile, updateDescription, updateBasicInfo } from "../actions";
 
 const avatarDefault =
   "https://scontent.fsgn1-1.fna.fbcdn.net/v/t1.0-1/p100x100/67735731_499113454230617_7180310859275567104_n.jpg?_nc_cat=106&_nc_ohc=wfZV2GtbX2AAQm8sVDklsINg5iUsow-WVWd6c0Gpi1Xpr0n149MUjItfA&_nc_ht=scontent.fsgn1-1.fna&oh=5c9b9f5223c8b7808fc4bc4afe1e7004&oe=5E8832C5";
@@ -46,16 +48,30 @@ const names = [
 class UserProfileEdit extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       preview: null,
       src: "",
       isChangeAvatar: false,
 
-      fullname: "",
-      address: "",
+      fullname: (this.props.userData && this.props.userData.hoten) || "",
+      address: (this.props.userData && this.props.userData.diachi) || "",
       tags: [],
-      description: ""
+      description:
+        (this.props.userData && this.props.userData.baigioithieu) || ""
     };
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { userData } = newProps;
+
+    if (userData.chuoixacthuc) {
+      this.setState({
+        fullname: userData.hoten,
+        address: userData.diachi,
+        description: userData.baigioithieu
+      });
+    }
   }
 
   onCrop = preview => {
@@ -72,6 +88,7 @@ class UserProfileEdit extends Component {
 
   render() {
     const { isChangeAvatar, description, fullname, tags, address } = this.state;
+    const { userData, updateDescription, updateBasicInfo } = this.props;
 
     return (
       <LayoutUser>
@@ -164,8 +181,8 @@ class UserProfileEdit extends Component {
                 color="primary"
                 className="mt1"
                 size="small"
-                // fullWidth
-                // disabled={isSigningUp}
+                onClick={() => updateDescription(description)}
+                disabled={userData && userData.updatingDescription}
               >
                 Cập nhật
               </Button>
@@ -206,8 +223,8 @@ class UserProfileEdit extends Component {
                 color="primary"
                 className="mt1"
                 size="small"
-                // fullWidth
-                // disabled={isSigningUp}
+                disabled={userData && userData.updatingBasicInfo}
+                onClick={() => updateBasicInfo(fullname, address)}
               >
                 Cập nhật
               </Button>
@@ -264,7 +281,7 @@ class UserProfileEdit extends Component {
                 color="primary"
                 className="mt1"
                 size="small"
-                // fullWidth
+
                 // disabled={isSigningUp}
               >
                 Cập nhật
@@ -276,4 +293,10 @@ class UserProfileEdit extends Component {
     );
   }
 }
-export default UserProfileEdit;
+
+export default connect(
+  ({ auth }) => ({
+    userData: auth.userData
+  }),
+  { getProfile, updateDescription, updateBasicInfo }
+)(UserProfileEdit);

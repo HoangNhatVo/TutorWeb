@@ -8,7 +8,10 @@ const initState = {
     hoten: "",
     chuoixacthuc: "",
     avatar: "",
-    vaitro: ""
+    vaitro: "",
+    updatingDescription: false,
+    updatingBasicInfo: false,
+    updatingTags: false
   }
 };
 
@@ -67,6 +70,40 @@ export default (state = initState, { type, payload }) => {
         userData: {
           ...payload,
           isGetting: false
+        }
+      };
+    case types.UPDATING_DESCTIPTION:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          updatingDescription: true
+        }
+      };
+    case types.UPDATE_DESCTIPTION_RESPONSE:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          updatingDescription: false,
+          baigioithieu: payload
+        }
+      };
+    case types.UPDATING_BASIC_INFO:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          updatingBasicInfo: true
+        }
+      };
+    case types.UPDATE_BASIC_INFO_RESPONSE:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          updatingBasicInfo: false,
+          ...payload
         }
       };
     default:
