@@ -51,7 +51,7 @@ router.post('/updateIntroduce', async function(req,res,next){
   try{
     var iduser = req.body.iduser
     var content = req.body.content
-    await accountModel.updateTagname(iduser,content)
+    await accountModel.updateIntroduce(iduser,content)
     res.send("Cập nhật thành công")
   }
   catch(err){
