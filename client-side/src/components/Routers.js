@@ -38,7 +38,7 @@ class Routers extends Component {
           <Route path="/student" component={withAuth(StudentHome)} />
 
           <Route path="/profile/:id" component={withAuth(UserProfileShow)} />
-          <Route path="/profile" component={withAuth(UserProfileEdit)} />
+          <Route path="/profile" exact component={withAuth(UserProfileEdit)} />
           <Route path="/" component={Home} />
           <Route path="*">404 - Not Found!</Route>
         </Switch>

@@ -5,6 +5,11 @@ const initState = {
     isOk: false,
     specializes: [],
     message: ""
+  },
+  tags: {
+    isOk: false,
+    tags: [],
+    message: ""
   }
 };
 
@@ -16,6 +21,15 @@ export default (state = initState, { type, payload }) => {
         specializes: {
           isOk: true,
           specializes: payload.specializes,
+          message: payload.message
+        }
+      };
+    case types.GET_TAGS_OK:
+      return {
+        ...state,
+        tags: {
+          isOk: true,
+          tags: payload.tags,
           message: payload.message
         }
       };

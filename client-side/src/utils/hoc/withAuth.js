@@ -2,14 +2,13 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import cookies from "../cookies";
-import { getProfile } from "../../actions";
+import { getProfile, getTags } from "../../actions";
 
 export function withAuth(ComposedComponent) {
   class WrappedComponent extends React.Component {
     componentDidMount() {
-      if (!this.props.token) {
-        this.props.getProfile();
-      }
+      if (!this.props.token) this.props.getProfile();
+      if (!this.props.isTagsGotten) this.props.getTags();
     }
 
     render() {
@@ -21,10 +20,11 @@ export function withAuth(ComposedComponent) {
   }
 
   return connect(
-    ({ auth }) => ({
+    ({ auth, utils }) => ({
       isSignedIn: auth.userData.chuoixacthuc || cookies.get("token"),
-      token: auth.userData.chuoixacthuc
+      token: auth.userData.chuoixacthuc,
+      isTagsGotten: utils.tags.isOk
     }),
-    { getProfile }
+    { getProfile, getTags }
   )(WrappedComponent);
 }

@@ -154,7 +154,7 @@ export const signIn = (username, password) => async dispatch => {
   }
 };
 
-export const getProfile = cb => async dispatch => {
+export const getProfile = () => async dispatch => {
   dispatch(isGettingProfile());
 
   const response = await api.get(`/profile/${cookies.get("id")}`);
@@ -168,7 +168,6 @@ export const getProfile = cb => async dispatch => {
       dispatch(getProfileSuccessfully(userData));
     }
   }
-  if (cb) cb();
 };
 
 export const updateDescription = content => async dispatch => {
@@ -207,9 +206,9 @@ export const updateAvatar = base64 => dispatch => {
         .child(`${cookies.get("id")}`)
         .getDownloadURL()
         .then(async url => {
-          api.post("/user/updateIntroduce", {
+          api.post("/user/updateAva", {
             iduser: cookies.get("id"),
-            url
+            ava: url
           });
           dispatch(updateAvatarResponse(url));
         });

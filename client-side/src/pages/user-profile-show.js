@@ -2,11 +2,29 @@ import React, { Component } from "react";
 import { LayoutUser } from "../layouts";
 import { Typography, Paper, Grid, Button, Chip } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
-import { color } from "../utils";
+import { color, getRole, getSpecialize } from "../utils";
+import { withRouter } from "react-router-dom";
 import { Avatar } from "../components";
+import moment from "moment";
+import { connect } from "react-redux";
+import { getSpecializes, getUser } from "../actions";
 
-const avatarDefault =
-  "https://scontent.fsgn1-1.fna.fbcdn.net/v/t1.0-1/p100x100/67735731_499113454230617_7180310859275567104_n.jpg?_nc_cat=106&_nc_ohc=wfZV2GtbX2AAQm8sVDklsINg5iUsow-WVWd6c0Gpi1Xpr0n149MUjItfA&_nc_ht=scontent.fsgn1-1.fna&oh=5c9b9f5223c8b7808fc4bc4afe1e7004&oe=5E8832C5";
+function ItemInfo({ title, value }) {
+  return (
+    <>
+      <Grid item style={{ alignSelf: "center" }} xs={2}>
+        <Typography style={{ fontWeight: 400, color: "black" }} variant="body1">
+          {title}
+        </Typography>
+      </Grid>
+      <Grid item style={{ alignSelf: "center" }} xs={10}>
+        <Typography variant="body1" color="textSecondary">
+          {value}
+        </Typography>
+      </Grid>
+    </>
+  );
+}
 
 class UserProfileShow extends Component {
   constructor(props) {
@@ -14,7 +32,34 @@ class UserProfileShow extends Component {
     this.state = {};
   }
 
+  componentDidMount() {
+    const id = this.props.match.params.id;
+    const { currentUser } = this.props;
+
+    if (!this.props.gotSpecializes) this.props.getSpecializes();
+    if (!currentUser.id || currentUser.id !== id) this.props.getUser(id);
+  }
+
   render() {
+    const { currentUser, specializes } = this.props;
+
+    if (!currentUser) return <div />;
+    const {
+      diachi,
+      thanhpho,
+      baigioithieu,
+      avatar,
+      hoten,
+      vaitro,
+      email,
+      ngaysinh,
+      gioitinh,
+      sdt,
+      tiendaymotgio,
+      monhoc,
+      chuyennganh
+    } = currentUser;
+
     return (
       <LayoutUser>
         <Grid container spacing={2} className="mt2">
@@ -28,18 +73,11 @@ class UserProfileShow extends Component {
               }}
               elevation={2}
             >
-              <img
-                src={this.state.preview || avatarDefault}
-                alt="Avatar"
+              <Avatar
+                src={avatar}
+                alt="Ảnh đại diện"
+                style={{ width: 80, height: 80 }}
                 className="mt1"
-                style={{
-                  border: "1px solid gray",
-                  borderRadius: "50%",
-                  width: 120,
-                  height: 120,
-                  objectFit: "cover",
-                  cursor: "pointer"
-                }}
               />
               <Typography
                 variant="h5"
@@ -48,7 +86,7 @@ class UserProfileShow extends Component {
                 style={{ fontWeight: 600 }}
                 align="center"
               >
-                Lê Văn Tư
+                {hoten}
               </Typography>
 
               <Typography
@@ -58,7 +96,7 @@ class UserProfileShow extends Component {
                 color="textSecondary"
                 align="center"
               >
-                Giáo viên
+                {getRole(vaitro)}
               </Typography>
 
               <div
@@ -129,13 +167,7 @@ class UserProfileShow extends Component {
                 Một chút về bản thân
               </Typography>
               <Typography color="textSecondary" component="p" variant="body1">
-                Copywriter and professional translator (English to Arabic and
-                vice versa). Over the last fours years, I have provided great
-                content and translations for a large number of websites and
-                publishing houses. Copywriter and professional translator
-                (English to Arabic and vice versa). Over the last fours years, I
-                have provided great content and translations for a large number
-                of websites and publishing houses.
+                {baigioithieu || "Chưa cập nhật bài giới thiệu..."}
               </Typography>
             </Paper>
 
@@ -155,75 +187,24 @@ class UserProfileShow extends Component {
                 Thông tin cơ bản
               </Typography>
               <Grid container spacing={2}>
-                <Grid item style={{ alignSelf: "center" }} xs={2}>
-                  <Typography
-                    style={{ fontWeight: 400, color: "black" }}
-                    variant="body1"
-                  >
-                    Địa chỉ
-                  </Typography>
-                </Grid>
-                <Grid item style={{ alignSelf: "center" }} xs={10}>
-                  <Typography variant="body1" color="textSecondary">
-                    123 Hồ Chí Minh xyz
-                  </Typography>
-                </Grid>
+                <ItemInfo title="Giới tính" value={gioitinh} />
+                <ItemInfo
+                  title="Ngày sinh"
+                  value={moment(ngaysinh).format("DD/MM/YYYY")}
+                />
 
-                <Grid item style={{ alignSelf: "center" }} xs={2}>
-                  <Typography
-                    style={{ fontWeight: 400, color: "black" }}
-                    variant="body1"
-                  >
-                    Email
-                  </Typography>
-                </Grid>
-                <Grid item style={{ alignSelf: "center" }} xs={10}>
-                  <Typography variant="body1" color="textSecondary">
-                    hoaloan@gmail.com
-                  </Typography>
-                </Grid>
-
-                <Grid item style={{ alignSelf: "center" }} xs={2}>
-                  <Typography
-                    style={{ fontWeight: 400, color: "black" }}
-                    variant="body1"
-                  >
-                    Điện thoại
-                  </Typography>
-                </Grid>
-                <Grid item style={{ alignSelf: "center" }} xs={10}>
-                  <Typography variant="body1" color="textSecondary">
-                    099329219
-                  </Typography>
-                </Grid>
-
-                <Grid item style={{ alignSelf: "center" }} xs={2}>
-                  <Typography
-                    style={{ fontWeight: 400, color: "black" }}
-                    variant="body1"
-                  >
-                    Chuyên ngành
-                  </Typography>
-                </Grid>
-                <Grid item style={{ alignSelf: "center" }} xs={10}>
-                  <Typography variant="body1" color="textSecondary">
-                    Công nghệ thông tin
-                  </Typography>
-                </Grid>
-
-                <Grid item style={{ alignSelf: "center" }} xs={2}>
-                  <Typography
-                    style={{ fontWeight: 400, color: "black" }}
-                    variant="body1"
-                  >
-                    Môn học
-                  </Typography>
-                </Grid>
-                <Grid item style={{ alignSelf: "center" }} xs={10}>
-                  <Typography variant="body1" color="textSecondary">
-                    Toán, lý, hóa
-                  </Typography>
-                </Grid>
+                <ItemInfo title="Địa chỉ" value={`${diachi} - ${thanhpho}`} />
+                <ItemInfo title="Email" value={email} />
+                <ItemInfo title="Điện thoại" value={sdt} />
+                <ItemInfo
+                  title="Chuyên ngành"
+                  value={getSpecialize(specializes, chuyennganh)}
+                />
+                <ItemInfo
+                  title="Tiền dạy một giờ"
+                  value={`${tiendaymotgio}VND/h`}
+                />
+                <ItemInfo title="Môn học" value={monhoc} />
 
                 <Grid item style={{ alignSelf: "center" }} xs={2}>
                   <Typography
@@ -234,11 +215,11 @@ class UserProfileShow extends Component {
                   </Typography>
                 </Grid>
                 <Grid item style={{ alignSelf: "center" }} xs={10}>
-                  <Typography variant="body1" color="textSecondary">
+                  <div className="df">
                     {["Tin hoc", "photoshop"].map(tag => (
                       <Chip className="mr1" key={tag} label={tag} />
                     ))}
-                  </Typography>
+                  </div>
                 </Grid>
               </Grid>
             </Paper>
@@ -260,7 +241,7 @@ class UserProfileShow extends Component {
               </Typography>
 
               {[1, 2, 3, 4, 5].map(list => (
-                <div className="df mb1">
+                <div className="df mb1" key={list}>
                   <Avatar src={null} name="Hao" alt="" />
                   <div className="f1 ml1">
                     <Typography
@@ -284,4 +265,14 @@ class UserProfileShow extends Component {
     );
   }
 }
-export default UserProfileShow;
+
+export default withRouter(
+  connect(
+    ({ utils, admin }) => ({
+      specializes: utils.specializes && utils.specializes.specializes,
+      gotSpecializes: utils.specializes && utils.specializes.isOk,
+      currentUser: admin.currentUser && admin.currentUser.userData
+    }),
+    { getSpecializes, getUser }
+  )(UserProfileShow)
+);

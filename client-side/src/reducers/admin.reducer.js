@@ -6,6 +6,10 @@ const initState = {
     users: [],
     message: ""
   },
+  currentUser: {
+    isLoading: false,
+    userData: {}
+  },
   tags: {
     isLoading: false,
     tags: [],
@@ -15,6 +19,23 @@ const initState = {
 
 export default (state = initState, { type, payload }) => {
   switch (type) {
+    case types.IS_GETTING_USER:
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          isLoading: true
+        }
+      };
+    case types.GET_USER_SUCCESSFULLY:
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          isLoading: false,
+          userData: payload
+        }
+      };
     case types.IS_GETTING_USERS:
       return {
         ...state,

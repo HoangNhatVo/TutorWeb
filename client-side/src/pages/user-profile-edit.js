@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { LayoutUser } from "../layouts";
-import Avatar from "react-avatar-edit";
+import MyAvatar from "react-avatar-edit";
 import {
   Typography,
   Paper,
@@ -12,19 +12,13 @@ import {
   Select,
   OutlinedInput,
   Chip,
-  MenuItem
+  MenuItem,
+  Avatar
 } from "@material-ui/core";
 import "./style/teacher-home.css";
 import { connect } from "react-redux";
-import {
-  getProfile,
-  updateDescription,
-  updateBasicInfo,
-  updateAvatar
-} from "../actions";
-
-const avatarDefault =
-  "https://scontent.fsgn1-1.fna.fbcdn.net/v/t1.0-1/p100x100/67735731_499113454230617_7180310859275567104_n.jpg?_nc_cat=106&_nc_ohc=wfZV2GtbX2AAQm8sVDklsINg5iUsow-WVWd6c0Gpi1Xpr0n149MUjItfA&_nc_ht=scontent.fsgn1-1.fna&oh=5c9b9f5223c8b7808fc4bc4afe1e7004&oe=5E8832C5";
+import { updateDescription, updateBasicInfo, updateAvatar } from "../actions";
+import { getRole } from "../utils";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -37,18 +31,14 @@ const MenuProps = {
   }
 };
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder"
-];
+const getTagName = (tags, id) => {
+  let ret = "";
+  tags.forEach(item => {
+    if (id === item.id) ret = item.tentag;
+  });
+
+  return ret;
+};
 
 class UserProfileEdit extends Component {
   constructor(props) {
@@ -61,7 +51,7 @@ class UserProfileEdit extends Component {
 
       fullname: (this.props.userData && this.props.userData.hoten) || "",
       address: (this.props.userData && this.props.userData.diachi) || "",
-      tags: [],
+      userTags: [],
       description:
         (this.props.userData && this.props.userData.baigioithieu) || ""
     };
@@ -96,7 +86,7 @@ class UserProfileEdit extends Component {
       isChangeAvatar,
       description,
       fullname,
-      tags,
+      userTags,
       address,
       preview
     } = this.state;
@@ -105,8 +95,11 @@ class UserProfileEdit extends Component {
       userData,
       updateDescription,
       updateBasicInfo,
-      updateAvatar
+      updateAvatar,
+      tags
     } = this.props;
+
+    if (!userData) return <div />;
 
     return (
       <LayoutUser>
@@ -123,7 +116,7 @@ class UserProfileEdit extends Component {
             >
               {isChangeAvatar && (
                 <div className="df fdc ac">
-                  <Avatar
+                  <MyAvatar
                     width={200}
                     height={200}
                     onCrop={this.onCrop}
@@ -135,7 +128,7 @@ class UserProfileEdit extends Component {
                     color="primary"
                     className="mt1"
                     size="small"
-                    disabled={userData && userData.updatingAvatar}
+                    disabled={userData.updatingAvatar}
                     onClick={() => {
                       if (preview) updateAvatar(preview);
                     }}
@@ -144,18 +137,11 @@ class UserProfileEdit extends Component {
                   </Button>
                 </div>
               )}
-              <img
-                src={preview || avatarDefault}
-                alt="Avatar"
+              <Avatar
+                src={preview || userData.avatar}
+                alt="Ảnh đại diện"
+                style={{ width: 80, height: 80 }}
                 className="mt1"
-                style={{
-                  border: "1px solid gray",
-                  borderRadius: "50%",
-                  width: 120,
-                  height: 120,
-                  objectFit: "cover",
-                  cursor: "pointer"
-                }}
                 onClick={() =>
                   this.setState(prevState => ({
                     isChangeAvatar: !prevState.isChangeAvatar
@@ -169,7 +155,7 @@ class UserProfileEdit extends Component {
                 style={{ fontWeight: 600 }}
                 align="center"
               >
-                Lê Văn Tư
+                {userData.hoten}
               </Typography>
 
               <Typography
@@ -179,7 +165,7 @@ class UserProfileEdit extends Component {
                 color="textSecondary"
                 align="center"
               >
-                Giáo viên
+                {getRole(userData.vaitro)}
               </Typography>
             </Paper>
           </Grid>
@@ -285,25 +271,25 @@ class UserProfileEdit extends Component {
                   labelId="demo-mutiple-chip-label"
                   id="demo-mutiple-chip"
                   multiple
-                  value={tags}
+                  value={userTags}
                   onChange={event => {
-                    this.setState({ tags: event.target.value });
+                    this.setState({ userTags: event.target.value });
                   }}
                   input={
                     <OutlinedInput labelWidth={90} id="select-multiple-chip" />
                   }
                   renderValue={selected => (
                     <div>
-                      {selected.map(value => (
-                        <Chip key={value} label={value} />
+                      {selected.map(tag => (
+                        <Chip key={tag} label={getTagName(tags, tag)} />
                       ))}
                     </div>
                   )}
                   MenuProps={MenuProps}
                 >
-                  {names.map(name => (
-                    <MenuItem key={name} value={name}>
-                      {name}
+                  {tags.map(tag => (
+                    <MenuItem key={tag.id} value={tag.id}>
+                      {tag.tentag}
                     </MenuItem>
                   ))}
                 </Select>
@@ -327,8 +313,9 @@ class UserProfileEdit extends Component {
 }
 
 export default connect(
-  ({ auth }) => ({
-    userData: auth.userData
+  ({ auth, utils }) => ({
+    userData: auth.userData,
+    tags: utils.tags && utils.tags.tags
   }),
-  { getProfile, updateDescription, updateBasicInfo, updateAvatar }
+  { updateDescription, updateBasicInfo, updateAvatar }
 )(UserProfileEdit);
