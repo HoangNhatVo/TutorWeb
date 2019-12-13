@@ -16,7 +16,12 @@ import {
 } from "@material-ui/core";
 import "./style/teacher-home.css";
 import { connect } from "react-redux";
-import { getProfile, updateDescription, updateBasicInfo } from "../actions";
+import {
+  getProfile,
+  updateDescription,
+  updateBasicInfo,
+  updateAvatar
+} from "../actions";
 
 const avatarDefault =
   "https://scontent.fsgn1-1.fna.fbcdn.net/v/t1.0-1/p100x100/67735731_499113454230617_7180310859275567104_n.jpg?_nc_cat=106&_nc_ohc=wfZV2GtbX2AAQm8sVDklsINg5iUsow-WVWd6c0Gpi1Xpr0n149MUjItfA&_nc_ht=scontent.fsgn1-1.fna&oh=5c9b9f5223c8b7808fc4bc4afe1e7004&oe=5E8832C5";
@@ -87,8 +92,21 @@ class UserProfileEdit extends Component {
   };
 
   render() {
-    const { isChangeAvatar, description, fullname, tags, address } = this.state;
-    const { userData, updateDescription, updateBasicInfo } = this.props;
+    const {
+      isChangeAvatar,
+      description,
+      fullname,
+      tags,
+      address,
+      preview
+    } = this.state;
+
+    const {
+      userData,
+      updateDescription,
+      updateBasicInfo,
+      updateAvatar
+    } = this.props;
 
     return (
       <LayoutUser>
@@ -104,16 +122,30 @@ class UserProfileEdit extends Component {
               elevation={2}
             >
               {isChangeAvatar && (
-                <Avatar
-                  width={200}
-                  height={200}
-                  onCrop={this.onCrop}
-                  onClose={this.onClose}
-                  src={this.state.src}
-                />
+                <div className="df fdc ac">
+                  <Avatar
+                    width={200}
+                    height={200}
+                    onCrop={this.onCrop}
+                    onClose={this.onClose}
+                    src={this.state.src}
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="mt1"
+                    size="small"
+                    disabled={userData && userData.updatingAvatar}
+                    onClick={() => {
+                      if (preview) updateAvatar(preview);
+                    }}
+                  >
+                    Cập nhật
+                  </Button>
+                </div>
               )}
               <img
-                src={this.state.preview || avatarDefault}
+                src={preview || avatarDefault}
                 alt="Avatar"
                 className="mt1"
                 style={{
@@ -298,5 +330,5 @@ export default connect(
   ({ auth }) => ({
     userData: auth.userData
   }),
-  { getProfile, updateDescription, updateBasicInfo }
+  { getProfile, updateDescription, updateBasicInfo, updateAvatar }
 )(UserProfileEdit);

@@ -11,6 +11,7 @@ const initState = {
     vaitro: "",
     updatingDescription: false,
     updatingBasicInfo: false,
+    updatingAvatar: false,
     updatingTags: false
   }
 };
@@ -104,6 +105,23 @@ export default (state = initState, { type, payload }) => {
           ...state.userData,
           updatingBasicInfo: false,
           ...payload
+        }
+      };
+    case types.UPDATING_AVATAR:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          updatingAvatar: true
+        }
+      };
+    case types.UPDATE_AVATAR_RESPONSE:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          updatingAvatar: false,
+          avatar: payload
         }
       };
     default:

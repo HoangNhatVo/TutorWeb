@@ -2,6 +2,7 @@ import * as types from "../types";
 import api from "../utils/axios";
 import cookies from "../utils/cookies";
 import history from "../utils/history";
+import ref from "../utils/firebase-storage";
 
 const isSigningUp = () => ({
   type: types.SIGNING_UP
@@ -51,6 +52,15 @@ const updatingBasicInfo = () => ({
 const updateBasicInfoResponse = (name, address) => ({
   type: types.UPDATE_BASIC_INFO_RESPONSE,
   payload: { hoten: name, diachi: address }
+});
+
+const updatingAvatar = () => ({
+  type: types.UPDATING_AVATAR
+});
+
+const updateAvatarResponse = data => ({
+  type: types.UPDATE_AVATAR_RESPONSE,
+  payload: data
 });
 
 export const signUpStudent = (
@@ -183,6 +193,27 @@ export const updateBasicInfo = (name, address) => async dispatch => {
   });
   if (response && response.data === "Cập nhật thành công")
     dispatch(updateBasicInfoResponse(name, address));
+};
+
+export const updateAvatar = base64 => dispatch => {
+  dispatch(updatingAvatar());
+
+  ref
+    .child(`${cookies.get("id")}`)
+    .putString(base64.replace(/^data:image\/(png|jpg);base64,/, ""), "base64")
+    .then(function(snapshot) {
+      // upload avatar ok
+      ref
+        .child(`${cookies.get("id")}`)
+        .getDownloadURL()
+        .then(async url => {
+          api.post("/user/updateIntroduce", {
+            iduser: cookies.get("id"),
+            url
+          });
+          dispatch(updateAvatarResponse(url));
+        });
+    });
 };
 
 export const signOut = () => async dispatch => {

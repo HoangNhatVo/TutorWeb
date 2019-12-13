@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Container, Typography, TextField, Button } from "@material-ui/core";
 import { HeaderOut, Footer } from "../components";
-import api from "../utils/axios";
+// import api from "../utils/axios";
 import { connect } from "react-redux";
 import { signIn } from "../actions";
 
@@ -18,10 +18,10 @@ class UserSignIn extends Component {
     this.setState({ [field]: event.target.value });
   };
 
-  googleSignIn = async () => {
-    const response = await api.get("/google");
-    console.log(response);
-  };
+  // googleSignIn = async () => {
+  //   const response = await api.get("/google");
+  //   console.log(response);
+  // };
 
   render() {
     const { username, password } = this.state;
