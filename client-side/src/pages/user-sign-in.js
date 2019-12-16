@@ -28,9 +28,9 @@ class UserSignIn extends Component {
     const { signIn, isSigningIn, message } = this.props;
 
     return (
-      <div className="df fc" style={{ minHeight: "100vh" }}>
+      <div className="df fdc" style={{ minHeight: "100vh" }}>
         <HeaderOut hasNoAccount />
-        <Container maxWidth="sm" className="df fc f1">
+        <Container maxWidth="sm" className="df fdc f1">
           <header className="df mt2">
             <img
               src="/logo.svg"

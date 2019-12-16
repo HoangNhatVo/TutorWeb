@@ -65,7 +65,7 @@ class UserProfileShow extends Component {
         <Grid container spacing={2} className="mt2">
           <Grid item xs={4}>
             <Paper
-              className="df fdc ac"
+              className="df fdc aic"
               style={{
                 borderRadius: 4,
                 overflow: "hidden",
@@ -100,7 +100,7 @@ class UserProfileShow extends Component {
               </Typography>
 
               <div
-                className="df mt1 jcsb ac"
+                className="df mt1 jcsb aic"
                 style={{ padding: "0 2rem", width: "100%" }}
               >
                 <div className="df fdc">

@@ -24,7 +24,7 @@ class TeacherHome extends Component {
         <Typography variant="h4" className="mt2" align="center" component="h4">
           Your profile
         </Typography>
-        <Container maxWidth="lg" className="df fc f1" style={{ backgroundColor: '#fff', margin: '50px 0' }}>
+        <Container maxWidth="lg" className="df fdc f1" style={{ backgroundColor: '#fff', margin: '50px 0' }}>
           <div>
             <div className='form-item'>
               <div className='label'>

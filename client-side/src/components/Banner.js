@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import "./style/banner.css";
+import "./style/Banner.css";
 import { Typography } from "@material-ui/core";
 
 class Banner extends React.Component {
@@ -12,8 +12,8 @@ class Banner extends React.Component {
           src="https://www.asktutorhelp.com/img/banner_1.jpg"
           alt="banner"
         />
-        <div className="title">
-          <Typography variant="h1" component="h1" className="titleBanner">
+        <div className="title mt2">
+          <Typography variant="h1" component="h1" className="titleBanner mt2">
             X-Tutor
           </Typography>
           <Typography

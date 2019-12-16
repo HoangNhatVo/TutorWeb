@@ -38,7 +38,7 @@ class HeaderUserProfile extends Component {
     return (
       <>
         <div
-          className="df ac"
+          className="df aic"
           style={{ cursor: "pointer" }}
           onClick={event => this.setState({ anchorEl: event.target })}
         >

@@ -39,7 +39,7 @@ class Verify extends Component {
     const { isVerifying, message } = this.state;
 
     return (
-      <div className="df fc p1" style={{ minHeight: "100vh" }}>
+      <div className="df fdc p1" style={{ minHeight: "100vh" }}>
         {message && (
           <Typography variant="body2" color="secondary">
             {message}

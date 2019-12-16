@@ -21,7 +21,7 @@ class AdminSignIn extends Component {
     const { username, password } = this.state;
 
     return (
-      <Container maxWidth="sm" className="df fc f1">
+      <Container maxWidth="sm" className="df fdc f1">
         <header className="df mt2">
           <img src="/logo.svg" style={{ width: 120, height: 120 }} alt="logo" />
           <Typography

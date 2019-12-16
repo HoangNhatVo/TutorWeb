@@ -23,8 +23,8 @@ function TagItem({ data }) {
   const [tagValue, settagValue] = useState(data.label);
 
   return (
-    <Paper className="df jcsb ac p1">
-      <div className="df ac">
+    <Paper className="df jcsb aic p1">
+      <div className="df aic">
         <Label color="inherit" className="mr1" />
         {isOnEdit ? (
           <TextField
@@ -36,7 +36,7 @@ function TagItem({ data }) {
         )}
       </div>
       {isOnEdit ? (
-        <div className="df ac">
+        <div className="df aic">
           <IconButton>
             <Check />
           </IconButton>
@@ -45,7 +45,7 @@ function TagItem({ data }) {
           </IconButton>
         </div>
       ) : (
-        <div className="df ac">
+        <div className="df aic">
           <IconButton onClick={() => setisOnEdit(true)}>
             <Edit />
           </IconButton>
@@ -75,8 +75,8 @@ class Tags extends Component {
 
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <div className="df jcsb ac p1">
-              <div className="df ac f1">
+            <div className="df jcsb aic p1">
+              <div className="df aic f1">
                 <Label color="inherit" className="mr1" />
                 <TextField
                   fullWidth

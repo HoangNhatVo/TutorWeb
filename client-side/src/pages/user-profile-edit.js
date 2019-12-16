@@ -106,7 +106,7 @@ class UserProfileEdit extends Component {
         <Grid container spacing={2} className="mt2">
           <Grid item xs={4}>
             <Paper
-              className="df fdc ac"
+              className="df fdc aic"
               style={{
                 borderRadius: 4,
                 overflow: "hidden",
@@ -115,7 +115,7 @@ class UserProfileEdit extends Component {
               elevation={2}
             >
               {isChangeAvatar && (
-                <div className="df fdc ac">
+                <div className="df fdc aic">
                   <MyAvatar
                     width={200}
                     height={200}

@@ -18,11 +18,11 @@ const useStyles = makeStyles(theme => ({
 function ListTeacher() {
   const classes = useStyles()
   return (
-    <div className="df fc" style={{ minHeight: "100vh" }}>
+    <div className="df fdc" style={{ minHeight: "100vh" }}>
       <HeaderOut hasNoAccount hasAccount />
       <Menu></Menu>
       <Banner></Banner>
-      <Container maxWidth="lg" className="df fc f1">
+      <Container maxWidth="lg" className="df fdc f1">
         <Typography
           variant="h4"
           className="mt2"

@@ -6,7 +6,11 @@ class Menu extends React.Component {
   render() {
     return (
       <div style={{ background: color.menu, padding: "1rem 56px" }}>
-        <Container maxWidth="lg" className="df jcsb">
+        <Container
+          maxWidth="lg"
+          className="df jcsb"
+          style={{ padding: "0 4rem" }}
+        >
           <Link>Web</Link>
           <Link>We nâng cao</Link>
           <Link>Mobile</Link>
