@@ -5,9 +5,26 @@ const passport = require('passport');
 var adminModel = require('../model/admin.model');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-    // adminModel.getAdmin();
-  res.send('Api admin');
+router.post('/lockaccount', function(req, res, next) {
+  var idUser = req.body.idUser
+  adminModel.LockAccount(idUser)
+  .then(r =>{
+    res.send('Khóa thành công')
+  })
+  .catch(err =>{
+    console.log(err)
+  })
+});
+
+router.post('/unlockaccount', function(req, res, next) {
+  var idUser = req.body.idUser
+  adminModel.UnLockAccount(idUser)
+  .then(r =>{
+    res.send('Mở khóa thành công')
+  })
+  .catch(err =>{
+    console.log(err)
+  })
 });
 
 
