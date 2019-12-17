@@ -74,7 +74,12 @@ class UserSignIn extends Component {
             />
 
             {message && (
-              <Typography variant="body2" color="secondary" align="center">
+              <Typography
+                variant="body2"
+                color="secondary"
+                className="mt1"
+                align="center"
+              >
                 {message}
               </Typography>
             )}
@@ -100,7 +105,7 @@ class UserSignIn extends Component {
             Hoặc
           </Typography>
 
-          <div className="df jsb mb1">
+          <div className="df jcsb mb1">
             <Button
               variant="contained"
               className="mt1"

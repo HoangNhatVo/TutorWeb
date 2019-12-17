@@ -9,32 +9,42 @@ class Verify extends Component {
     super(props);
     this.state = {
       isVerifying: false,
-      success: null
+      success: null,
+      message: ""
     };
   }
-
   async componentDidMount() {
     this.setState({ isVerifying: true });
-
     const response = await api.post("/verify", {
-      verify: this.props.match.params.id
+      verify: window.location.pathname.slice("/verify".length + 1)
     });
 
-    if (response) {
-      this.setState({ isVerifying: false, success: true });
-    } else this.setState({ success: false });
+    if (response && response.data === "Thành công") {
+      this.setState({
+        isVerifying: false,
+        success: true,
+        message: response.data
+      });
+
+      history.push("/sign-in");
+    } else
+      this.setState({
+        isVerifying: false,
+        success: false,
+        message: response.data
+      });
   }
 
   render() {
-    const { isVerifying, success } = this.state;
-
-    if (!isVerifying && success)
-      setTimeout(() => history.push("/student"), 500);
-    if (!isVerifying && success === false)
-      setTimeout(() => history.push("/login"), 500);
+    const { isVerifying, message } = this.state;
 
     return (
-      <div className="df fc" style={{ minHeight: "100vh" }}>
+      <div className="df fc p1" style={{ minHeight: "100vh" }}>
+        {message && (
+          <Typography variant="body2" color="secondary">
+            {message}
+          </Typography>
+        )}
         {isVerifying && (
           <Typography variant="body1"> Đang xác thực...</Typography>
         )}

@@ -8,7 +8,7 @@ class Footer extends Component {
   render() {
     return (
       <div style={{ background: color.main }}>
-        <Container maxWidth="lg" className="df jsb p1 ac">
+        <Container maxWidth="lg" className="df jcsb p1 ac">
           <Link
             style={{ color: "white" }}
             href="#"

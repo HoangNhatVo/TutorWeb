@@ -86,7 +86,8 @@ class UserSignUp extends Component {
       signUpStudent,
       signUpTeacher,
       isSigningUp,
-      specializes
+      specializes,
+      message
     } = this.props;
 
     return (
@@ -183,7 +184,7 @@ class UserSignUp extends Component {
                 onChange={this.changeState("email")}
                 className="mt1"
               />
-              <div className="df jsb">
+              <div className="df jcsb">
                 <TextField
                   label="Ngày sinh"
                   variant="outlined"
@@ -235,6 +236,18 @@ class UserSignUp extends Component {
                 onChange={this.changeState("city")}
                 className="mt1"
               />
+
+              {message && (
+                <Typography
+                  variant="body2"
+                  color="secondary"
+                  className="mt1"
+                  align="center"
+                >
+                  {message}
+                </Typography>
+              )}
+
               <Button
                 variant="contained"
                 color="primary"
@@ -315,7 +328,7 @@ class UserSignUp extends Component {
                 onChange={this.changeState("email")}
                 className="mt1"
               />
-              <div className="df jsb">
+              <div className="df jcsb">
                 <TextField
                   label="Ngày sinh"
                   variant="outlined"
@@ -419,6 +432,18 @@ class UserSignUp extends Component {
                 onChange={this.changeState("wage")}
                 className="mt1"
               />
+
+              {message && (
+                <Typography
+                  variant="body2"
+                  color="secondary"
+                  className="mt1"
+                  align="center"
+                >
+                  {message}
+                </Typography>
+              )}
+
               <Button
                 variant="contained"
                 color="primary"

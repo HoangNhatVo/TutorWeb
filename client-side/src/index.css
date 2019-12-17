@@ -27,11 +27,15 @@ code {
     display: flex;
 }
 
+.fdc {
+    flex-direction: column;
+}
+
 .jc {
     justify-content: center;
 }
 
-.jsb {
+.jcsb {
     justify-content: space-between;
 }
 
@@ -51,6 +55,14 @@ code {
 /* 
  * dimensionnnnnnnn
  */
+
+.ml1 {
+    margin-left: 1rem !important;
+}
+
+.mr1 {
+    margin-right: 1rem !important;
+}
 
 .mt1 {
     margin-top: 1rem !important;

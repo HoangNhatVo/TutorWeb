@@ -30,8 +30,8 @@ router.get('/facebook/callback', passport.authenticate('facebook',
     failureRedirect: '/'
   }))
 
-router.get('/home', function(req, res, next) {
-    // adminModel.getAdmin();
+router.get('/home', function (req, res, next) {
+  // adminModel.getAdmin();
   res.send('home');
 });
 
@@ -144,23 +144,23 @@ function (req, res) {
 );
 
 
-router.post('/verify', function(req, res, next){
+router.post('/verify', function (req, res, next) {
   console.log(req.body.verify);
-  accountModel.getAccountVerify(req.body.verify).then(r=>{
-    if(r.length){
-      accountModel.updateAccountVerify(r[0].id).then(r1=>{
+  accountModel.getAccountVerify(req.body.verify).then(r => {
+    if (r.length) {
+      accountModel.updateAccountVerify(r[0].id).then(r1 => {
         res.send('Thành công')
-      }).catch(err=>{
+      }).catch(err => {
         console.log(err);
         //req.flash('accountMsg', 'Lỗi khi xác thực');
         res.send('Lỗi khi xác thực')
       })
     }
-    else{
+    else {
       //req.flash('accountMsg', 'Xác thực không đúng.');
       res.send('Xác thực không đúng.');
     }
-  }).catch(err=>{
+  }).catch(err => {
     console.log(err);
     //req.flash('accountMsg', 'Lỗi khi xác thực');
     res.send('Lỗi khi xác thực');
@@ -177,22 +177,34 @@ router.post('/verify', function(req, res, next){
 //   res.send(req.user);
 // });
 
-router.get('/chuyennganh', function(req, res, next){
-  accountModel.getAllChuyenNganh().then(r=>{
-    if(r.length){
+router.get('/chuyennganh', function (req, res, next) {
+  accountModel.getAllChuyenNganh().then(r => {
+    if (r.length) {
       res.send(r);
     }
-    else{
+    else {
       // req.flash('accountMsg', 'Không có chuyên ngành nào.');
       res.send('Không có chuyên ngành nào.')
     }
-  }).catch(err=>{
-      console.log(err);
-      //req.flash('accountMsg', 'Lỗi khi xác thực');
-      res.send('Lỗi')
+  }).catch(err => {
+    console.log(err);
+    //req.flash('accountMsg', 'Lỗi khi xác thực');
+    res.send('Lỗi')
   })
 });
 
+router.get('/allTeacher', async function (req, res, next) {
+  try {
+    var allTeacher = await accountModel.getAllteacher()
+    if (allTeacher.length)
+      res.send(allTeacher)
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
 router.get('/profile/:ID', function(req, res, next){
   var id = req.params.ID;
   console.log(id);

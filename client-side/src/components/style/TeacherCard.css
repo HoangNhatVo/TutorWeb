@@ -1,0 +1,12 @@
+.tag{
+    border-top:1px solid #e0e0e0;
+    padding:16px;
+    margin: 10px 0;
+    word-wrap: break-word;
+}
+.tag span{
+    background-color: #e0e0e0;
+    padding:8px;
+    margin:5px;
+    border-radius: 5px;
+}

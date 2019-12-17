@@ -2,4 +2,20 @@ import Routers from "./Routers";
 import HeaderOut from "./HeaderOut";
 import HeaderIn from "./HeaderIn";
 import Footer from "./Footer";
-export { Routers, Footer, HeaderIn, HeaderOut };
+import BreadCrums from "./BreadCrums";
+
+import Menu from "./Menu";
+import Banner from "./Banner";
+import TeacherCard from "./TecherCard";
+
+export * from "./common";
+export {
+  BreadCrums,
+  Routers,
+  Footer,
+  HeaderIn,
+  HeaderOut,
+  Menu,
+  Banner,
+  TeacherCard
+};
