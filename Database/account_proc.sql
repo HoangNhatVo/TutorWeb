@@ -213,6 +213,15 @@ DELIMITER ;
 
 DELIMITER $$
 USE `sql12314047`$$
+CREATE PROCEDURE GetAllTagByAccID(in accID int(11))
+BEGIN
+	select * from tag_account where id_account = accID order by id_tag asc;
+END;$$
+DELIMITER ;
+call GetAllTagByAccID(39);
+
+DELIMITER $$
+USE `sql12314047`$$
 CREATE PROCEDURE UpdateTagName(in i int(11), in TagNameUpdate varchar(50))
 BEGIN
 	declare TagNameNew varchar(50);

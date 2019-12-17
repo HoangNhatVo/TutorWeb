@@ -529,8 +529,8 @@ router.get('/contract/:ID',function(req, res, next){
   })
 })
 
-router.get('/dkhd/:ID',function(req, res, next){
-  var ContractID = req.params.ID;
+router.get('/dkhd/:contractID',function(req, res, next){
+  var ContractID = req.params.contractID;
   contractModel.get_DieuKhoanHopDong_ByIDContract(ContractID).then(r=>{
     if(r.length){
       res.send(r);
