@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 const passport = require('passport');
+const paypal = require('paypal-rest-sdk')
 var cors=require('cors');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -20,6 +21,11 @@ var allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Authorization, Content-Type, Accept");
   next();
 }
+paypal.configure({
+  'mode': 'sandbox', //sandbox or live
+  'client_id': 'ATMGf77K9It38ZorVFEXX7PMABNWYcjIFxCsR69DBgRcNpftgo3tEJHSKB7UTDeQl51NLJ9LjkYmlXYe',
+  'client_secret': 'ENeEZ6LqaW1F8Jy7GoqbnBWUBxQRHIiU_QkJOZREhMbim1pT7a2XCd7FfenitOHlLZV50mwCWXE58NeA'
+});
 var app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
