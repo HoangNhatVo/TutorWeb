@@ -313,9 +313,9 @@ class UserProfileEdit extends Component {
 }
 
 export default connect(
-  ({ auth, utils }) => ({
+  ({ auth, admin }) => ({
     userData: auth.userData,
-    tags: utils.tags && utils.tags.tags
+    tags: admin.tags.tags
   }),
   { updateDescription, updateBasicInfo, updateAvatar }
 )(UserProfileEdit);

@@ -194,6 +194,18 @@ export const updateBasicInfo = (name, address) => async dispatch => {
     dispatch(updateBasicInfoResponse(name, address));
 };
 
+// export const updateTags = (name, address) => async dispatch => {
+//   dispatch(updatingTags());
+
+//   const response = await api.post("/addtagaccount", {
+//     iduser: cookies.get("id"),
+//     name,
+//     address
+//   });
+//   if (response && response.data === "Cập nhật thành công")
+//     dispatch(updateTagsResponse(name, address));
+// };
+
 export const updateAvatar = base64 => dispatch => {
   dispatch(updatingAvatar());
 

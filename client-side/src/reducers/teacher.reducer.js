@@ -3,6 +3,7 @@ import * as types from "../types";
 const initState = {
   teachers: {
     isLoading: false,
+    isOk: false,
     teachers: []
   }
 };
@@ -21,6 +22,7 @@ export default (state = initState, { type, payload }) => {
         ...state,
         teachers: {
           isLoading: false,
+          isOk: true,
           teachers: payload
         }
       };

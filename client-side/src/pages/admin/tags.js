@@ -10,17 +10,11 @@ import {
 } from "@material-ui/core";
 import { Label, Edit, Delete, Clear, Check } from "@material-ui/icons";
 import { connect } from "react-redux";
+import { updateTag, deleteTag, addTag } from "../../actions";
 
-const data = [
-  { value: "hello", label: "Xin chao" },
-  { value: "hi", label: "Xin chao than mat" },
-  { value: "good", label: "Tot" },
-  { value: "bad", label: "Xau" }
-];
-
-function TagItem({ data }) {
+function TagItem({ data, updateTag, deleteTag }) {
   const [isOnEdit, setisOnEdit] = useState(false);
-  const [tagValue, settagValue] = useState(data.label);
+  const [tagValue, settagValue] = useState(data.tentag);
 
   return (
     <Paper className="df jcsb aic p1">
@@ -32,16 +26,20 @@ function TagItem({ data }) {
             onChange={event => settagValue(event.target.value)}
           />
         ) : (
-          <Typography>{data.label}</Typography>
+          <Typography>{data.tentag}</Typography>
         )}
       </div>
       {isOnEdit ? (
         <div className="df aic">
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              if (tagValue) updateTag(data.id, tagValue);
+            }}
+          >
             <Check />
           </IconButton>
-          <IconButton>
-            <Clear onClick={() => setisOnEdit(false)} />
+          <IconButton onClick={() => setisOnEdit(false)}>
+            <Clear />
           </IconButton>
         </div>
       ) : (
@@ -49,7 +47,12 @@ function TagItem({ data }) {
           <IconButton onClick={() => setisOnEdit(true)}>
             <Edit />
           </IconButton>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              if (window.confirm("Bạn muốn xóa tag kỹ năng này ?"))
+                deleteTag(data.id);
+            }}
+          >
             <Delete color="secondary" />
           </IconButton>
         </div>
@@ -68,6 +71,7 @@ class Tags extends Component {
 
   render() {
     const { newTagValue } = this.state;
+    const { tags, isLoadingTags, updateTag, deleteTag, addTag } = this.props;
 
     return (
       <LayoutAdmin>
@@ -87,17 +91,30 @@ class Tags extends Component {
                   value={newTagValue}
                 />
               </div>
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  if (newTagValue) addTag(newTagValue);
+                }}
+              >
                 <Check />
               </IconButton>
             </div>
           </Grid>
+          <Grid item xs={8} />
 
-          {data.map((tag, index) => (
-            <Grid item xs={4} key={index}>
-              <TagItem data={tag} />
+          {!isLoadingTags ? (
+            <Grid item xs={4}>
+              <div>Đang tải...</div>
             </Grid>
-          ))}
+          ) : (
+            <>
+              {tags.map((tag, index) => (
+                <Grid item xs={4} key={index}>
+                  <TagItem data={tag} {...{ updateTag, deleteTag }} />
+                </Grid>
+              ))}
+            </>
+          )}
         </Grid>
       </LayoutAdmin>
     );
@@ -107,7 +124,7 @@ class Tags extends Component {
 export default connect(
   ({ admin }) => ({
     isLoadingTags: admin.tags.isOk,
-    tags: admin.tags.tags
+    tags: typeof admin.tags.tags === "object" ? admin.tags.tags : []
   }),
-  {}
+  { updateTag, deleteTag, addTag }
 )(Tags);

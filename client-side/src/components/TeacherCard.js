@@ -33,10 +33,10 @@ function TeacherCard({ data }) {
       <CardActionArea>
         <CardMedia
           component="img"
-          alt="Contemplative Reptile"
+          alt={hoten}
           height="140"
           image={avatar || avatarDefault}
-          title="Contemplative Reptile"
+          title={hoten}
         />
         <CardContent>
           <div className="df jcsb">

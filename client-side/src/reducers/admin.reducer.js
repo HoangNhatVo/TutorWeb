@@ -13,7 +13,9 @@ const initState = {
   tags: {
     isLoading: false,
     tags: [],
-    message: ""
+    isOk: false,
+    message: "",
+    isAdding: false
   }
 };
 
@@ -53,24 +55,35 @@ export default (state = initState, { type, payload }) => {
           users: payload
         }
       };
-    case types.IS_GETTING_TAGS:
+    case types.IS_ADDING_TAG:
       return {
         ...state,
         tags: {
           ...state.tags,
-          isOk: payload
+          isAdding: true
         }
       };
-    case types.GET_TAGS_SUCCESSFULLY:
+    case types.ADD_TAG_SUCCESSFULLY:
       return {
         ...state,
         tags: {
           ...state.tags,
-          isOk: false,
-          tags: payload
+          isAdding: false,
+          tags: [{ ...payload }].concat(
+            typeof state.tags.tags === "object" ? state.tags.tags : []
+          )
         }
       };
-    case types.DELETE_TAGS_SUCCESSFULLY:
+    case types.GET_TAGS_OK:
+      return {
+        ...state,
+        tags: {
+          isOk: true,
+          tags: payload.tags,
+          message: payload.message
+        }
+      };
+    case types.DELETE_TAG_SUCCESSFULLY:
       return {
         ...state,
         tags: {
@@ -78,7 +91,7 @@ export default (state = initState, { type, payload }) => {
           tags: state.tags.tags.filter(tag => tag.id !== payload)
         }
       };
-    case types.IS_DELETING_TAGS:
+    case types.IS_DELETING_TAG:
       return {
         ...state,
         tags: {
@@ -89,7 +102,7 @@ export default (state = initState, { type, payload }) => {
           })
         }
       };
-    case types.UPDATE_TAGS_SUCCESSFULLY:
+    case types.UPDATE_TAG_SUCCESSFULLY:
       return {
         ...state,
         tags: {
@@ -100,7 +113,7 @@ export default (state = initState, { type, payload }) => {
           })
         }
       };
-    case types.UPDATE_TAGS_FAILED:
+    case types.UPDATE_TAG_FAILED:
       return {
         ...state,
         tags: {
@@ -111,7 +124,7 @@ export default (state = initState, { type, payload }) => {
           })
         }
       };
-    case types.IS_UPDATING_TAGS:
+    case types.IS_UPDATING_TAG:
       return {
         ...state,
         tags: {

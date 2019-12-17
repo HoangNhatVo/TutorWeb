@@ -44,7 +44,11 @@ class HeaderUserProfile extends Component {
         >
           <Typography className="mr1">{fullname}</Typography>
           {avatar ? (
-            <Avatar src={avatar} alt="Ảnh đại diện" />
+            <Avatar
+              src={avatar}
+              style={{ width: 32, height: 32, border: "2px solid white" }}
+              alt="Ảnh đại diện"
+            />
           ) : (
             <AccountCircle />
           )}

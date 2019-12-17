@@ -20,10 +20,10 @@ export function withAuth(ComposedComponent) {
   }
 
   return connect(
-    ({ auth, utils }) => ({
+    ({ auth, admin }) => ({
       isSignedIn: auth.userData.chuoixacthuc || cookies.get("token"),
       token: auth.userData.chuoixacthuc,
-      isTagsGotten: utils.tags.isOk
+      isTagsGotten: admin.tags.isOk
     }),
     { getProfile, getTags }
   )(WrappedComponent);

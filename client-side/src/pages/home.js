@@ -1,22 +1,9 @@
 import React, { useEffect } from "react";
 import { HeaderOut, Footer, Menu, Banner, TeacherCard } from "../components";
-import { Container, Typography, Link } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
+import { Container, Typography, Link, Grid } from "@material-ui/core";
 import { getTeachers } from "../actions";
 import { connect } from "react-redux";
 import { color } from "../utils";
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary
-  }
-}));
 
 function ItemHot({ src, body1, body2 }) {
   return (
@@ -49,8 +36,6 @@ function ItemHot({ src, body1, body2 }) {
 }
 
 function Home({ teachers, getTeachers }) {
-  const classes = useStyles();
-
   useEffect(() => {
     getTeachers();
   }, []);
@@ -80,7 +65,7 @@ function Home({ teachers, getTeachers }) {
           <Grid container justify="center" spacing={2}>
             {teachers.teachers.slice(0, 10).map((teacher, index) => (
               <Grid key={index} item xs={3}>
-                <TeacherCard data={teacher} className={classes.paper} />
+                <TeacherCard data={teacher} />
               </Grid>
             ))}
           </Grid>
