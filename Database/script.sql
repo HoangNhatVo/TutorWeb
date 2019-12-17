@@ -169,3 +169,16 @@ ADD COLUMN trangthaihopdong VARCHAR(50) AFTER thoigianky;
 #------------------  Add Column table taikhoan -----------#
 ALTER TABLE taikhoan
 ADD COLUMN tennganhang VARCHAR(255) AFTER chutaikhoan;
+
+
+create table dangkygiaovien
+(
+	id int(11) primary key auto_increment not null,
+    nguoiday int(11) not null,
+    nguoihoc int(11) not null,
+    ngaybatdau date,
+    ngayketthuc date,
+    thoigianday1ngay int(11)
+);
+alter table dangkygiaovien add constraint FK_dangkygiaovien_account_nguoiday foreign key (nguoiday) references account(id);
+alter table dangkygiaovien add constraint FK_dangkygiaovien_account_nguoihoc foreign key (nguoihoc) references account(id);

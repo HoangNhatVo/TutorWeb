@@ -3,8 +3,13 @@ var router = express.Router();
 const passport = require('passport');
 var accountModel = require('../model/account.model');
 var tagModel = require('../model/tag.model');
+var contractModel = require('../model/contract.model');
 var bCrypt = require('bcrypt');
 const saltRounds = 10;
+var moment = require('moment');
+
+var configAuth = require('../middlewares/auth');
+var nodemailer = require('nodemailer');
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
@@ -378,11 +383,57 @@ router.post('/resetpassword', function(req,res,next){
   })
 })
 
+router.post('/sendmailresetpassword', function(req,res,next){
+  var ToEmail = req.body.toemail;
+  accountModel.getAccountByEmail(ToEmail).then(r=>{
+    if(r.length){
+      var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: configAuth.email,
+          pass: configAuth.pass
+        }
+      });
+      var message = {
+        from: configAuth.from,
+        to: ToEmail,
+        subject: 'Reset Mật khẩu đăng nhập',
+        test: 'Plaintext version of the message',
+        html: '<h3>Nhấn vào link sau để xác thực:  <a href="http://localhost:3001/resetpassword/'+r[0].chuoixacthuc+'" target="_blank">Xác Thực Tài Khoản TutorWeb</a> </h3>'
+      };
+      transporter.sendMail(message, (err, info) => {
+        if (err) {
+          console.log('err', err);
+        }
+        res.send('Thành công');
+        console.log('Message sent: %s', info.messageId);
+        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      });
+    }
+    else{
+      res.send('Email không tồn tại.');
+    }
+  }).catch(err=>{
+    console.log(err);
+    res.send('Đã xảy ra lỗi.');
+  })
+})
+
 router.post('/changestatusaccount', function(req, res, next){
   var ID = req.body.id;
   var newStatus = req.body.newstatus;
-  accountModel.changeStatusAccount(ID, newStatus).then(r=>{
-    res.send('Thành công');
+  accountModel.getAccountByID(ID).then(r1=>{
+    if(!r1.length){
+      res.send('Tài khoản không tồn tại.');
+    }
+    else{
+      accountModel.changeStatusAccount(ID, newStatus).then(r=>{
+        res.send('Thành công');
+      }).catch(err=>{
+        console.log(err);
+        res.send('Đã xảy ra lỗi.');
+      })
+    }
   }).catch(err=>{
     console.log(err);
     res.send('Đã xảy ra lỗi.');
@@ -403,4 +454,93 @@ router.get('/listcontract',function(req, res, next){
     })
 })
 
+router.post('/createcontract', function(req, res, next){
+  var TenHopDong = req.body.tenhopdong;
+  var IDNguoiDay = req.body.idnguoiday;
+  var IDNguoiHoc = req.body.idnguoihoc;
+  var ThoiGianKy = moment(req.body.thoigianky, 'DD/MM/YYYY').format('YYYY-MM-DD');
+  console.log(TenHopDong);
+  console.log(IDNguoiDay);
+  console.log(IDNguoiHoc);
+  console.log(ThoiGianKy);
+  contractModel.addContract(TenHopDong, IDNguoiDay, IDNguoiHoc, ThoiGianKy).then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Thêm Hợp đồng thất bại.');
+    }
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+router.post('/adddkhd', function(req, res, next){
+  var IDHD = req.body.idhd;
+  var NoiDung = req.body.noidung;
+  var BenThucHien = req.body.benthuchien;
+  contractModel.add_DieuKhoanHopDong(IDHD, NoiDung, BenThucHien) .then(r=>{
+    res.send('Thành công');
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+router.post('/changestatuscontract', function(req, res, next){
+  var IDContract = req.body.idcontract;
+  var StatusNew = req.body.statusnew;
+  contractModel.updateStatusContract(IDContract, StatusNew) .then(r=>{
+    res.send('Thành công');
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+router.get('/allcontractbyteacher/:ID',function(req, res, next){
+  var TeacherID = req.params.ID;
+  contractModel.getAllContractByTeacherID(TeacherID).then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Không có hợp đồng nào.');
+    }
+  }).catch(err=>{
+  console.log(err);
+  res.send('Đã xảy ra lỗi.');
+  })
+})
+
+router.get('/contract/:ID',function(req, res, next){
+  var ID = req.params.ID;
+  contractModel.getContractByID(ID).then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Hợp đồng không tồn tại.');
+    }
+  }).catch(err=>{
+  console.log(err);
+  res.send('Đã xảy ra lỗi.');
+  })
+})
+
+router.get('/dkhd/:ID',function(req, res, next){
+  var ContractID = req.params.ID;
+  contractModel.get_DieuKhoanHopDong_ByIDContract(ContractID).then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Không có điều khoản nào trong hợp đồng này.');
+    }
+  }).catch(err=>{
+  console.log(err);
+  res.send('Đã xảy ra lỗi.');
+  })
+})
 module.exports = router;
