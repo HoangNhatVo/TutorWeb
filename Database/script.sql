@@ -159,3 +159,13 @@ insert into chuyennganh values(null,'Khoa học máy tính');
 insert into chuyennganh values(null,'Công nghệ tri thức');
 
 select * from chuyennganh;
+
+
+#------------------  Add Column table hopdong -----------#
+ALTER TABLE hopdong
+ADD COLUMN trangthaihopdong VARCHAR(50) AFTER thoigianky;
+
+
+#------------------  Add Column table taikhoan -----------#
+ALTER TABLE taikhoan
+ADD COLUMN tennganhang VARCHAR(255) AFTER chutaikhoan;

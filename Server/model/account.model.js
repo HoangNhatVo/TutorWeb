@@ -42,4 +42,10 @@ module.exports = {
     resetPassword:(verify, newPass)=>{
         return orm.selectAll(`call ResetPassword('${verify}','${newPass}')`);
     },
+    changeStatusAccount:(ID, newStatus)=>{
+        return orm.selectAll(`call ChangeStatusAccount(${ID},'${newStatus}')`);
+    },
+    getAllContract: () => {
+        return orm.selectAll(`call GetAllContract()`);
+    },
 }

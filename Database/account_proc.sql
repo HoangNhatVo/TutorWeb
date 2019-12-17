@@ -269,3 +269,69 @@ BEGIN
 END;$$
 DELIMITER ;
 
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE ChangeStatusAccount(in i int(11), in statusnew varchar(20))
+BEGIN
+	update account a
+    set a.tinhtrang = statusnew
+    where a.id = i;
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllContract()
+BEGIN
+	select * from hopdong;
+END;$$
+DELIMITER ;
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddContract(in ten varchar(255), in nguoi_day int(11), in nguoi_hoc int(11), in tgianky date)
+BEGIN
+	insert into hopdong values(null, ten, nguoi_day, nguoi_hoc, tgianky, 'Chưa duyệt');
+END;$$
+DELIMITER ;
+#call AddContract('Hợp đồng A',37,38,'2019-12-12');
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE UpdateStatusContract(in i int1(11), in status varchar(50))
+BEGIN
+	update hopdong set trangthaihopdong = status where id =i;
+END;$$
+DELIMITER ;
+#call UpdateStatusContract(1);
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE Add_DieuKhoanHopDong(in idHD int(11), in noi_dung text, in ben_thuc_hien varchar(100))
+BEGIN
+	insert into dieukhoanhopdong values(null, idHD, noi_dung, ben_thuc_hien);
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE Add_TaiKhoanNganHang(in chu_tai_khoan int(11), in ten_ngan_hang varchar(255))
+BEGIN
+	insert into taikhoan values(null, chu_tai_khoan, ten_ngan_hang, 0);
+END;$$
+DELIMITER ;
+call Add_TaiKhoanNganHang(37,'Vietcombank');
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE Add_GiaoDich(in IDTaiKhoanNganHang int(11), in nguoi_gui int(11), in nguoi_nhan int(11),
+								in loai_giao_dich int(11), in so_tien int(11), in mo_ta varchar(255))
+BEGIN
+	insert into giaodich values(null, IDTaiKhoanNganHang, nguoi_gui, nguoi_nhan, loai_giao_dich, so_tien, mo_ta);
+    update taikhoan t
+    set t.sotienconlai = t.sotienconlai + so_tien
+    where t.id = IDTaiKhoanNganHang;
+END;$$
+DELIMITER ;
+call Add_GiaoDich(1,37,38,1,100000,'trả tiền');

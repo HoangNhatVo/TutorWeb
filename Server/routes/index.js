@@ -366,4 +366,29 @@ router.post('/resetpassword', function(req,res,next){
   })
 })
 
+router.post('/changestatusaccount', function(req, res, next){
+  var ID = req.body.id;
+  var newStatus = req.body.newstatus;
+  accountModel.changeStatusAccount(ID, newStatus).then(r=>{
+    res.send('Thành công');
+  }).catch(err=>{
+    console.log(err);
+    res.send('Đã xảy ra lỗi.');
+  })
+})
+
+router.get('/listcontract',function(req, res, next){
+    accountModel.getAllContract().then(r=>{
+      if(r.length){
+        res.send(r);
+      }
+      else{
+        res.send('Chưa có Hợp đồng nào.');
+      }
+    }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
 module.exports = router;
