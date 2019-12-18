@@ -52,7 +52,13 @@ BEGIN
 END;$$
 DELIMITER ;
 
-
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE Get_ChuyenNganh_ByID(in i int(11))
+BEGIN
+	select * from chuyennganh where id=i;
+END;$$
+DELIMITER ;
 
 DELIMITER $$
 USE `sql12314047`$$
