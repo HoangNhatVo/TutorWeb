@@ -529,6 +529,33 @@ router.get('/contract/:ID',function(req, res, next){
   })
 })
 
+router.get('/tagteacher/:ID',function(req, res, next){
+  var ID = req.params.ID;
+  accountModel.getAccountByID(ID).then(r1=>{
+    if(r1.length){
+      tagModel.getAllTagByAccID(ID).then(r=>{
+        if(r.length){
+          res.send(r);
+        }
+        else{
+          res.send('Không có Tag nào.');
+        }
+      }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+      })
+    }
+    else{
+      res.send('Tài khoản không tồn tại.');
+    }
+  }).catch(err=>{
+  console.log(err);
+  res.send('Đã xảy ra lỗi.');
+  })
+
+  
+})
+
 router.get('/dkhd/:contractID',function(req, res, next){
   var ContractID = req.params.contractID;
   contractModel.get_DieuKhoanHopDong_ByIDContract(ContractID).then(r=>{
