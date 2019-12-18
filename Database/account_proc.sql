@@ -213,6 +213,15 @@ DELIMITER ;
 
 DELIMITER $$
 USE `sql12314047`$$
+CREATE PROCEDURE GetAllTagByAccID(in accID int(11))
+BEGIN
+	select * from tag_account where id_account = accID order by id_tag asc;
+END;$$
+DELIMITER ;
+call GetAllTagByAccID(39);
+
+DELIMITER $$
+USE `sql12314047`$$
 CREATE PROCEDURE UpdateTagName(in i int(11), in TagNameUpdate varchar(50))
 BEGIN
 	declare TagNameNew varchar(50);
@@ -268,4 +277,103 @@ BEGIN
     where a.chuoixacthuc = verify;
 END;$$
 DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE ChangeStatusAccount(in i int(11), in statusnew varchar(20))
+BEGIN
+	update account a
+    set a.tinhtrang = statusnew
+    where a.id = i;
+END;$$
+DELIMITER ;
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllContract()
+BEGIN
+	select * from hopdong;
+END;$$
+DELIMITER ;
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddContract(in ten varchar(255), in nguoi_day int(11), in nguoi_hoc int(11), in tgianky date)
+BEGIN
+	insert into hopdong values(null, ten, nguoi_day, nguoi_hoc, tgianky, 'Chưa duyệt');
+    SELECT LAST_INSERT_ID() as id;
+    #SELECT * FROM hopdong WHERE id = SCOPE_IDENTITY();
+END;$$
+DELIMITER ;
+#call AddContract('Hợp đồng B',38,37,'2019-12-12');
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE UpdateStatusContract(in i int1(11), in status varchar(50))
+BEGIN
+	update hopdong set trangthaihopdong = status where id =i;
+END;$$
+DELIMITER ;
+#call UpdateStatusContract(1);
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE Add_DieuKhoanHopDong(in idHD int(11), in noi_dung text, in ben_thuc_hien varchar(100))
+BEGIN
+	insert into dieukhoanhopdong values(null, idHD, noi_dung, ben_thuc_hien);
+END;$$
+DELIMITER ;
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllContractByTeacherID(in teacherID int(11))
+BEGIN
+	select * from hopdong where nguoiday = teacherID;
+END;$$
+DELIMITER ;
+
+call GetAllContractByTeacherID(38);
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetContractByID(in i int(11))
+BEGIN
+	select * from hopdong where id = i;
+END;$$
+DELIMITER ;
+call GetContractByID(4);
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE Get_DieuKhoanHopDong_ByIDContract(in contractID int(11))
+BEGIN
+	select * from dieukhoanhopdong where sohopdong = contractID;
+END;$$
+DELIMITER ;
+
+call Get_DieuKhoanHopDong_ByIDContract(11);
+
+#-----------------------------------------------------------#
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE Add_TaiKhoanNganHang(in chu_tai_khoan int(11), in ten_ngan_hang varchar(255))
+BEGIN
+	insert into taikhoan values(null, chu_tai_khoan, ten_ngan_hang, 0);
+END;$$
+DELIMITER ;
+call Add_TaiKhoanNganHang(37,'Vietcombank');
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE NapTienVaoTaiKhoan(in IDTaiKhoanNganHang int(11), in nguoi_nap int(11), in so_tien int(11))
+BEGIN
+	insert into giaodich values(null, IDTaiKhoanNganHang, nguoi_nap, nguoi_nap, 1, so_tien, 'Nộp tiền vào tài khoản');
+    update taikhoan t
+    set t.sotienconlai = t.sotienconlai + so_tien
+    where t.id = IDTaiKhoanNganHang;
+END;$$
+DELIMITER ;
+call NapTienVaoTaiKhoan(1,37,100000);
 
