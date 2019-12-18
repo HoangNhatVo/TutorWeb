@@ -63,4 +63,8 @@ module.exports = {
     getAllContract: () => {
         return orm.selectAll(`call GetAllContract()`);
     },
+    get_ChuyenNganh_ByID: (ID) => {
+        return orm.selectAll(`call Get_ChuyenNganh_ByID(${ID})`);
+    },
 }
+

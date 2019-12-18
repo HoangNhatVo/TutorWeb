@@ -222,7 +222,38 @@ router.get('/profile/:ID', function(req, res, next){
         res.send('Chủ tài khoản này chưa xác thực.');
       }
       else{
-        res.send(r[0]);
+        if(r[0].vaitro!=2){
+          res.send({user: r[0]});
+        }
+        else{
+          tagModel.getAllTagByAccID(id).then(r2=>{
+            if(r2.length){
+              if(r[0].chuyennganh!=1){
+                accountModel.get_ChuyenNganh_ByID(r[0].chuyennganh).then(r3=>{
+                  if(r3.length){
+                    console.log('abc');
+                    res.json({
+                      user: r[0],
+                      tag: r2,
+                      chuyennganh: r3[0]});
+                  }
+                  else{
+                    res.send({user: r[0],tag: r2});
+                  }
+                }).catch(err=>{
+                  console.log(err);
+                  res.send('Đã xảy ra lỗi.');
+                })
+              }
+            }
+            else{
+              res.send(r[0]);
+            }
+          }).catch(err=>{
+            console.log(err);
+            res.send('Đã xảy ra lỗi.');
+          })
+        }
       }
     }
     else{
