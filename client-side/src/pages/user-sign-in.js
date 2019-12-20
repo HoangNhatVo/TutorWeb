@@ -21,7 +21,6 @@ class UserSignIn extends Component {
 
   // googleSignIn = async () => {
   //   const response = await api.get("/google");
-  //   console.log(response);
   // };
 
   render() {

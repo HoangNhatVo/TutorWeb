@@ -8,6 +8,7 @@ import { Avatar } from "../components";
 import moment from "moment";
 import { connect } from "react-redux";
 import { getSpecializes, getUser } from "../actions";
+import history from "../utils/history";
 
 function ItemInfo({ title, value }) {
   return (
@@ -150,7 +151,11 @@ class UserProfileShow extends Component {
               color="primary"
               className="mt1 p1"
               fullWidth
-              // disabled={isSigningUp}
+              onClick={() =>
+                history.push(
+                  `/profile/${this.props.match.params.id}/create-contract`
+                )
+              }
             >
               Đặt lịch
             </Button>

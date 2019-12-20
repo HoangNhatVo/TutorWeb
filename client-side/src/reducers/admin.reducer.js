@@ -16,6 +16,11 @@ const initState = {
     isOk: false,
     message: "",
     isAdding: false
+  },
+  contracts: {
+    isGetting: false,
+    isOk: false,
+    contracts: ""
   }
 };
 
@@ -133,6 +138,24 @@ export default (state = initState, { type, payload }) => {
             if (tag.id === payload) return { ...tag, updating: true };
             else return tag;
           })
+        }
+      };
+    case types.IS_GETTING_CONTRACTS:
+      return {
+        ...state,
+        contracts: {
+          ...state.contracts,
+          isGetting: true
+        }
+      };
+    case types.GET_CONTRACTS_OK:
+      return {
+        ...state,
+        contracts: {
+          ...state.contracts,
+          isGetting: false,
+          isOk: true,
+          contracts: payload
         }
       };
     default:

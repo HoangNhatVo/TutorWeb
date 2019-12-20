@@ -8,12 +8,13 @@ import {
   AdminSignIn,
   UserProfileEdit,
   UserProfileShow,
-  ListTeacher,
+  ContractsEdit,
   ResetPasswordToken,
   Verify,
   ResetPassword,
   Users,
   Tags,
+  Contracts,
   Home
 } from "../pages";
 import { Router, Switch, Route } from "react-router-dom";
@@ -36,11 +37,15 @@ class Routers extends Component {
           <Route path="/admin/tags" component={withAuth(Tags)} />
           {/* <Route path="/admin/users" component={withAuth(Users)} /> */}
           <Route path="/admin/users" component={Users} />
+          <Route path="/admin/contracts" component={Contracts} />
 
-          <Route path="/list-teacher" component={ListTeacher} />
           <Route path="/teacher" component={withAuth(TeacherHome)} />
           <Route path="/student" component={withAuth(StudentHome)} />
 
+          <Route
+            path="/profile/:id/create-contract"
+            component={withAuth(ContractsEdit)}
+          />
           <Route path="/profile/:id" component={withAuth(UserProfileShow)} />
           <Route path="/profile" exact component={withAuth(UserProfileEdit)} />
           <Route path="/" component={Home} />
