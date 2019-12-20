@@ -545,19 +545,30 @@ router.get('/allcontractbyteacher/:ID',function(req, res, next){
   })
 })
 
-router.get('/contract/:ID',function(req, res, next){
-  var ID = req.params.ID;
-  contractModel.getContractByID(ID).then(r=>{
-    if(r.length){
-      res.send(r);
-    }
-    else{
-      res.send('Hợp đồng không tồn tại.');
-    }
-  }).catch(err=>{
-  console.log(err);
-  res.send('Đã xảy ra lỗi.');
-  })
+router.get('/contract/:ID', async function(req, res, next){
+  try{
+    var ID = req.params.ID;
+    //contractModel.getContractByID(ID).then(r=>{
+      var r = await contractModel.getContractByID(ID);
+      if(r.length){
+        var teacher = await accountModel.getAccountByID(r[0].nguoiday);
+        var student = await accountModel.getAccountByID(r[0].nguoihoc);
+        res.json({
+          contract: r[0],
+          teacher: teacher,
+          student: student
+        });
+      }
+      else{
+        res.send('Hợp đồng không tồn tại.');
+      }
+    // }).catch(err=>{
+    // console.log(err);
+    // res.send('Đã xảy ra lỗi.');
+    // })
+  }catch(error){
+    console.log(err);
+  }
 })
 
 router.get('/tagteacher/:ID',function(req, res, next){
