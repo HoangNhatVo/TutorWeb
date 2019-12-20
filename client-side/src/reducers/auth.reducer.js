@@ -12,7 +12,8 @@ const initState = {
     updatingDescription: false,
     updatingBasicInfo: false,
     updatingAvatar: false,
-    updatingTags: false
+    updatingTags: false,
+    updatingPassword: false
   }
 };
 
@@ -55,6 +56,10 @@ export default (state = initState, { type, payload }) => {
         ...state,
         userData: {
           ...payload
+        },
+        signIn: {
+          message: "",
+          isSigningIn: false
         }
       };
     case types.IS_GETTING_PROFILE:
@@ -122,6 +127,22 @@ export default (state = initState, { type, payload }) => {
           ...state.userData,
           updatingAvatar: false,
           avatar: payload
+        }
+      };
+    case types.UPDATING_PASSWORD:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          updatingPassword: true
+        }
+      };
+    case types.UPDATE_PASSWORD_RESPONSE:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          updatingPassword: false
         }
       };
     default:

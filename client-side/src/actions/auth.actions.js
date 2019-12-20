@@ -63,6 +63,15 @@ const updateAvatarResponse = data => ({
   payload: data
 });
 
+const updatingPassword = () => ({
+  type: types.UPDATING_PASSWORD
+});
+
+const updatePasswordResponse = data => ({
+  type: types.UPDATE_PASSWORD_RESPONSE,
+  payload: data
+});
+
 export const signUpStudent = (
   username,
   password,
@@ -164,7 +173,7 @@ export const getProfile = () => async dispatch => {
       dispatch(getProfileSuccessfully(response.data));
     //success
     else {
-      const userData = response.data;
+      const userData = response.data.user;
       dispatch(getProfileSuccessfully(userData));
     }
   }
@@ -205,6 +214,18 @@ export const updateBasicInfo = (name, address) => async dispatch => {
 //   if (response && response.data === "Cập nhật thành công")
 //     dispatch(updateTagsResponse(name, address));
 // };
+
+export const updatePassword = (curpassword, newpassword) => async dispatch => {
+  dispatch(updatingPassword());
+
+  const response = await api.post("/changepassword", {
+    id: cookies.get("id"),
+    curpassword,
+    newpassword
+  });
+  if (response && response.data)
+    dispatch(updatePasswordResponse(response.data));
+};
 
 export const updateAvatar = base64 => dispatch => {
   dispatch(updatingAvatar());

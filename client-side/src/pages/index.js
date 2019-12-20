@@ -10,6 +10,9 @@ import AdminSignIn from "./admin/sign-in";
 import Verify from "./verify";
 import Home from "./home";
 
+import ResetPassword from "./reset-password";
+import ResetPasswordToken from "./reset-password-token";
+
 import ListTeacher from "./list-teacher";
 import UserProfileEdit from "./user-profile-edit";
 import UserProfileShow from "./user-profile-show";
@@ -20,9 +23,11 @@ export {
   UserSignIn,
   UserProfileEdit,
   UserProfileShow,
+  ResetPasswordToken,
   ListTeacher,
   TeacherHome,
   StudentHome,
+  ResetPassword,
   Moderators,
   Verify,
   Home,

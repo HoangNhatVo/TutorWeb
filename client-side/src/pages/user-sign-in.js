@@ -4,6 +4,7 @@ import { HeaderOut, Footer } from "../components";
 // import api from "../utils/axios";
 import { connect } from "react-redux";
 import { signIn } from "../actions";
+import { Link } from "react-router-dom";
 
 class UserSignIn extends Component {
   constructor(props) {
@@ -72,7 +73,13 @@ class UserSignIn extends Component {
               onChange={this.changeState("password")}
               className="mt1"
             />
-
+            <Link
+              to="/reset-password"
+              className="mt1"
+              style={{ display: "inline-block", color: "blue" }}
+            >
+              Quên mật khẩu?
+            </Link>
             {message && (
               <Typography
                 variant="body2"

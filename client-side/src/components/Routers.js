@@ -9,7 +9,9 @@ import {
   UserProfileEdit,
   UserProfileShow,
   ListTeacher,
+  ResetPasswordToken,
   Verify,
+  ResetPassword,
   Users,
   Tags,
   Home
@@ -27,6 +29,8 @@ class Routers extends Component {
           <Route path="/sign-up" component={UserSignUp} />
           <Route path="/sign-in" component={UserSignIn} />
           <Route path="/verify/:token" component={Verify} />
+          <Route path="/resetpassword/:token" component={ResetPasswordToken} />
+          <Route path="/reset-password" component={ResetPassword} />
 
           <Route path="/admin/moderators" component={withAuth(Moderators)} />
           <Route path="/admin/tags" component={withAuth(Tags)} />

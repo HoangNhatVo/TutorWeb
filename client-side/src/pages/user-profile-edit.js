@@ -17,7 +17,12 @@ import {
 } from "@material-ui/core";
 import "./style/teacher-home.css";
 import { connect } from "react-redux";
-import { updateDescription, updateBasicInfo, updateAvatar } from "../actions";
+import {
+  updateDescription,
+  updateBasicInfo,
+  updateAvatar,
+  updatePassword
+} from "../actions";
 import { getRole } from "../utils";
 
 const ITEM_HEIGHT = 48;
@@ -48,6 +53,10 @@ class UserProfileEdit extends Component {
       preview: null,
       src: "",
       isChangeAvatar: false,
+
+      oldPassword: "",
+      newPassword: "",
+      renewPassword: "",
 
       fullname: (this.props.userData && this.props.userData.hoten) || "",
       address: (this.props.userData && this.props.userData.diachi) || "",
@@ -88,7 +97,10 @@ class UserProfileEdit extends Component {
       fullname,
       userTags,
       address,
-      preview
+      preview,
+      oldPassword,
+      newPassword,
+      renewPassword
     } = this.state;
 
     const {
@@ -96,6 +108,7 @@ class UserProfileEdit extends Component {
       updateDescription,
       updateBasicInfo,
       updateAvatar,
+      updatePassword,
       tags
     } = this.props;
 
@@ -103,7 +116,7 @@ class UserProfileEdit extends Component {
 
     return (
       <LayoutUser>
-        <Grid container spacing={2} className="mt2">
+        <Grid container spacing={2} className="mt2 mb2">
           <Grid item xs={4}>
             <Paper
               className="df fdc aic"
@@ -305,6 +318,59 @@ class UserProfileEdit extends Component {
                 Cập nhật
               </Button>
             </Paper>
+
+            <Paper
+              style={{
+                borderRadius: 4,
+                padding: "1rem"
+              }}
+              className="mt1"
+              elevation={2}
+            >
+              <Typography
+                style={{ fontWeight: 600, color: "gray" }}
+                variant="body2"
+                className="mb1"
+              >
+                Bảo mật
+              </Typography>
+              <TextField
+                fullWidth
+                label="Mật khẩu cũ"
+                type="password"
+                variant="outlined"
+                value={oldPassword}
+                onChange={this.changeState("oldPassword")}
+              />
+              <TextField
+                fullWidth
+                label="Mật khẩu mới"
+                type="password"
+                variant="outlined"
+                className="mt1"
+                value={newPassword}
+                onChange={this.changeState("newPassword")}
+              />
+              <TextField
+                fullWidth
+                label="Nhập lại mật khẩu mới"
+                type="password"
+                variant="outlined"
+                className="mt1"
+                value={renewPassword}
+                onChange={this.changeState("renewPassword")}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                className="mt1"
+                size="small"
+                disabled={userData && userData.updatingPassword}
+                onClick={() => updatePassword(oldPassword, newPassword)}
+              >
+                Cập nhật
+              </Button>
+            </Paper>
           </Grid>
         </Grid>
       </LayoutUser>
@@ -317,5 +383,5 @@ export default connect(
     userData: auth.userData,
     tags: admin.tags.tags
   }),
-  { updateDescription, updateBasicInfo, updateAvatar }
+  { updateDescription, updateBasicInfo, updateAvatar, updatePassword }
 )(UserProfileEdit);

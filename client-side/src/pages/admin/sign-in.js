@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Typography, TextField, Button } from "@material-ui/core";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { signIn } from "../../actions";
 
 class AdminSignIn extends Component {
@@ -53,7 +54,13 @@ class AdminSignIn extends Component {
             onChange={this.changeState("password")}
             className="mt1"
           />
-
+          <Link
+            to="/reset-password"
+            className="mt1 mb1"
+            style={{ color: "blue" }}
+          >
+            Quên mật khẩu?
+          </Link>
           <Button
             variant="contained"
             color="primary"

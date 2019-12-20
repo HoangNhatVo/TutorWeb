@@ -33,6 +33,7 @@ export const getUser = id => async dispatch => {
   dispatch(isGettingUser(true));
 
   const user = await api.get(`/profile/${id}`);
-
-  dispatch(getUserOk(user && user.data));
+  if (typeof user.data.user === "object")
+    dispatch(getUserOk(user && user.data.user));
+  else dispatch(getUserOk(user && user.data));
 };

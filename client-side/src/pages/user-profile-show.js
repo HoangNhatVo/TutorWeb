@@ -37,7 +37,11 @@ class UserProfileShow extends Component {
     const { currentUser } = this.props;
 
     if (!this.props.gotSpecializes) this.props.getSpecializes();
-    if (!currentUser.id || currentUser.id !== id) this.props.getUser(id);
+    if (
+      (currentUser && !currentUser.id) ||
+      (currentUser && currentUser.id !== id)
+    )
+      this.props.getUser(id);
   }
 
   render() {
