@@ -156,13 +156,29 @@ export const signIn = (username, password) => async dispatch => {
   if (response) {
     if (typeof response.data === "string")
       dispatch(signInResponse(response.data));
-    //success
+    // success
     else {
       const userData = response.data[0];
       dispatch(signInSuccessfully(userData));
       cookies.set("token", userData.chuoixacthuc);
       cookies.set("role", userData.vaitro);
       cookies.set("id", userData.id);
+
+      // vi truong tra ve luc dang nhap khac voi truong get profile nen bat dac di~ :))
+      const response2 = await api.get(`/profile/${cookies.get("id")}`);
+      if (response2) {
+        if (response2.data && typeof response2.data.user === "object") {
+          const userData = response2.data.user;
+          dispatch(
+            getProfileSuccessfully({
+              ...userData,
+              tags: response2.data.tag
+                ? response2.data.tag.map(tag => tag.id_tag)
+                : []
+            })
+          );
+        } else dispatch(getProfileSuccessfully(response2.data));
+      }
 
       const role = userData.vaitro;
       if (role === 1) history.push("/student");

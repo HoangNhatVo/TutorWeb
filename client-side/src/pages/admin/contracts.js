@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { LayoutAdmin } from "../../layouts";
 import MaterialTable from "material-table";
-import { BreadCrums, Avatar } from "../../components";
+import { BreadCrums } from "../../components";
 import { getContracts } from "../../actions";
 import { connect } from "react-redux";
 import history from "../../utils/history";
+import moment from "moment";
 
 class Contracts extends Component {
   componentDidMount() {
@@ -30,38 +31,28 @@ class Contracts extends Component {
                 title: "Tên hợp đồng",
                 field: "NameContract"
               },
-              { title: "Thời gian bắt đầu", field: "TimeAsigned" },
+              {
+                title: "Thời gian bắt đầu",
+                field: "TimeAsigned",
+                render: rowData =>
+                  moment(rowData.TimeAsigned).format("DD/MM/YYYY")
+              },
               {
                 title: "Trạng thái",
                 field: "StatusContract"
               },
-              { title: "Giới tính", field: "gioitinh" },
               {
-                title: "Avatar giáo viên",
-                field: "AvatarTeacher",
-                render: rowData => (
-                  <Avatar
-                    src={rowData.AvatarTeacher}
-                    name={rowData.NameTeacher}
-                    alt={rowData.NameTeacher}
-                  />
-                )
+                title: "Người dạy",
+                field: "NameTeacher"
               },
               {
-                title: "Avatar học sinh",
-                field: "avatar",
-                render: rowData => (
-                  <Avatar
-                    src={rowData.AvatarStudent}
-                    name={rowData.NameStudent}
-                    alt={rowData.NameStudent}
-                  />
-                )
+                title: "Người học",
+                field: "NameStudent"
               }
             ]}
             data={contracts.contracts}
             onRowClick={(event, selectedRow) =>
-              history.push(`/profile/${selectedRow.id}`)
+              history.push(`/contracts/${selectedRow.id}`)
             }
           />
         )}

@@ -37,7 +37,10 @@ function ItemHot({ src, body1, body2 }) {
 
 class Home extends Component {
   componentDidMount() {
-    this.props.getTeachers();
+    if (this.props.teachers && !this.props.teachers.isOk)
+      this.props.getTeachers();
+    // if (this.props.specializes && !this.props.specializes.isOk)
+    //   this.props.getSpecializes();
   }
 
   render() {
@@ -188,6 +191,10 @@ class Home extends Component {
 export default connect(
   ({ teacher }) => ({
     teachers: teacher.teachers
+    // specializes: utils.specializes
   }),
-  { getTeachers }
+  {
+    getTeachers
+    // getSpecializes
+  }
 )(Home);

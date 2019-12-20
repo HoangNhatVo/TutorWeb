@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import { LayoutUser } from "../layouts";
 import { Typography, Grid } from "@material-ui/core";
 import { TeacherCard } from "../components";
-import { getTeachers } from "../actions";
+import { getTeachers, getSpecializes } from "../actions";
 import { connect } from "react-redux";
 
 class StudentHome extends Component {
   componentDidMount() {
     if (!this.props.isOk) this.props.getTeachers();
+    if (this.props.specializes && !this.props.specializes.isOk)
+      this.props.getSpecializes();
   }
 
   render() {
@@ -49,10 +51,11 @@ class StudentHome extends Component {
   }
 }
 export default connect(
-  ({ teacher }) => ({
+  ({ teacher, utils }) => ({
+    specializes: utils.specializes,
     teachers: teacher.teachers.teachers,
     isLoadingTeachers: teacher.teachers.isLoading,
     isOk: teacher.teachers.isOk
   }),
-  { getTeachers }
+  { getTeachers, getSpecializes }
 )(StudentHome);

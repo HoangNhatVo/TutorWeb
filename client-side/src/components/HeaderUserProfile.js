@@ -8,8 +8,14 @@ import {
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import { signOut, getProfile } from "../actions";
-import { AccountCircle, Person, CallMissedOutgoing } from "@material-ui/icons";
+import {
+  AccountCircle,
+  Person,
+  CallMissedOutgoing,
+  Home
+} from "@material-ui/icons";
 import history from "../utils/history";
+import cookies from "../utils/cookies";
 
 class HeaderUserProfile extends Component {
   constructor(props) {
@@ -34,6 +40,7 @@ class HeaderUserProfile extends Component {
     const { avatar, hoten: fullname } = userData;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
+    const role = Number(cookies.get("role"));
 
     return (
       <>
@@ -59,6 +66,18 @@ class HeaderUserProfile extends Component {
           open={Boolean(open)}
           onClose={this.handleCloseMenu}
         >
+          <MenuItem
+            onClick={() =>
+              history.push(
+                role === 1 ? "/student" : role === 2 ? "/teacher" : "/admin"
+              )
+            }
+          >
+            <ListItemIcon>
+              <Home fontSize="small" />
+            </ListItemIcon>
+            <Typography variant="inherit">Trang của bạn</Typography>
+          </MenuItem>
           <MenuItem onClick={() => history.push("/profile")}>
             <ListItemIcon>
               <Person fontSize="small" />

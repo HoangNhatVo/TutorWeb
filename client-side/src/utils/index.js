@@ -10,6 +10,8 @@ export function getRole(id) {
 }
 
 export function getSpecialize(specializes, id) {
+  if (!specializes) return;
+
   id = Number(id);
   let ret = "";
 
