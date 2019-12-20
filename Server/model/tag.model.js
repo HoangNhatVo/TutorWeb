@@ -18,4 +18,7 @@ module.exports = {
     getTagByID:(IDTag)=>{
         return orm.selectAll(`call GetTagByID(${IDTag})`);
     },
+    getAllTagByAccID:(ID)=>{
+        return orm.selectAll(`call GetAllTagByAccID(${ID})`);
+    },
 }

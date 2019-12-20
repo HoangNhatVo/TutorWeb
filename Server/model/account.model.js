@@ -57,4 +57,14 @@ module.exports = {
     resetPassword:(verify, newPass)=>{
         return orm.selectAll(`call ResetPassword('${verify}','${newPass}')`);
     },
+    changeStatusAccount:(ID, newStatus)=>{
+        return orm.selectAll(`call ChangeStatusAccount(${ID},'${newStatus}')`);
+    },
+    getAllContract: () => {
+        return orm.selectAll(`call GetAllContract()`);
+    },
+    get_ChuyenNganh_ByID: (ID) => {
+        return orm.selectAll(`call Get_ChuyenNganh_ByID(${ID})`);
+    },
 }
+
