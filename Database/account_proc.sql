@@ -387,3 +387,19 @@ END;$$
 DELIMITER ;
 call NapTienVaoTaiKhoan(1,37,100000);
 
+
+
+#-------------------------
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllContract()
+BEGIN
+	select hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher,
+    hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+    nd.hoten as NameTeacher, nh.hoten as NameStudent
+    from hopdong hd, account nd, account nh
+    where hd.nguoiday = nd.id and hd.nguoihoc = nh.id;
+END;$$
+DELIMITER ;
+
+call GetAllContract();
