@@ -48,27 +48,41 @@ export const getTags = () => async dispatch => {
   dispatch(getTagsOk(tags && tags.data));
 };
 
-export const deleteTag = id => async dispatch => {
+export const deleteTag = (id, cbs) => async dispatch => {
   dispatch(isDeletingTag(id));
 
   const response = await api.post("/deletetag", { id });
 
-  if (response.data === "Thành công") dispatch(deleteTagOk(id));
+  if (response.data === "Thành công") {
+    dispatch(deleteTagOk(id));
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
 };
 
-export const updateTag = (id, tagnameupdate) => async dispatch => {
+export const updateTag = (id, tagnameupdate, cbs) => async dispatch => {
   dispatch(isUpdatingTag(id));
 
   const response = await api.post("/updatetagname", { id, tagnameupdate });
-
-  if (response.data === "Thành công") dispatch(updateTagOk(id, tagnameupdate));
-  else dispatch(updateTagFailed(id));
+  if (response.data === "Thành công") {
+    dispatch(updateTagOk(id, tagnameupdate));
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    dispatch(updateTagFailed(id));
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
 };
 
-export const addTag = tagname => async dispatch => {
+export const addTag = (tagname, cbs) => async dispatch => {
   dispatch(addingTag());
 
   const response = await api.post("/addtag", { tagname });
 
-  if (response.data) dispatch(addTagOk(response.data, tagname));
+  if (typeof response.data === 'number') {
+    dispatch(addTagOk(response.data, tagname));
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
 };

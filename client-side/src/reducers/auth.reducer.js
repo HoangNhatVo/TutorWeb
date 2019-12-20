@@ -145,6 +145,26 @@ export default (state = initState, { type, payload }) => {
           updatingPassword: false
         }
       };
+    case types.UPDATING_TAGS:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          updatingTags: true
+        }
+      };
+    case types.UPDATE_TAGS_RESPONSE:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          tags:
+            typeof state.userData.tags === "object"
+              ? state.userData.tags.concat(payload)
+              : [].concat(payload),
+          updatingTags: false
+        }
+      };
     default:
       return state;
   }

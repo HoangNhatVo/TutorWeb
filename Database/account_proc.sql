@@ -346,7 +346,11 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetContractByID(in i int(11))
 BEGIN
-	select * from hopdong where id = i;
+	select hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+    nh.avatar as AvatarStudent, nh.hoten as NameStudent, nh.email as EmailStudent, nh.sdt as PhoneStudent,
+    nd.avatar as AvatarTeacher, nd.hoten as NameTeacher, nd.email as EmailTeacher, nd.sdt as PhoneTeacher
+    from hopdong hd, account nd, account nh
+    where hd.id = i and hd.nguoiday = nd.id and hd.nguoihoc = nh.id;
 END;$$
 DELIMITER ;
 call GetContractByID(4);

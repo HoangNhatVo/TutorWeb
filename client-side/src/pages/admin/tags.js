@@ -11,10 +11,12 @@ import {
 import { Label, Edit, Delete, Clear, Check } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { updateTag, deleteTag, addTag } from "../../actions";
+import { withSnackbar, useSnackbar } from "notistack";
 
 function TagItem({ data, updateTag, deleteTag }) {
   const [isOnEdit, setisOnEdit] = useState(false);
   const [tagValue, settagValue] = useState(data.tentag);
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <Paper className="df jcsb aic p1">
@@ -22,6 +24,11 @@ function TagItem({ data, updateTag, deleteTag }) {
         <Label color="inherit" className="mr1" />
         {isOnEdit ? (
           <TextField
+            error={!tagValue}
+            helperText={
+              (data.updating && "Đang cập nhật") ||
+              (!tagValue && "Không được để trống")
+            }
             value={tagValue}
             onChange={event => settagValue(event.target.value)}
           />
@@ -32,8 +39,21 @@ function TagItem({ data, updateTag, deleteTag }) {
       {isOnEdit ? (
         <div className="df aic">
           <IconButton
+            disabled={data.updating}
             onClick={() => {
-              if (tagValue) updateTag(data.id, tagValue);
+              if (tagValue)
+                updateTag(data.id, tagValue, {
+                  suc: () => {
+                    enqueueSnackbar("Cập nhật thành công", {
+                      variant: "success"
+                    });
+                  },
+                  err: mes => {
+                    enqueueSnackbar(mes, {
+                      variant: "error"
+                    });
+                  }
+                });
             }}
           >
             <Check />
@@ -50,7 +70,18 @@ function TagItem({ data, updateTag, deleteTag }) {
           <IconButton
             onClick={() => {
               if (window.confirm("Bạn muốn xóa tag kỹ năng này ?"))
-                deleteTag(data.id);
+                deleteTag(data.id, {
+                  suc: () => {
+                    enqueueSnackbar("Xóa tag thành công", {
+                      variant: "success"
+                    });
+                  },
+                  err: mes => {
+                    enqueueSnackbar(mes, {
+                      variant: "error"
+                    });
+                  }
+                });
             }}
           >
             <Delete color="secondary" />
@@ -71,7 +102,14 @@ class Tags extends Component {
 
   render() {
     const { newTagValue } = this.state;
-    const { tags, isLoadingTags, updateTag, deleteTag, addTag } = this.props;
+    const {
+      tags,
+      isLoadingTags,
+      updateTag,
+      deleteTag,
+      addTag,
+      enqueueSnackbar
+    } = this.props;
 
     return (
       <LayoutAdmin>
@@ -84,6 +122,7 @@ class Tags extends Component {
                 <Label color="inherit" className="mr1" />
                 <TextField
                   fullWidth
+                  helperText={this.props.isAdding && "Đang thêm..."}
                   placeholder="Nhập tên tag mới..."
                   onChange={event =>
                     this.setState({ newTagValue: event.target.value })
@@ -92,8 +131,21 @@ class Tags extends Component {
                 />
               </div>
               <IconButton
+                disabled={this.props.isAdding || !newTagValue}
                 onClick={() => {
-                  if (newTagValue) addTag(newTagValue);
+                  if (newTagValue)
+                    addTag(newTagValue, {
+                      suc: () => {
+                        enqueueSnackbar("Thêm tag thành công", {
+                          variant: "success"
+                        });
+                      },
+                      err: mes => {
+                        enqueueSnackbar(mes, {
+                          variant: "error"
+                        });
+                      }
+                    });
                 }}
               >
                 <Check />
@@ -124,7 +176,8 @@ class Tags extends Component {
 export default connect(
   ({ admin }) => ({
     isLoadingTags: admin.tags.isOk,
-    tags: typeof admin.tags.tags === "object" ? admin.tags.tags : []
+    tags: typeof admin.tags.tags === "object" ? admin.tags.tags : [],
+    isAdding: admin.tags.isAdding
   }),
   { updateTag, deleteTag, addTag }
-)(Tags);
+)(withSnackbar(Tags));

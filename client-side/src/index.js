@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import configureStore from "./store";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
+import { SnackbarProvider } from "notistack";
 
 const theme = createMuiTheme({
   palette: {
@@ -23,7 +24,9 @@ ReactDOM.render(
   <Provider store={configureStore()}>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-      <Routers />
+      <SnackbarProvider>
+        <Routers />
+      </SnackbarProvider>
     </ThemeProvider>
   </Provider>,
   document.getElementById("root")

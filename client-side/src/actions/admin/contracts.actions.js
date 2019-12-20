@@ -13,7 +13,7 @@ const getContractOk = data => ({
 export const getContracts = () => async dispatch => {
   dispatch(isGettingontract());
 
-  const sub = await api.get("/listcontract", {});
-
-  dispatch(getContractOk(sub.data));
+  const contracts = await api.get("/listcontract");
+  console.log("view contracts", contracts);
+  dispatch(getContractOk(contracts.data));
 };

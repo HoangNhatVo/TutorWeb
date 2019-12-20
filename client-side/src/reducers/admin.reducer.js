@@ -113,7 +113,8 @@ export default (state = initState, { type, payload }) => {
         tags: {
           ...state.tags,
           tags: state.tags.tags.map(tag => {
-            if (tag.id === payload.id) return { ...payload };
+            if (tag.id === payload.id)
+              return { ...tag, tentag: payload.tagnameupdate, updating: false };
             else return tag;
           })
         }

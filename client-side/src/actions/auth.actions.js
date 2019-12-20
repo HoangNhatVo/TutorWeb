@@ -63,6 +63,15 @@ const updateAvatarResponse = data => ({
   payload: data
 });
 
+const updatingTags = () => ({
+  type: types.UPDATING_TAGS
+});
+
+const updateTagsOk = id => ({
+  type: types.UPDATE_TAGS_RESPONSE,
+  payload: id
+});
+
 const updatingPassword = () => ({
   type: types.UPDATING_PASSWORD
 });
@@ -167,19 +176,23 @@ export const getProfile = () => async dispatch => {
   dispatch(isGettingProfile());
 
   const response = await api.get(`/profile/${cookies.get("id")}`);
-
+  console.log("view get profile", response);
   if (response) {
-    if (typeof response.data === "string")
-      dispatch(getProfileSuccessfully(response.data));
-    //success
-    else {
+    if (response.data && typeof response.data.user === "object") {
       const userData = response.data.user;
-      dispatch(getProfileSuccessfully(userData));
-    }
+      dispatch(
+        getProfileSuccessfully({
+          ...userData,
+          tags: response.data.tag
+            ? response.data.tag.map(tag => tag.id_tag)
+            : []
+        })
+      );
+    } else dispatch(getProfileSuccessfully(response.data));
   }
 };
 
-export const updateDescription = content => async dispatch => {
+export const updateDescription = (content, cbs) => async dispatch => {
   dispatch(updatingDescription());
 
   const response = await api.post("/user/updateIntroduce", {
@@ -187,11 +200,15 @@ export const updateDescription = content => async dispatch => {
     content
   });
 
-  if (response && response.data === "Cập nhật thành công")
+  if (response && response.data === "Cập nhật thành công") {
     dispatch(updateDescriptionResponse(content));
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
 };
 
-export const updateBasicInfo = (name, address) => async dispatch => {
+export const updateBasicInfo = (name, address, cbs) => async dispatch => {
   dispatch(updatingBasicInfo());
 
   const response = await api.post("/user/updateInfor", {
@@ -199,23 +216,41 @@ export const updateBasicInfo = (name, address) => async dispatch => {
     name,
     address
   });
-  if (response && response.data === "Cập nhật thành công")
+  if (response && response.data === "Cập nhật thành công") {
     dispatch(updateBasicInfoResponse(name, address));
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
 };
 
-// export const updateTags = (name, address) => async dispatch => {
-//   dispatch(updatingTags());
+export const updateTags = (tags, cbs) => async dispatch => {
+  dispatch(updatingTags());
 
-//   const response = await api.post("/addtagaccount", {
-//     iduser: cookies.get("id"),
-//     name,
-//     address
-//   });
-//   if (response && response.data === "Cập nhật thành công")
-//     dispatch(updateTagsResponse(name, address));
-// };
+  if (!tags) return;
+  let count = 0;
 
-export const updatePassword = (curpassword, newpassword) => async dispatch => {
+  tags.map(async idtag => {
+    const response = await api.post("/addtagaccount", {
+      idtag,
+      idaccount: cookies.get("id")
+    });
+    if (response && response.data === "Thành công") count++;
+    console.log("view tagupdate", response);
+    if (count === tags.length) {
+      dispatch(updateTagsOk(idtag));
+      if (cbs && cbs.suc) cbs.suc();
+    } else {
+      if (cbs && cbs.err) cbs.err("Cập nhật thất bại");
+    }
+  });
+};
+
+export const updatePassword = (
+  curpassword,
+  newpassword,
+  cbs
+) => async dispatch => {
   dispatch(updatingPassword());
 
   const response = await api.post("/changepassword", {
@@ -223,11 +258,16 @@ export const updatePassword = (curpassword, newpassword) => async dispatch => {
     curpassword,
     newpassword
   });
-  if (response && response.data)
+  console.log("view password change", response);
+  if (response && response.data) {
     dispatch(updatePasswordResponse(response.data));
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
 };
 
-export const updateAvatar = base64 => dispatch => {
+export const updateAvatar = (base64, cbs) => dispatch => {
   dispatch(updatingAvatar());
 
   ref
@@ -244,6 +284,7 @@ export const updateAvatar = base64 => dispatch => {
             ava: url
           });
           dispatch(updateAvatarResponse(url));
+          if (cbs && cbs.suc) cbs.suc();
         });
     });
 };

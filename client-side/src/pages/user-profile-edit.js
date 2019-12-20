@@ -21,9 +21,11 @@ import {
   updateDescription,
   updateBasicInfo,
   updateAvatar,
-  updatePassword
+  updatePassword,
+  updateTags
 } from "../actions";
 import { getRole } from "../utils";
+import { withSnackbar } from "notistack";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -60,7 +62,7 @@ class UserProfileEdit extends Component {
 
       fullname: (this.props.userData && this.props.userData.hoten) || "",
       address: (this.props.userData && this.props.userData.diachi) || "",
-      userTags: [],
+      userTags: (this.props.userData && this.props.userData.tags) || [],
       description:
         (this.props.userData && this.props.userData.baigioithieu) || ""
     };
@@ -73,6 +75,7 @@ class UserProfileEdit extends Component {
       this.setState({
         fullname: userData.hoten,
         address: userData.diachi,
+        userTags: userData.tags,
         description: userData.baigioithieu
       });
     }
@@ -109,7 +112,8 @@ class UserProfileEdit extends Component {
       updateBasicInfo,
       updateAvatar,
       updatePassword,
-      tags
+      tags,
+      enqueueSnackbar
     } = this.props;
 
     if (!userData) return <div />;
@@ -143,7 +147,19 @@ class UserProfileEdit extends Component {
                     size="small"
                     disabled={userData.updatingAvatar}
                     onClick={() => {
-                      if (preview) updateAvatar(preview);
+                      if (preview)
+                        updateAvatar(preview, {
+                          suc: () => {
+                            enqueueSnackbar("Cập nhật thành công", {
+                              variant: "success"
+                            });
+                          },
+                          err: mes => {
+                            enqueueSnackbar(mes, {
+                              variant: "error"
+                            });
+                          }
+                        });
                     }}
                   >
                     Cập nhật
@@ -212,7 +228,20 @@ class UserProfileEdit extends Component {
                 color="primary"
                 className="mt1"
                 size="small"
-                onClick={() => updateDescription(description)}
+                onClick={() =>
+                  updateDescription(description, {
+                    suc: () => {
+                      enqueueSnackbar("Cập nhật thành công", {
+                        variant: "success"
+                      });
+                    },
+                    err: mes => {
+                      enqueueSnackbar(mes, {
+                        variant: "error"
+                      });
+                    }
+                  })
+                }
                 disabled={userData && userData.updatingDescription}
               >
                 Cập nhật
@@ -255,7 +284,20 @@ class UserProfileEdit extends Component {
                 className="mt1"
                 size="small"
                 disabled={userData && userData.updatingBasicInfo}
-                onClick={() => updateBasicInfo(fullname, address)}
+                onClick={() =>
+                  updateBasicInfo(fullname, address, {
+                    suc: () => {
+                      enqueueSnackbar("Cập nhật thành công", {
+                        variant: "success"
+                      });
+                    },
+                    err: mes => {
+                      enqueueSnackbar(mes, {
+                        variant: "error"
+                      });
+                    }
+                  })
+                }
               >
                 Cập nhật
               </Button>
@@ -312,8 +354,20 @@ class UserProfileEdit extends Component {
                 color="primary"
                 className="mt1"
                 size="small"
-
-                // disabled={isSigningUp}
+                onClick={() =>
+                  this.props.updateTags(userTags, {
+                    suc: () => {
+                      enqueueSnackbar("Cập nhật thành công", {
+                        variant: "success"
+                      });
+                    },
+                    err: mes => {
+                      enqueueSnackbar(mes, {
+                        variant: "error"
+                      });
+                    }
+                  })
+                }
               >
                 Cập nhật
               </Button>
@@ -366,7 +420,20 @@ class UserProfileEdit extends Component {
                 className="mt1"
                 size="small"
                 disabled={userData && userData.updatingPassword}
-                onClick={() => updatePassword(oldPassword, newPassword)}
+                onClick={() =>
+                  updatePassword(oldPassword, newPassword, {
+                    suc: () => {
+                      enqueueSnackbar("Đổi mật khẩu thành công", {
+                        variant: "success"
+                      });
+                    },
+                    err: mes => {
+                      enqueueSnackbar(mes, {
+                        variant: "error"
+                      });
+                    }
+                  })
+                }
               >
                 Cập nhật
               </Button>
@@ -383,5 +450,11 @@ export default connect(
     userData: auth.userData,
     tags: admin.tags.tags
   }),
-  { updateDescription, updateBasicInfo, updateAvatar, updatePassword }
-)(UserProfileEdit);
+  {
+    updateDescription,
+    updateBasicInfo,
+    updateAvatar,
+    updatePassword,
+    updateTags
+  }
+)(withSnackbar(UserProfileEdit));
