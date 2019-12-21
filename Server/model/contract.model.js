@@ -20,5 +20,11 @@ module.exports = {
     },
     get_DieuKhoanHopDong_ByIDContract: (ContractID) => {
         return orm.selectAll(`call Get_DieuKhoanHopDong_ByIDContract(${ContractID})`);
+    }, 
+    addCmtContractByID: (ContractID, CMT) => {
+        return orm.selectAll(`call AddCmtContractByID(${ContractID}, '${CMT}')`);
+    }, 
+    addScoreContractByID: (ContractID, Score) => {
+        return orm.selectAll(`call AddScoreContractByID(${ContractID}, ${Score})`);
     },  
 }
