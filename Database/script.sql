@@ -165,6 +165,12 @@ select * from chuyennganh;
 ALTER TABLE hopdong
 ADD COLUMN trangthaihopdong VARCHAR(50) AFTER thoigianky;
 
+ALTER TABLE hopdong
+ADD COLUMN danhgia text AFTER trangthaihopdong;
+
+ALTER TABLE hopdong
+ADD COLUMN sodiem int(11) AFTER danhgia;
+
 
 #------------------  Add Column table taikhoan -----------#
 ALTER TABLE taikhoan

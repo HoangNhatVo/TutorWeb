@@ -630,4 +630,30 @@ router.get('/dkhd/:contractID',function(req, res, next){
   res.send('Đã xảy ra lỗi.');
   })
 })
+
+
+
+router.post('/addcmtcontract', function(req, res, next){
+  var IDContract = req.body.idcontract;
+  var CMT = req.body.cmt;
+  contractModel.addCmtContractByID(IDContract, CMT) .then(r=>{
+    res.send('Thành công');
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+
+router.post('/addscorecontract', function(req, res, next){
+  var IDContract = req.body.idcontract;
+  var Score = req.body.score;
+  contractModel.addScoreContractByID(IDContract, Score) .then(r=>{
+    res.send('Thành công');
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
 module.exports = router;

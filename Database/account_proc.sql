@@ -429,3 +429,59 @@ BEGIN
 END;$$
 DELIMITER ;
 call GetAllContractByStudentID(9);
+
+#------------------ CHAT-----------------------#
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddChat(in IDnguoigui int(11), in IDnguoinhan int(11), in nd text, in thoi_gian_chat datetime)
+BEGIN
+	insert into chat values (null, IDnguoigui, IDnguoinhan, nd, thoi_gian_chat);
+    select c.id as ID, c.noidung as NoiDungChat, c.thoigianchat as ThoiGianChat,
+    c.nguoigui as IDNguoiGui, c.nguoinhan as IDNguoiNhan,
+    ng.hoten as TenNguoiGui, ng.avatar as AvatarNguoiGui,
+    nn.hoten as TenNguoiNhan, nn.avatar as AvatarNguoiNhan
+    from chat c, account ng, account nn
+    where c.id = LAST_INSERT_ID() and IDnguoigui = ng.id and IDnguoinhan = nn.id;
+    #----SELECT LAST_INSERT_ID() as id;
+END;$$
+DELIMITER ;
+call AddChat(37,38,'đlgđ','2019-12-22 23:59:59');
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetChat(in IDnguoi1 int(11), in IDnguoi2 int(11))
+BEGIN
+	select * 
+    from chat c
+    where c.nguoigui = IDnguoi1 and  c.nguoinhan = IDnguoi2 
+		or c.nguoigui = IDnguoi2 and c.nguoinhan = IDnguoi1;
+END;$$
+DELIMITER ;
+call GetChat(37,38);
+
+#------------------ Đánh giá hợp đồng-----------------------#
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddCmtContractByID(in IDContract int(11), in cmt text)
+BEGIN
+	update hopdong
+    set danhgia = cmt
+    where id = IDContract;
+END;$$
+DELIMITER ;
+call AddCmtContractByID(2,'abcbabab');
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddScoreContractByID(in IDContract int(11), in score int(11))
+BEGIN
+	update hopdong
+    set sodiem = score
+    where id = IDContract;
+END;$$
+DELIMITER ;
+call AddScoreContractByID(2,5);
