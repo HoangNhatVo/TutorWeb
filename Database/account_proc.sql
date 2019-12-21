@@ -123,27 +123,37 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAccountByID(in i int(11))
 BEGIN
-	select * from account where id = i;
+	select * from account where id = i and tinhtrang = 'active' and xacthuc = true;
 END;$$
 DELIMITER ;
+call GetAccountByID(9);
 
 DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAllAccount()
 BEGIN
-	select * from account;
+	select * from account where tinhtrang = 'active' and xacthuc = true;
+END;$$
+DELIMITER ;
+call GetAllAccount();
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllTeacher()
+BEGIN
+	select * from account where vaitro = 2 and tinhtrang = 'active' and xacthuc = true;
 END;$$
 DELIMITER ;
 call GetAllTeacher();
 
 DELIMITER $$
 USE `sql12314047`$$
-CREATE PROCEDURE GetAllTeacher()
+CREATE PROCEDURE GetAllAdmin()
 BEGIN
-	select * from account where vaitro = 2;
+	select * from account where vaitro = 3 and tinhtrang = 'active' and xacthuc = true;
 END;$$
 DELIMITER ;
-
+call GetAllAdmin();
 
 DELIMITER $$
 USE `sql12314047`$$
@@ -336,11 +346,14 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAllContractByTeacherID(in teacherID int(11))
 BEGIN
-	select * from hopdong where nguoiday = teacherID;
+	select hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+    nh.avatar as AvatarStudent, nh.hoten as NameStudent,
+    nd.avatar as AvatarTeacher, nd.hoten as NameTeacher
+    from hopdong hd, account nd, account nh
+    where hd.nguoiday = teacherID and hd.nguoihoc = nh.id and nd.id = teacherID;
 END;$$
 DELIMITER ;
-
-call GetAllContractByTeacherID(38);
+call GetAllContractByTeacherID(37);
 
 DELIMITER $$
 USE `sql12314047`$$
@@ -387,3 +400,32 @@ END;$$
 DELIMITER ;
 call NapTienVaoTaiKhoan(1,37,100000);
 
+
+
+#-------------------------
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllContract()
+BEGIN
+	select hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher,
+    hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+    nd.hoten as NameTeacher, nh.hoten as NameStudent
+    from hopdong hd, account nd, account nh
+    where hd.nguoiday = nd.id and hd.nguoihoc = nh.id;
+END;$$
+DELIMITER ;
+
+call GetAllContract();
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllContractByStudentID(in studentID int(11))
+BEGIN
+	select hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+    nh.avatar as AvatarStudent, nh.hoten as NameStudent,
+    nd.avatar as AvatarTeacher, nd.hoten as NameTeacher
+    from hopdong hd, account nd, account nh
+    where hd.nguoihoc = studentID and hd.nguoiday = nd.id and nh.id = studentID;
+END;$$
+DELIMITER ;
+call GetAllContractByStudentID(9);

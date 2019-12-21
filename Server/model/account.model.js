@@ -39,6 +39,9 @@ module.exports = {
     getAllteacher : () => {
         return orm.selectAll(`call GetAllTeacher()`);
     },
+    getAllAdmin : () => {
+        return orm.selectAll(`call GetAllAdmin()`);
+    },
     updateAvatar: (iduser,ava) => {
         return orm.selectAll(`call UpdateAvatar(${iduser},'${ava}')`)
     },

@@ -12,6 +12,9 @@ module.exports = {
     getAllContractByTeacherID: (TeacherID) => {
         return orm.selectAll(`call GetAllContractByTeacherID(${TeacherID})`);
     },
+    getAllContractByStudentID: (StudentID) => {
+        return orm.selectAll(`call GetAllContractByStudentID(${StudentID})`);
+    },
     getContractByID: (ID) => {
         return orm.selectAll(`call GetContractByID(${ID})`);
     },
