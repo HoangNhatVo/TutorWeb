@@ -123,27 +123,37 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAccountByID(in i int(11))
 BEGIN
-	select * from account where id = i;
+	select * from account where id = i and tinhtrang = 'active' and xacthuc = true;
 END;$$
 DELIMITER ;
+call GetAccountByID(9);
 
 DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAllAccount()
 BEGIN
-	select * from account;
+	select * from account where tinhtrang = 'active' and xacthuc = true;
+END;$$
+DELIMITER ;
+call GetAllAccount();
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllTeacher()
+BEGIN
+	select * from account where vaitro = 2 and tinhtrang = 'active' and xacthuc = true;
 END;$$
 DELIMITER ;
 call GetAllTeacher();
 
 DELIMITER $$
 USE `sql12314047`$$
-CREATE PROCEDURE GetAllTeacher()
+CREATE PROCEDURE GetAllAdmin()
 BEGIN
-	select * from account where vaitro = 2;
+	select * from account where vaitro = 3 and tinhtrang = 'active' and xacthuc = true;
 END;$$
 DELIMITER ;
-
+call GetAllAdmin();
 
 DELIMITER $$
 USE `sql12314047`$$

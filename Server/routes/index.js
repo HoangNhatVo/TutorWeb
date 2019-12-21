@@ -210,6 +210,20 @@ router.get('/allTeacher', async function (req, res, next) {
     console.log(err)
   }
 })
+
+router.get('/alladmin', async function (req, res, next) {
+  try {
+    var allAdmin = await accountModel.getAllAdmin()
+    if (allAdmin.length)
+      res.send(allAdmin)
+    else
+      res.send('Không có admin nào.');
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
+
 router.get('/profile/:ID', function(req, res, next){
   var id = req.params.ID;
   console.log(id);
