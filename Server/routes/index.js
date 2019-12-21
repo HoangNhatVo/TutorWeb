@@ -545,6 +545,21 @@ router.get('/allcontractbyteacher/:ID',function(req, res, next){
   })
 })
 
+router.get('/allcontractbystudent/:ID',function(req, res, next){
+  var StudentID = req.params.ID;
+  contractModel.getAllContractByStudentID(StudentID).then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Không có hợp đồng nào.');
+    }
+  }).catch(err=>{
+  console.log(err);
+  res.send('Đã xảy ra lỗi.');
+  })
+})
+
 router.get('/contract/:ID', async function(req, res, next){
     var ID = req.params.ID;
     contractModel.getContractByID(ID).then(r=>{
