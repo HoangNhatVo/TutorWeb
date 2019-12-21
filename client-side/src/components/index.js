@@ -7,6 +7,7 @@ import BreadCrums from "./BreadCrums";
 import Menu from "./Menu";
 import Banner from "./Banner";
 import TeacherCard from "./TeacherCard";
+import ContractItem from "./ContractItem";
 
 export * from "./common";
 export {
@@ -17,5 +18,6 @@ export {
   HeaderOut,
   Menu,
   Banner,
-  TeacherCard
+  TeacherCard,
+  ContractItem
 };

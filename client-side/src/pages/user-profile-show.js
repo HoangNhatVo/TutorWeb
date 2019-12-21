@@ -9,6 +9,7 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { getSpecializes, getUser } from "../actions";
 import history from "../utils/history";
+import cookies from "../utils/cookies";
 
 function ItemInfo({ title, value }) {
   return (
@@ -105,7 +106,7 @@ class UserProfileShow extends Component {
               </Typography>
 
               <div
-                className="df mt1 jcsb aic"
+                className="df mt1 mb2 jcsb aic"
                 style={{ padding: "0 2rem", width: "100%" }}
               >
                 <div className="df fdc">
@@ -146,19 +147,21 @@ class UserProfileShow extends Component {
                 </div>
               </div>
             </Paper>
-            <Button
-              variant="contained"
-              color="primary"
-              className="mt1 p1"
-              fullWidth
-              onClick={() =>
-                history.push(
-                  `/profile/${this.props.match.params.id}/create-contract`
-                )
-              }
-            >
-              Đặt lịch
-            </Button>
+            {Number(cookies.get("role")) === 1 && (
+              <Button
+                variant="contained"
+                color="primary"
+                className="mt1 p1"
+                fullWidth
+                onClick={() =>
+                  history.push(
+                    `/contract/${this.props.match.params.id}/create-contract`
+                  )
+                }
+              >
+                Đặt lịch
+              </Button>
+            )}
           </Grid>
           <Grid item xs={8}>
             <Paper
@@ -175,8 +178,13 @@ class UserProfileShow extends Component {
               >
                 Một chút về bản thân
               </Typography>
-              <Typography color="textSecondary" component="p" variant="body1">
-                {baigioithieu || "Chưa cập nhật bài giới thiệu..."}
+              <Typography
+                color="textSecondary"
+                component="pre"
+                style={{ whiteSpace: "pre-wrap" }}
+                variant="body1"
+              >
+                {baigioithieu || <i>Chưa cập nhật bài giới thiệu...</i>}
               </Typography>
             </Paper>
 

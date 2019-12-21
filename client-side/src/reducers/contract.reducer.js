@@ -9,6 +9,10 @@ const initState = {
 
 export default (state = initState, { type, payload }) => {
   switch (type) {
+    case types.RESET:
+      return {
+        ...initState
+      };
     case types.IS_CREATING_CONTRACT:
       return {
         ...state,

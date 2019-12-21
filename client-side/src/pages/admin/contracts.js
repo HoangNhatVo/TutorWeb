@@ -52,7 +52,7 @@ class Contracts extends Component {
             ]}
             data={contracts.contracts}
             onRowClick={(event, selectedRow) =>
-              history.push(`/contracts/${selectedRow.id}`)
+              history.push(`/contract/${selectedRow.IDContract}`)
             }
           />
         )}

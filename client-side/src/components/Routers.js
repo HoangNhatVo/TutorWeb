@@ -9,6 +9,7 @@ import {
   UserProfileEdit,
   UserProfileShow,
   ContractsEdit,
+  ContractsView,
   ResetPasswordToken,
   Verify,
   ResetPassword,
@@ -35,17 +36,17 @@ class Routers extends Component {
 
           <Route path="/admin/moderators" component={withAuth(Moderators)} />
           <Route path="/admin/tags" component={withAuth(Tags)} />
-          {/* <Route path="/admin/users" component={withAuth(Users)} /> */}
-          <Route path="/admin/users" component={Users} />
-          <Route path="/admin/contracts" component={Contracts} />
+          <Route path="/admin/users" component={withAuth(Users)} />
+          <Route path="/admin/contracts" component={withAuth(Contracts)} />
 
           <Route path="/teacher" component={withAuth(TeacherHome)} />
           <Route path="/student" component={withAuth(StudentHome)} />
 
           <Route
-            path="/profile/:id/create-contract"
+            path="/contract/:id/create-contract"
             component={withAuth(ContractsEdit)}
           />
+          <Route path="/contract/:id" component={withAuth(ContractsView)} />
           <Route path="/profile/:id" component={withAuth(UserProfileShow)} />
           <Route path="/profile" exact component={withAuth(UserProfileEdit)} />
           <Route path="/" component={Home} />

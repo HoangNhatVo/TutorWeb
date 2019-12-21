@@ -2,6 +2,7 @@ import * as types from "../types";
 import api from "../utils/axios";
 import moment from "moment";
 import cookies from "../utils/cookies";
+import history from "../utils/history";
 
 const isCreatingContract = () => ({
   type: types.IS_CREATING_CONTRACT
@@ -34,5 +35,7 @@ export const createContract = (
       benthuchien: rule.actor
     });
   });
+
   dispatch(createContractOk(sub));
+  history.push("/student");
 };

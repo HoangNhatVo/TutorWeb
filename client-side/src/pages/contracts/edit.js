@@ -105,13 +105,13 @@ class ContractsEdit extends Component {
               >
                 Gia sư
               </Typography>
-              <Grid item xs={6} className="df">
+              <div className="df">
                 <Avatar src={currentUser.avatar} alt="Ảnh đại diện" />
                 <div className="ml1">
                   <Typography>{currentUser.hoten}</Typography>
                   <Typography>{currentUser.email}</Typography>
                 </div>
-              </Grid>
+              </div>
               <form>
                 <Typography
                   style={{ fontWeight: 600, color: "gray" }}

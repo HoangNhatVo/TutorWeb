@@ -1,146 +1,114 @@
 import React, { Component } from "react";
 import { LayoutUser } from "../layouts";
-import { Typography, Grid, Paper, Avatar } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import { Typography, Grid } from "@material-ui/core";
 import "./style/teacher-home.css";
+import { getCurrentContractList } from "../actions";
+import { connect } from "react-redux";
+import { ContractItem } from "../components";
+
 class TeacherHome extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
+  componentDidMount() {
+    const { myContracts } = this.props;
+    if (myContracts && !myContracts.isOk) this.props.getCurrentContractList();
+  }
+
   render() {
+    const { myContracts } = this.props;
+
+    if (!myContracts) return <div>Đang tải...</div>;
+    const pendingList = myContracts.contracts.filter(
+      contract => contract.StatusContract === "Chưa duyệt"
+    );
+    const doingList = myContracts.contracts.filter(
+      contract => contract.StatusContract === "Đã duyệt"
+    );
+    const endedList = myContracts.contracts.filter(
+      contract => contract.StatusContract === "Kết thúc"
+    );
+
     return (
       <LayoutUser>
-        <Typography
-          variant="h5"
-          className="mt2 mb1"
-          component="h5"
-          style={{ fontWeight: 600 }}
-        >
-          Hợp đồng mới
-        </Typography>
-
-        <Grid container spacing={2}>
-          <Grid item xs={3}>
-            <Paper
-              className="df fdc"
-              style={{
-                borderRadius: 4,
-                overflow: "hidden",
-                padding: "1rem"
-              }}
-              elevation={2}
+        {pendingList.length !== 0 && (
+          <>
+            <Typography
+              variant="h5"
+              className="mt2 mb1"
+              component="h5"
+              style={{ fontWeight: 600 }}
             >
-              <Typography style={{ fontWeight: 600 }}>
-                Ten hop dong ne
-              </Typography>
+              Hợp đồng mới
+            </Typography>
 
-              <Typography color="textSecondary" variant="body2">
-                Thoi gian bat dau ne
-              </Typography>
+            <Grid container spacing={2}>
+              {pendingList.map(contract => (
+                <ContractItem
+                  pending
+                  contract={contract}
+                  key={contract.NameContract}
+                />
+              ))}
+            </Grid>
+          </>
+        )}
 
-              <div className="mt1 df aic">
-                <Avatar style={{ width: 28, height: 28 }} />
-                <Typography className="ml1">Ten hoc sinh ne</Typography>
-              </div>
-              <div className="mt1">
-                <Button variant="contained" color="primary">
-                  Duyet
-                </Button>
-                <Button variant="text" color="secondary" className="ml1">
-                  Tu choi
-                </Button>
-              </div>
-            </Paper>
-          </Grid>
-        </Grid>
-        <Typography
-          variant="h5"
-          className="mt2 mb1"
-          component="h5"
-          style={{ fontWeight: 600 }}
-        >
-          Hợp đồng đang diễn ra
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={3}>
-            <Paper
-              className="df fdc"
-              style={{
-                borderRadius: 4,
-                overflow: "hidden",
-                padding: "1rem"
-              }}
-              elevation={2}
+        {doingList.length !== 0 && (
+          <>
+            <Typography
+              variant="h5"
+              className="mt2 mb1"
+              component="h5"
+              style={{ fontWeight: 600 }}
             >
-              <Typography style={{ fontWeight: 600 }}>
-                Ten hop dong ne
-              </Typography>
+              Hợp đồng đang diễn ra
+            </Typography>
+            <Grid container spacing={2}>
+              {doingList.map(contract => (
+                <ContractItem
+                  doing
+                  contract={contract}
+                  key={contract.NameContract}
+                />
+              ))}
+            </Grid>
+          </>
+        )}
 
-              <Typography color="textSecondary" variant="body2">
-                Thoi gian bat dau ne
-              </Typography>
-
-              <div className="mt1 df aic">
-                <Avatar style={{ width: 28, height: 28 }} />
-                <Typography className="ml1">Ten hoc sinh ne</Typography>
-              </div>
-              <div className="mt1">
-                <Button variant="contained" color="primary">
-                  Duyet
-                </Button>
-                <Button variant="text" color="secondary" className="ml1">
-                  Tu choi
-                </Button>
-              </div>
-            </Paper>
-          </Grid>
-        </Grid>
-        <Typography
-          variant="h5"
-          className="mt2 mb1"
-          component="h5"
-          style={{ fontWeight: 600 }}
-        >
-          Hợp đồng đã thực hiện
-        </Typography>
-        <Grid container spacing={2} className="mb2">
-          <Grid item xs={3}>
-            <Paper
-              className="df fdc"
-              style={{
-                borderRadius: 4,
-                overflow: "hidden",
-                padding: "1rem"
-              }}
-              elevation={2}
+        {endedList.length !== 0 && (
+          <>
+            <Typography
+              variant="h5"
+              className="mt2 mb1"
+              component="h5"
+              style={{ fontWeight: 600 }}
             >
-              <Typography style={{ fontWeight: 600 }}>
-                Ten hop dong ne
-              </Typography>
-
-              <Typography color="textSecondary" variant="body2">
-                Thoi gian bat dau ne
-              </Typography>
-
-              <div className="mt1 df aic">
-                <Avatar style={{ width: 28, height: 28 }} />
-                <Typography className="ml1">Ten hoc sinh ne</Typography>
-              </div>
-              <div className="mt1">
-                <Button variant="contained" color="primary">
-                  Duyet
-                </Button>
-                <Button variant="text" color="secondary" className="ml1">
-                  Tu choi
-                </Button>
-              </div>
-            </Paper>
-          </Grid>
-        </Grid>
+              Hợp đồng đã thực hiện
+            </Typography>
+            <Grid container spacing={2} className="mb2">
+              {endedList.map(contract => (
+                <ContractItem
+                  ended
+                  contract={contract}
+                  key={contract.NameContract}
+                />
+              ))}
+            </Grid>
+          </>
+        )}
       </LayoutUser>
     );
   }
 }
-export default TeacherHome;
+
+export default connect(
+  ({ teacher }) => ({
+    myContracts: teacher.myContracts
+  }),
+  {
+    getCurrentContractList
+  }
+)(TeacherHome);

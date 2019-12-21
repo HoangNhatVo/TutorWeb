@@ -77,7 +77,6 @@ function ResetPassword() {
                     toemail: email
                   });
                   setemailSending(false);
-                  console.log("view", response);
                   if (response && response.data) setemailOk(true);
                 }}
               >

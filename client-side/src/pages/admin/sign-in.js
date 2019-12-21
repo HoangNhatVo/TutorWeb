@@ -56,8 +56,8 @@ class AdminSignIn extends Component {
           />
           <Link
             to="/reset-password"
-            className="mt1 mb1"
-            style={{ color: "blue" }}
+            className="mt1"
+            style={{ display: "inline-block", color: "blue" }}
           >
             Quên mật khẩu?
           </Link>

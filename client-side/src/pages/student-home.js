@@ -1,34 +1,110 @@
 import React, { Component } from "react";
 import { LayoutUser } from "../layouts";
 import { Typography, Grid } from "@material-ui/core";
-import { TeacherCard } from "../components";
-import { getTeachers, getSpecializes } from "../actions";
+import { TeacherCard, ContractItem } from "../components";
+import {
+  getTeachers,
+  getSpecializes,
+  getCurrentContractList
+} from "../actions";
 import { connect } from "react-redux";
 
 class StudentHome extends Component {
   componentDidMount() {
+    const { myContracts, specializes } = this.props;
     if (!this.props.isOk) this.props.getTeachers();
-    if (this.props.specializes && !this.props.specializes.isOk)
-      this.props.getSpecializes();
+    if (specializes && !specializes.isOk) this.props.getSpecializes();
+    if (myContracts && !myContracts.isOk) this.props.getCurrentContractList();
   }
 
   render() {
-    const { teachers, isLoadingTeachers } = this.props;
+    const { teachers, isLoadingTeachers, myContracts } = this.props;
+    console.log("view myContracts", myContracts);
+
+    const pendingList = myContracts.contracts.filter(
+      contract => contract.StatusContract === "Chưa duyệt"
+    );
+    const doingList = myContracts.contracts.filter(
+      contract => contract.StatusContract === "Đã duyệt"
+    );
+    const endedList = myContracts.contracts.filter(
+      contract => contract.StatusContract === "Kết thúc"
+    );
 
     return (
       <LayoutUser>
-        <Typography
-          variant="h5"
-          className="mt2 mb2"
-          component="h5"
-          style={{ fontWeight: 600 }}
-        >
-          Gia sư của bạn
-        </Typography>
+        {pendingList.length !== 0 && (
+          <>
+            <Typography
+              variant="h5"
+              className="mt2 mb1"
+              component="h5"
+              style={{ fontWeight: 600 }}
+            >
+              Yêu cầu của bạn
+            </Typography>
+            <Grid container spacing={2}>
+              {pendingList.map(contract => (
+                <ContractItem
+                  isStudent
+                  pending
+                  contract={contract}
+                  key={contract.NameContract}
+                />
+              ))}
+            </Grid>
+          </>
+        )}
+
+        {doingList.length !== 0 && (
+          <>
+            <Typography
+              variant="h5"
+              className="mt2 mb1"
+              component="h5"
+              style={{ fontWeight: 600 }}
+            >
+              Gia sư của bạn
+            </Typography>
+            <Grid container spacing={2}>
+              {doingList.map(contract => (
+                <ContractItem
+                  isStudent
+                  doing
+                  contract={contract}
+                  key={contract.NameContract}
+                />
+              ))}
+            </Grid>
+          </>
+        )}
+
+        {endedList.length !== 0 && (
+          <>
+            <Typography
+              variant="h5"
+              className="mt2 mb1"
+              component="h5"
+              style={{ fontWeight: 600 }}
+            >
+              Đã học xong
+            </Typography>
+            <Grid container spacing={2}>
+              {endedList.map(contract => (
+                <ContractItem
+                  isStudent
+                  ended
+                  contract={contract}
+                  key={contract.NameContract}
+                />
+              ))}
+            </Grid>
+          </>
+        )}
 
         <Typography
           variant="h5"
-          className="mt2 mb2"
+          className="mt2 mb1"
           component="h5"
           style={{ fontWeight: 600 }}
         >
@@ -55,7 +131,8 @@ export default connect(
     specializes: utils.specializes,
     teachers: teacher.teachers.teachers,
     isLoadingTeachers: teacher.teachers.isLoading,
-    isOk: teacher.teachers.isOk
+    isOk: teacher.teachers.isOk,
+    myContracts: teacher.myContracts
   }),
-  { getTeachers, getSpecializes }
+  { getTeachers, getSpecializes, getCurrentContractList }
 )(StudentHome);

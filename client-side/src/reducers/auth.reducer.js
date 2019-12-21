@@ -5,6 +5,7 @@ const initState = {
   signUp: { isSigningUp: false, message: "" },
   userData: {
     isGetting: false,
+    isOk: false,
     hoten: "",
     chuoixacthuc: "",
     avatar: "",
@@ -19,6 +20,10 @@ const initState = {
 
 export default (state = initState, { type, payload }) => {
   switch (type) {
+    case types.RESET:
+      return {
+        ...initState
+      };
     case types.SIGNING_IN:
       return {
         ...state,
@@ -75,6 +80,7 @@ export default (state = initState, { type, payload }) => {
         ...state,
         userData: {
           ...payload,
+          isOk: true,
           isGetting: false
         }
       };
@@ -158,10 +164,10 @@ export default (state = initState, { type, payload }) => {
         ...state,
         userData: {
           ...state.userData,
-          tags:
-            typeof state.userData.tags === "object"
-              ? state.userData.tags.concat(payload)
-              : [].concat(payload),
+          tags: payload,
+          // typeof state.userData.tags === "object"
+          //   ? state.userData.tags.concat(payload)
+          //   : [].concat(payload),
           updatingTags: false
         }
       };

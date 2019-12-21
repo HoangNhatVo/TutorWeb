@@ -10,6 +10,11 @@ const initState = {
     isLoading: false,
     userData: {}
   },
+  currentContract: {
+    isLoading: false,
+    contractData: {},
+    isOk: false
+  },
   tags: {
     isLoading: false,
     tags: [],
@@ -26,6 +31,10 @@ const initState = {
 
 export default (state = initState, { type, payload }) => {
   switch (type) {
+    case types.RESET:
+      return {
+        ...initState
+      };
     case types.IS_GETTING_USER:
       return {
         ...state,
@@ -41,6 +50,24 @@ export default (state = initState, { type, payload }) => {
           ...state.currentUser,
           isLoading: false,
           userData: payload
+        }
+      };
+    case types.IS_GETTING_CURRENT_CONTRACT:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          isLoading: true
+        }
+      };
+    case types.GET_CURRENT_CONTRACT_SUCCESSFULLY:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          isLoading: false,
+          isOk: true,
+          contractData: payload
         }
       };
     case types.IS_GETTING_USERS:

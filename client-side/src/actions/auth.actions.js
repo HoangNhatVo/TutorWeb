@@ -192,7 +192,6 @@ export const getProfile = () => async dispatch => {
   dispatch(isGettingProfile());
 
   const response = await api.get(`/profile/${cookies.get("id")}`);
-  console.log("view get profile", response);
   if (response) {
     if (response.data && typeof response.data.user === "object") {
       const userData = response.data.user;
@@ -244,22 +243,23 @@ export const updateTags = (tags, cbs) => async dispatch => {
   dispatch(updatingTags());
 
   if (!tags) return;
-  let count = 0;
 
-  tags.map(async idtag => {
-    const response = await api.post("/addtagaccount", {
-      idtag,
-      idaccount: cookies.get("id")
-    });
-    if (response && response.data === "Thành công") count++;
-    console.log("view tagupdate", response);
-    if (count === tags.length) {
-      dispatch(updateTagsOk(idtag));
-      if (cbs && cbs.suc) cbs.suc();
-    } else {
-      if (cbs && cbs.err) cbs.err("Cập nhật thất bại");
+  tags.map(
+    async idtag => {
+      const response = await api.post("/addtagaccount", {
+        idtag,
+        idaccount: cookies.get("id")
+      });
+
+      if (response && response.data === "Thành công") {
+        dispatch(updateTagsOk(tags));
+        if (cbs && cbs.suc) cbs.suc();
+      }
     }
-  });
+    // else {
+    //   if (cbs && cbs.err) cbs.err("Cập nhật thất bại");
+    // }
+  );
 };
 
 export const updatePassword = (
@@ -274,7 +274,6 @@ export const updatePassword = (
     curpassword,
     newpassword
   });
-  console.log("view password change", response);
   if (response && response.data) {
     dispatch(updatePasswordResponse(response.data));
     if (cbs && cbs.suc) cbs.suc();
@@ -306,7 +305,8 @@ export const updateAvatar = (base64, cbs) => dispatch => {
 };
 
 export const signOut = () => async dispatch => {
-  dispatch(signInSuccessfully(null));
+  dispatch({ type: types.RESET });
+
   cookies.remove("token");
   cookies.remove("role");
   cookies.remove("id");

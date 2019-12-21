@@ -7,7 +7,7 @@ import { getProfile, getTags } from "../../actions";
 export function withAuth(ComposedComponent) {
   class WrappedComponent extends React.Component {
     componentDidMount() {
-      if (!this.props.token) this.props.getProfile();
+      if (this.props.shouldGet) this.props.getProfile();
       if (!this.props.isTagsGotten) this.props.getTags();
     }
 
@@ -22,7 +22,7 @@ export function withAuth(ComposedComponent) {
   return connect(
     ({ auth, admin }) => ({
       isSignedIn: auth.userData.chuoixacthuc || cookies.get("token"),
-      token: auth.userData.chuoixacthuc,
+      shouldGet: !auth.userData.isOk,
       isTagsGotten: admin.tags.isOk
     }),
     { getProfile, getTags }

@@ -6,6 +6,7 @@ import {
   Menu,
   ListItemIcon
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut, getProfile } from "../actions";
 import {
@@ -28,7 +29,7 @@ class HeaderUserProfile extends Component {
   componentDidMount() {
     const { userData } = this.props;
 
-    if (userData && !userData.chuoixacthuc) {
+    if (userData && !userData.isOk) {
       this.props.getProfile();
     }
   }
@@ -41,9 +42,22 @@ class HeaderUserProfile extends Component {
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const role = Number(cookies.get("role"));
+    const url = role === 1 ? "/student" : role === 2 ? "/teacher" : "/admin";
 
     return (
       <>
+        <Link
+          to={url}
+          style={{
+            textDecoration: "none",
+            color: "white",
+            marginRight: "2rem"
+          }}
+          className="df aic"
+        >
+          <Home fontSize="small" style={{ marginRight: 4 }} />
+          <Typography variant="body1">Trang của bạn</Typography>
+        </Link>
         <div
           className="df aic"
           style={{ cursor: "pointer" }}
@@ -66,18 +80,6 @@ class HeaderUserProfile extends Component {
           open={Boolean(open)}
           onClose={this.handleCloseMenu}
         >
-          <MenuItem
-            onClick={() =>
-              history.push(
-                role === 1 ? "/student" : role === 2 ? "/teacher" : "/admin"
-              )
-            }
-          >
-            <ListItemIcon>
-              <Home fontSize="small" />
-            </ListItemIcon>
-            <Typography variant="inherit">Trang của bạn</Typography>
-          </MenuItem>
           <MenuItem onClick={() => history.push("/profile")}>
             <ListItemIcon>
               <Person fontSize="small" />
