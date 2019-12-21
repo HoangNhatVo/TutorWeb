@@ -210,6 +210,20 @@ router.get('/allTeacher', async function (req, res, next) {
     console.log(err)
   }
 })
+
+router.get('/alladmin', async function (req, res, next) {
+  try {
+    var allAdmin = await accountModel.getAllAdmin()
+    if (allAdmin.length)
+      res.send(allAdmin)
+    else
+      res.send('Không có admin nào.');
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
+
 router.get('/profile/:ID', function(req, res, next){
   var id = req.params.ID;
   console.log(id);
@@ -533,6 +547,21 @@ router.post('/changestatuscontract', function(req, res, next){
 router.get('/allcontractbyteacher/:ID',function(req, res, next){
   var TeacherID = req.params.ID;
   contractModel.getAllContractByTeacherID(TeacherID).then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Không có hợp đồng nào.');
+    }
+  }).catch(err=>{
+  console.log(err);
+  res.send('Đã xảy ra lỗi.');
+  })
+})
+
+router.get('/allcontractbystudent/:ID',function(req, res, next){
+  var StudentID = req.params.ID;
+  contractModel.getAllContractByStudentID(StudentID).then(r=>{
     if(r.length){
       res.send(r);
     }
