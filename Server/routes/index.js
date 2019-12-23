@@ -656,4 +656,39 @@ router.post('/addscorecontract', function(req, res, next){
     })
 })
 
+
+router.post('/addknhd', function(req, res, next){
+  var IDNguoiKhieuNai = req.body.idnguoikhieunai;
+  var IDHopDong = req.body.idhopdong;
+  var NoiDung = req.body.noidung;
+  var ThoiGianKhieuNai = moment(req.body.thoigiankhieunai,'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss');
+  console.log(IDNguoiKhieuNai);
+  console.log(IDHopDong);
+  console.log(NoiDung);
+  console.log(ThoiGianKhieuNai);
+  
+  contractModel.addKNHD(IDNguoiKhieuNai, IDHopDong, NoiDung, ThoiGianKhieuNai).then(r=>{
+    res.send('Thành công');
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+
+router.get('/allcmtofteacher/:ID', function(req, res, next){
+  var IDTeacher = req.params.ID;
+  contractModel.getAllCMTOfTeacherByID(IDTeacher) .then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Không có đánh giá nào.')
+    }
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
 module.exports = router;

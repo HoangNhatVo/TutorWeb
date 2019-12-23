@@ -26,5 +26,11 @@ module.exports = {
     }, 
     addScoreContractByID: (ContractID, Score) => {
         return orm.selectAll(`call AddScoreContractByID(${ContractID}, ${Score})`);
+    },
+    addKNHD: (IDNguoiKhieuNai, IDHopDong, NoiDung, ThoiGianKhieuNai) => {
+        return orm.selectAll(`call AddKNHD(${IDNguoiKhieuNai}, ${IDHopDong}, '${NoiDung}', '${ThoiGianKhieuNai}')`);
+    },
+    getAllCMTOfTeacherByID: (IDTeacher) => {
+        return orm.selectAll(`call GetAllCMTOfTeacherByID(${IDTeacher})`);
     },  
 }

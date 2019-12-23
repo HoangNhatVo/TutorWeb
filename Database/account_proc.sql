@@ -485,3 +485,29 @@ BEGIN
 END;$$
 DELIMITER ;
 call AddScoreContractByID(2,5);
+
+
+#------------------ Khiếu nại hợp đồng-----------------------#
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddKNHD(in ID_nguoi_KN int(11), in ID_HD int(11), in noi_dung text, in thoi_gian_KN datetime)
+BEGIN
+	insert into khieunaihopdong values(null, ID_HD, ID_nguoi_KN, noi_dung,thoi_gian_KN);
+END;$$
+DELIMITER ;
+call AddKNHD(37, 1, 'abc','2019-12-12 12:12:12');
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllCMTOfTeacherByID(in IDTeacher int(11))
+BEGIN
+	select nh.id as IDNguoiDanhGia, nh.hoten as TenNguoiDanhGia, nh.avatar as AvatarNguoiDanhGia, 
+    hd.sodiem as SoSao, hd.danhgia as Comment
+    from hopdong hd, account nd, account nh
+    where hd.nguoiday = IDTeacher and hd.nguoihoc = nh.id and nd.id = IDTeacher
+		and ((hd.danhgia != '' and hd.danhgia is not null)or(hd.sodiem is not null and hd.sodiem>0));
+END;$$
+DELIMITER ;
+call GetAllCMTOfTeacherByID(38);
