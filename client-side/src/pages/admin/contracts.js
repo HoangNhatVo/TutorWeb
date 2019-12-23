@@ -6,6 +6,7 @@ import { getContracts } from "../../actions";
 import { connect } from "react-redux";
 import history from "../../utils/history";
 import moment from "moment";
+import { Typography } from "@material-ui/core";
 
 class Contracts extends Component {
   componentDidMount() {
@@ -39,7 +40,24 @@ class Contracts extends Component {
               },
               {
                 title: "Trạng thái",
-                field: "StatusContract"
+                field: "StatusContract",
+                render: rowData => {
+                  let color = "orange";
+                  if (rowData.StatusContract === "Đã duyệt") color = "green";
+                  else if (rowData.StatusContract === "Đã từ chối")
+                    color = "red";
+                  else if (rowData.StatusContract === "Kết thúc")
+                    color = "gray";
+
+                  return (
+                    <Typography
+                      variant="body1"
+                      style={{ fontWeight: 600, color }}
+                    >
+                      {rowData.StatusContract}
+                    </Typography>
+                  );
+                }
               },
               {
                 title: "Người dạy",

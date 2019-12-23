@@ -81,6 +81,11 @@ const updatePasswordResponse = data => ({
   payload: data
 });
 
+const addAdmin = data => ({
+  type: types.ADD_ADMIN_SUCCESS,
+  payload: data
+});
+
 export const signUpStudent = (
   username,
   password,
@@ -107,6 +112,51 @@ export const signUpStudent = (
   });
 
   dispatch(signUpResponse(response && response.data));
+};
+
+export const signUpAdmin = (
+  username,
+  password,
+  hoten,
+  email,
+  ngaysinh,
+  gioitinh,
+  diachi,
+  thanhpho,
+  sdt,
+  cbs
+) => async dispatch => {
+  dispatch(isSigningUp());
+
+  const response = await api.post("/admin/createadmin", {
+    username,
+    password,
+    hoten,
+    email,
+    ngaysinh,
+    gioitinh,
+    diachi,
+    thanhpho,
+    sdt
+  });
+
+  dispatch(signUpResponse(response && response.data));
+  if (response && response.data === "Thành công") {
+    dispatch(
+      addAdmin({
+        username,
+        password,
+        hoten,
+        email,
+        ngaysinh,
+        gioitinh,
+        diachi,
+        thanhpho,
+        sdt
+      })
+    );
+    if (cbs.suc) cbs.suc();
+  }
 };
 
 export const signUpTeacher = (

@@ -54,6 +54,97 @@ export default (state = initState, { type, payload }) => {
           contracts: payload
         }
       };
+    case types.ENDING_CONTRACT:
+      return {
+        ...state,
+        myContracts: {
+          ...state.myContracts,
+          contracts: state.myContracts.contracts.map(contract => {
+            if (contract.IDContract === payload)
+              return { ...contract, isEnding: true };
+            else return contract;
+          })
+        }
+      };
+    case types.END_CONTRACT_OK:
+      return {
+        ...state,
+        myContracts: {
+          ...state.myContracts,
+          contracts: state.myContracts.contracts.map(contract => {
+            if (contract.IDContract === payload)
+              return { ...contract, StatusContract: "Kết thúc" };
+            else return contract;
+          })
+        }
+      };
+    case types.ACCEPTING_CONTRACT:
+      return {
+        ...state,
+        myContracts: {
+          ...state.myContracts,
+          contracts: state.myContracts.contracts.map(contract => {
+            if (contract.IDContract === payload)
+              return { ...contract, isAccepting: true };
+            else return contract;
+          })
+        }
+      };
+    case types.ACCEPT_CONTRACT_OK:
+      return {
+        ...state,
+        myContracts: {
+          ...state.myContracts,
+          contracts: state.myContracts.contracts.map(contract => {
+            if (contract.IDContract === payload)
+              return { ...contract, StatusContract: "Đã duyệt" };
+            else return contract;
+          })
+        }
+      };
+    case types.REJECTING_CONTRACT:
+      return {
+        ...state,
+        myContracts: {
+          ...state.myContracts,
+          contracts: state.myContracts.contracts.map(contract => {
+            if (contract.IDContract === payload)
+              return { ...contract, isRejecting: true };
+            else return contract;
+          })
+        }
+      };
+    case types.REJECT_CONTRACT_OK:
+      return {
+        ...state,
+        myContracts: {
+          ...state.myContracts,
+          contracts: state.myContracts.contracts.map(contract => {
+            if (contract.IDContract === payload)
+              return { ...contract, StatusContract: "Đã từ chối" };
+            else return contract;
+          })
+        }
+      };
+
+    // case types.PAYING_CONTRACT:
+    //   return {
+    //     ...state,
+    //     contracts: {
+    //       ...state.contracts,
+    //       isGetting: true
+    //     }
+    //   };
+    // case types.PAY_CONTRACT_OK:
+    //   return {
+    //     ...state,
+    //     contracts: {
+    //       ...state.contracts,
+    //       isGetting: false,
+    //       isOk: true,
+    //       contracts: payload
+    //     }
+    //   };
     default:
       return state;
   }

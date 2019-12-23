@@ -49,7 +49,7 @@ class TeacherHome extends Component {
                 <ContractItem
                   pending
                   contract={contract}
-                  key={contract.NameContract}
+                  key={contract.IDContract}
                 />
               ))}
             </Grid>
@@ -71,7 +71,7 @@ class TeacherHome extends Component {
                 <ContractItem
                   doing
                   contract={contract}
-                  key={contract.NameContract}
+                  key={contract.IDContract}
                 />
               ))}
             </Grid>
@@ -93,7 +93,7 @@ class TeacherHome extends Component {
                 <ContractItem
                   ended
                   contract={contract}
-                  key={contract.NameContract}
+                  key={contract.IDContract}
                 />
               ))}
             </Grid>

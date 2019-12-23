@@ -29,7 +29,7 @@ class HeaderOut extends Component {
             ) : (
               <div className="df aic">
                 <Typography variant="body2" className="f1">
-                  Đã có tài khoản?
+                  {hasAccount ? "Đã " : "Chưa "}có tài khoản?
                 </Typography>
                 {hasAccount && (
                   <Button

@@ -24,8 +24,14 @@ const initState = {
   },
   contracts: {
     isGetting: false,
+    isRating: false,
     isOk: false,
     contracts: ""
+  },
+  admins: {
+    isGetting: false,
+    isOk: false,
+    admins: []
   }
 };
 
@@ -168,6 +174,34 @@ export default (state = initState, { type, payload }) => {
           })
         }
       };
+    case types.UPDATING_USER_STATUS:
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          users: state.users.users.map(user => {
+            if (user.id === payload) return { ...user, changingStatus: true };
+            else return user;
+          })
+        }
+      };
+    case types.UPDATE_USER_STATUS_OK:
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          users: state.users.users.map(user => {
+            if (user.id === payload.id)
+              return {
+                ...user,
+                changingStatus: false,
+                tinhtrang: payload.newstatus
+              };
+            else return user;
+          })
+        }
+      };
+
     case types.IS_GETTING_CONTRACTS:
       return {
         ...state,
@@ -176,6 +210,7 @@ export default (state = initState, { type, payload }) => {
           isGetting: true
         }
       };
+
     case types.GET_CONTRACTS_OK:
       return {
         ...state,
@@ -184,6 +219,127 @@ export default (state = initState, { type, payload }) => {
           isGetting: false,
           isOk: true,
           contracts: payload
+        }
+      };
+    case types.IS_GETTING_ADMINS:
+      return {
+        ...state,
+        admins: {
+          ...state.admins,
+          isGetting: true
+        }
+      };
+    case types.GET_ADMINS_OK:
+      return {
+        ...state,
+        admins: {
+          ...state.admins,
+          isGetting: false,
+          isOk: true,
+          admins: payload
+        }
+      };
+
+    case types.ADD_ADMIN_SUCCESS:
+      return {
+        ...state,
+        admins: {
+          ...state.admins,
+          admins: [payload].concat(state.admins.admins)
+        }
+      };
+    case types.ENDING_CONTRACT:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            isEnding: true
+          }
+        }
+      };
+    case types.END_CONTRACT_OK:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            StatusContract: "Kết thúc",
+            isEnding: false
+          }
+        }
+      };
+    case types.ACCEPTING_CONTRACT:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            isAccepting: true
+          }
+        }
+      };
+    case types.ACCEPT_CONTRACT_OK:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            StatusContract: "Đã duyệt",
+            isAccepting: false
+          }
+        }
+      };
+    case types.REJECTING_CONTRACT:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            isRejecting: true
+          }
+        }
+      };
+    case types.REJECT_CONTRACT_OK:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            StatusContract: "Đã từ chối",
+            isRejecting: false
+          }
+        }
+      };
+    case types.RATING_CONTRACT:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+
+            isRating: true
+          }
+        }
+      };
+    case types.RATE_CONTRACT_OK:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            cmt: payload.cmt,
+            score: payload.score,
+            isRating: false
+          }
         }
       };
     default:

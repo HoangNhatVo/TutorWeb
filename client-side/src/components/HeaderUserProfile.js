@@ -56,7 +56,7 @@ class HeaderUserProfile extends Component {
           className="df aic"
         >
           <Home fontSize="small" style={{ marginRight: 4 }} />
-          <Typography variant="body1">Trang của bạn</Typography>
+          <Typography variant="body1">Hợp đồng của bạn</Typography>
         </Link>
         <div
           className="df aic"

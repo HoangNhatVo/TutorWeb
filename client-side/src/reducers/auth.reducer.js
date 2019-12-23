@@ -21,6 +21,7 @@ const initState = {
 export default (state = initState, { type, payload }) => {
   switch (type) {
     case types.RESET:
+      console.log("reset");
       return {
         ...initState
       };

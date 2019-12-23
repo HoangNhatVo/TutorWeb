@@ -2,10 +2,16 @@ import React, { Component } from "react";
 import { LayoutAdmin } from "../../layouts";
 import MaterialTable from "material-table";
 import { BreadCrums, Avatar } from "../../components";
-import { getAllUsers } from "../../actions";
+import {
+  getAllUsers,
+  changeStatusUser,
+  changeStatusUserOk
+} from "../../actions";
 import { connect } from "react-redux";
 import moment from "moment";
 import history from "../../utils/history";
+import { Switch } from "@material-ui/core";
+import api from "../../utils/axios";
 
 class Users extends Component {
   componentDidMount() {
@@ -23,6 +29,7 @@ class Users extends Component {
           <div>Đang tải...</div>
         ) : (
           <MaterialTable
+            options={{ actionsColumnIndex: -1 }}
             title=""
             columns={[
               {
@@ -48,12 +55,42 @@ class Users extends Component {
                 title: "Vai trò",
                 field: "vaitro",
                 lookup: { 1: "Học sinh", 2: "Gia sư", 3: "Admin" }
+              },
+              {
+                title: "Trạng thái",
+                field: "tinhtrang",
+                render: rowData => (
+                  <Switch
+                    checked={rowData.tinhtrang === "active"}
+                    onChange={async () => {
+                      const newstatus =
+                        rowData.tinhtrang === "active" ? "block" : "active";
+                      const id = rowData.id;
+
+                      this.props.changeStatusUser(id);
+                      const res = await api.post("/changestatusaccount", {
+                        id,
+                        newstatus
+                      });
+
+                      res.data === "Thành công" &&
+                        this.props.changeStatusUserOk(id, newstatus);
+                    }}
+                    disabled={rowData.changingStatus}
+                    color="primary"
+                  />
+                )
               }
             ]}
             data={users}
-            onRowClick={(event, selectedRow) =>
-              history.push(`/profile/${selectedRow.id}`)
-            }
+            actions={[
+              {
+                icon: "visibility",
+                tooltip: "Xem chi tiết",
+                onClick: (event, selectedRow) =>
+                  history.push(`/profile/${selectedRow.id}`)
+              }
+            ]}
           />
         )}
       </LayoutAdmin>
@@ -66,5 +103,5 @@ export default connect(
     isLoadingUsers: admin.users.isOk,
     users: admin.users.users
   }),
-  { getAllUsers }
+  { getAllUsers, changeStatusUser, changeStatusUserOk }
 )(Users);
