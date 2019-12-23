@@ -457,10 +457,14 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetChat(in IDnguoi1 int(11), in IDnguoi2 int(11))
 BEGIN
-	select * 
-    from chat c
-    where c.nguoigui = IDnguoi1 and  c.nguoinhan = IDnguoi2 
-		or c.nguoigui = IDnguoi2 and c.nguoinhan = IDnguoi1;
+	select c.id as ID, c.noidung as NoiDungChat, c.thoigianchat as  ThoiGianChat,
+    c.nguoigui as IDNguoiGui, c.nguoinhan as IDNguoiNhan,
+    ng.hoten as TenNguoiGui, ng.avatar as AvatarNguoiGui,
+    nn.hoten as TenNguoiNhan, nn.avatar as AvatarNguoiNhan
+    from chat c, account ng, account nn
+    where (c.nguoigui = IDnguoi1 and  c.nguoinhan = IDnguoi2 
+		or c.nguoigui = IDnguoi2 and c.nguoinhan = IDnguoi1)
+		and c.nguoigui = ng.id and c.nguoinhan = nn.id;
 END;$$
 DELIMITER ;
 call GetChat(37,38);

@@ -4,6 +4,7 @@ const passport = require('passport');
 var accountModel = require('../model/account.model');
 var tagModel = require('../model/tag.model');
 var contractModel = require('../model/contract.model');
+var chatModel = require('../model/chat.model');
 var bCrypt = require('bcrypt');
 const saltRounds = 10;
 var moment = require('moment');
@@ -719,6 +720,40 @@ router.get('/knhd/:ID', function(req, res, next){
     }
     else{
       res.send('Không có khiếu nại nào.')
+    }
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+router.post('/chat', function(req, res, next){
+  var IDNguoiGui = req.body.idnguoigui;
+  var IDNguoiNhan = req.body.idnguoinhan;
+  var NoiDung = req.body.noidung;
+  var ThoiGianChat = moment().format('YYYY-MM-DD HH:mm:ss');
+  chatModel.addChat(IDNguoiGui, IDNguoiNhan, NoiDung, ThoiGianChat).then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Chat không thành công.')
+    }
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+router.get('/getchat/user1=:ID1&user2=:ID2', function(req, res, next){
+  var IDUser1 = req.params.ID1;
+  var IDUser2 = req.params.ID2;
+  chatModel.getChat(IDUser1, IDUser2) .then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Không có đoạn chat nào.')
     }
   }).catch(err=>{
       console.log(err);
