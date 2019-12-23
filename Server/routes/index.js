@@ -697,4 +697,33 @@ router.get('/allcmtofteacher/:ID', function(req, res, next){
     })
 })
 
+router.get('/allknhd', function(req, res, next){
+  contractModel.getAllKNHD() .then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Không có khiếu nại nào.')
+    }
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+router.get('/knhd/:ID', function(req, res, next){
+  var IDHD = req.params.ID;
+  contractModel.getAllKNHDByIDHD(IDHD) .then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Không có khiếu nại nào.')
+    }
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
 module.exports = router;
