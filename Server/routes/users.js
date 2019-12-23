@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var accountModel = require('../model/account.model')
 const paypal = require('paypal-rest-sdk')
+var moment = require('moment');
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
@@ -61,9 +62,66 @@ router.post('/updateIntroduce', async function (req, res, next) {
   }
 })
 
+// router.post('/pay', (req, res) => {
+//   const moneyhours = req.body.money;
+//   const hours = req.body.hours;
+//   const money = moneyhours * hours
+//   const IDpayer = req.body.IDpayer
+//   const IDreciver = req.body.IDreciver
+//   const date = moment().format('YYYY-MM-DD HH:mm:ss');
+//   const create_payment_json = {
+//     "intent": "sale",
+//     "payer": {
+//       "payment_method": "paypal"
+//     },
+//     "redirect_urls": {
+//       "return_url": "http://localhost:3000/user/success",
+//       "cancel_url": "http://localhost:3000/user/cancel"
+//     },
+//     "transactions": [{
+//       "item_list": {
+//         "items": [{
+//           "name": "Contract",
+//           "sku": "001",
+//           "price": "10.00",
+//           "currency": "USD",
+//           "quantity": 1
+//         }]
+//       },
+//       "amount": {
+//         "currency": "USD",
+//         "total":  "10.00"
+//       },
+//       "description": "Hat for the best team ever"
+//     }]
+//   };
+//   paypal.payment.create(create_payment_json, async function (error, payment) {
+//     if (error) {
+//       throw error;
+//     } else {
+//       // try {
+//       //   await accountModel.create_transaction(IDpayer, IDreciver, money, '', date)
+//       // }
+//       // catch (err) {
+//       //   console.log(err)
+//       // }
+//       for (let i = 0; i < payment.links.length; i++) {
+//         if (payment.links[i].rel === 'approval_url') {
+//           res.redirect(payment.links[i].href);
+//         }
+//       }
+//     }
+//   });
+
+// });
+
 router.post('/pay', (req, res) => {
-  const moneyhours= req.money;
-  const hours = req.hours
+  const moneyhours = req.body.moneyhours;
+  const hours = req.body.hours;
+  const money = moneyhours * hours
+  const IDpayer = req.body.IDpayer
+  const IDreciver = req.body.IDreciver
+  const date = moment().format('YYYY-MM-DD HH:mm:ss');
   const create_payment_json = {
     "intent": "sale",
     "payer": {
@@ -78,22 +136,28 @@ router.post('/pay', (req, res) => {
         "items": [{
           "name": "Contract",
           "sku": "001",
-          "price": moneyhours,
+          "price": "25.00",
           "currency": "USD",
-          "quantity": hours
+          "quantity": 1
         }]
       },
       "amount": {
         "currency": "USD",
-        "total": moneyhours*hours
+        "total": "25.00"
       },
       "description": "Hat for the best team ever"
     }]
   };
-  paypal.payment.create(create_payment_json, function (error, payment) {
+  paypal.payment.create(create_payment_json, async function (error, payment) {
     if (error) {
       throw error;
     } else {
+      try {
+        await accountModel.create_transaction(IDpayer, IDreciver, money, '', date)
+      }
+      catch (err) {
+        console.log(err)
+      }
       for (let i = 0; i < payment.links.length; i++) {
         if (payment.links[i].rel === 'approval_url') {
           res.redirect(payment.links[i].href);
@@ -101,13 +165,12 @@ router.post('/pay', (req, res) => {
       }
     }
   });
-
 });
+
 
 router.get('/success', (req, res) => {
   const payerId = req.query.PayerID;
   const paymentId = req.query.paymentId;
-  console.log(req.query)
   const execute_payment_json = {
     "payer_id": payerId,
     "transactions": [{
@@ -122,7 +185,7 @@ router.get('/success', (req, res) => {
       console.log(error.response);
       throw error;
     } else {
-      console.log(JSON.stringify(payment));
+      // console.log(JSON.stringify(payment));
       res.send('Success');
     }
   });
