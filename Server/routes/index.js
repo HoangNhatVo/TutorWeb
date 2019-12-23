@@ -201,8 +201,14 @@ router.get('/chuyennganh', function (req, res, next) {
 router.get('/allTeacher', async function (req, res, next) {
   try {
     var allTeacher = await accountModel.getAllteacher()
-    if (allTeacher.length)
-      res.send(allTeacher)
+    if (allTeacher.length){
+      for(var i = 0; i< allTeacher.length; i++){
+        var allTags = await tagModel.getAllTagByAccID(allTeacher[i].id);
+        console.log(allTags);
+        allTeacher[i]['tags']=allTags;
+      }
+      res.send(allTeacher);
+    }
     else
       res.send([])
   }
@@ -661,7 +667,7 @@ router.post('/addknhd', function(req, res, next){
   var IDNguoiKhieuNai = req.body.idnguoikhieunai;
   var IDHopDong = req.body.idhopdong;
   var NoiDung = req.body.noidung;
-  var ThoiGianKhieuNai = moment(req.body.thoigiankhieunai,'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss');
+  var ThoiGianKhieuNai = moment().format('YYYY-MM-DD HH:mm:ss');
   console.log(IDNguoiKhieuNai);
   console.log(IDHopDong);
   console.log(NoiDung);
