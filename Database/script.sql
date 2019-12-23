@@ -193,3 +193,9 @@ alter table dangkygiaovien add constraint FK_dangkygiaovien_account_nguoihoc for
 ALTER TABLE khieunaihopdong	DROP FOREIGN KEY FK_khieunaihopdong_account;
 ALTER TABLE khieunaihopdong CHANGE nguoihoc nguoikhieunai int(11);
 alter table khieunaihopdong add constraint FK_khieunaihopdong_account foreign key (nguoikhieunai) references account(id);
+
+
+#------------------  Add Column table giaodich -----------#
+ALTER TABLE giaodich ADD COLUMN thoigiangiaodich datetime AFTER mota;
+ALTER TABLE giaodich DROP FOREIGN KEY FK_giaodich_taikhoan;
+ALTER TABLE giaodich DROP COLUMN taikhoan;

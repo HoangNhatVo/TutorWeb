@@ -457,10 +457,14 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetChat(in IDnguoi1 int(11), in IDnguoi2 int(11))
 BEGIN
-	select * 
-    from chat c
-    where c.nguoigui = IDnguoi1 and  c.nguoinhan = IDnguoi2 
-		or c.nguoigui = IDnguoi2 and c.nguoinhan = IDnguoi1;
+	select c.id as ID, c.noidung as NoiDungChat, c.thoigianchat as  ThoiGianChat,
+    c.nguoigui as IDNguoiGui, c.nguoinhan as IDNguoiNhan,
+    ng.hoten as TenNguoiGui, ng.avatar as AvatarNguoiGui,
+    nn.hoten as TenNguoiNhan, nn.avatar as AvatarNguoiNhan
+    from chat c, account ng, account nn
+    where (c.nguoigui = IDnguoi1 and  c.nguoinhan = IDnguoi2 
+		or c.nguoigui = IDnguoi2 and c.nguoinhan = IDnguoi1)
+		and c.nguoigui = ng.id and c.nguoinhan = nn.id;
 END;$$
 DELIMITER ;
 call GetChat(37,38);
@@ -505,6 +509,32 @@ call AddKNHD(37, 1, 'abc','2019-12-12 12:12:12');
 
 DELIMITER $$
 USE `sql12314047`$$
+CREATE PROCEDURE GetAllKNHD()
+BEGIN
+	select kn.id as IDKNHD, kn.noidung as NoiDungKN, kn.thoigiankhieunai as ThoiGianKN,
+			hd.id as IDHD, hd.tenhopdong as TenHD,
+            a.hoten as TenNguoiKN, a.avatar as AvatarNguoiKN, v.ten as VaiTroNguoiKN
+    from hopdong hd, khieunaihopdong kn, account a, vaitro v
+    where kn.sohopdong=hd.id and kn.nguoikhieunai = a.id and v.id = a.vaitro;
+END;$$
+DELIMITER ;
+call GetAllKNHD();
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllKNHDByIDHD(in IDHD int(11))
+BEGIN
+	select kn.id as IDKNHD, kn.noidung as NoiDungKN, kn.thoigiankhieunai as ThoiGianKN,
+			hd.id as IDHD, hd.tenhopdong as TenHD,
+            a.hoten as TenNguoiKN, a.avatar as AvatarNguoiKN, v.ten as VaiTroNguoiKN
+    from hopdong hd, khieunaihopdong kn, account a, vaitro v
+    where kn.sohopdong=IDHD and hd.id = IDHD and kn.nguoikhieunai = a.id and v.id = a.vaitro;
+END;$$
+DELIMITER ;
+call GetAllKNHDByIDHD(4);
+
+DELIMITER $$
+USE `sql12314047`$$
 CREATE PROCEDURE GetAllCMTOfTeacherByID(in IDTeacher int(11))
 BEGIN
 	select hd.id as IDHopDong, nh.id as IDNguoiDanhGia, nh.hoten as TenNguoiDanhGia, nh.avatar as AvatarNguoiDanhGia, 
@@ -515,3 +545,17 @@ BEGIN
 END;$$
 DELIMITER ;
 call GetAllCMTOfTeacherByID(37);
+
+#---------------------------------- giaodich
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddTransaction(in IDNguoiGui int(11), in IDNguoiNhan int(11), in SoTien int(11), 
+									in Mota varchar(255), in ThoiGianGiaoDich datetime)
+BEGIN
+	insert into giaodich values(null, IDNguoiGui, IDNguoiNhan,2,SoTien, Mota, ThoiGianGiaoDich);
+END;$$
+DELIMITER ;
+call AddTransaction(10,33,100000,'abc','2019-12-12 12:12:12');
+
+

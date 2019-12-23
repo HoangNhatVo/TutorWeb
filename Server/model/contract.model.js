@@ -32,5 +32,11 @@ module.exports = {
     },
     getAllCMTOfTeacherByID: (IDTeacher) => {
         return orm.selectAll(`call GetAllCMTOfTeacherByID(${IDTeacher})`);
+    },
+    getAllKNHD: () => {
+        return orm.selectAll(`call GetAllKNHD()`);
+    },
+    getAllKNHDByIDHD: (IDHD) => {
+        return orm.selectAll(`call GetAllKNHDByIDHD(${IDHD})`);
     },  
 }
