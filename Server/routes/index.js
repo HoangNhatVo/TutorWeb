@@ -201,8 +201,14 @@ router.get('/chuyennganh', function (req, res, next) {
 router.get('/allTeacher', async function (req, res, next) {
   try {
     var allTeacher = await accountModel.getAllteacher()
-    if (allTeacher.length)
-      res.send(allTeacher)
+    if (allTeacher.length){
+      for(var i = 0; i< allTeacher.length; i++){
+        var allTags = await tagModel.getAllTagByAccID(allTeacher[i].id);
+        console.log(allTags);
+        allTeacher[i]['tags']=allTags;
+      }
+      res.send(allTeacher);
+    }
     else
       res.send([])
   }
@@ -650,6 +656,41 @@ router.post('/addscorecontract', function(req, res, next){
   var Score = req.body.score;
   contractModel.addScoreContractByID(IDContract, Score) .then(r=>{
     res.send('Thành công');
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+
+router.post('/addknhd', function(req, res, next){
+  var IDNguoiKhieuNai = req.body.idnguoikhieunai;
+  var IDHopDong = req.body.idhopdong;
+  var NoiDung = req.body.noidung;
+  var ThoiGianKhieuNai = moment().format('YYYY-MM-DD HH:mm:ss');
+  console.log(IDNguoiKhieuNai);
+  console.log(IDHopDong);
+  console.log(NoiDung);
+  console.log(ThoiGianKhieuNai);
+  
+  contractModel.addKNHD(IDNguoiKhieuNai, IDHopDong, NoiDung, ThoiGianKhieuNai).then(r=>{
+    res.send('Thành công');
+  }).catch(err=>{
+      console.log(err);
+      res.send('Đã xảy ra lỗi.');
+    })
+})
+
+
+router.get('/allcmtofteacher/:ID', function(req, res, next){
+  var IDTeacher = req.params.ID;
+  contractModel.getAllCMTOfTeacherByID(IDTeacher) .then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Không có đánh giá nào.')
+    }
   }).catch(err=>{
       console.log(err);
       res.send('Đã xảy ra lỗi.');
