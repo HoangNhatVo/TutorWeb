@@ -86,7 +86,7 @@ router.post('/TopincomebyQuarter', async function(req,res){
   }
 })
 
-router.get('/TopAll', async function(req,res){
+router.post('/TopAll', async function(req,res){
   try{
     var TopAll = await accountModel.GetTopInComebyAll()
     res.send(TopAll)
