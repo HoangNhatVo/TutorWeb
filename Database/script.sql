@@ -199,3 +199,16 @@ alter table khieunaihopdong add constraint FK_khieunaihopdong_account foreign ke
 ALTER TABLE giaodich ADD COLUMN thoigiangiaodich datetime AFTER mota;
 ALTER TABLE giaodich DROP FOREIGN KEY FK_giaodich_taikhoan;
 ALTER TABLE giaodich DROP COLUMN taikhoan;
+
+
+
+
+#------------------  Add Column table taikhoan -----------#
+ALTER TABLE chat
+ADD COLUMN isRead int(11) AFTER thoigianchat;
+
+ALTER TABLE chat
+ADD COLUMN idhopdong int(11) AFTER isRead;
+alter table chat add constraint FK_chat_hopdong foreign key (idhopdong) references hopdong(id);
+
+
