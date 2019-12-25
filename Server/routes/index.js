@@ -218,6 +218,8 @@ router.get('/allTeacher', async function (req, res, next) {
   }
 })
 
+
+
 router.get('/alladmin', async function (req, res, next) {
   try {
     var allAdmin = await accountModel.getAllAdmin()
@@ -812,5 +814,46 @@ router.post('/filterteacher', async function (req, res, next) {
     console.log(err)
   }
 })
+
+
+
+router.get('/allteacher/skip=:skip&limit=:limit', async function (req, res, next) {
+  var Skip = req.params.skip;
+  var Limit = req.params.limit;
+  try {
+    var allTeacher = await accountModel.getAllTeacher2(Skip,Limit);
+    if (allTeacher.length){
+      for(var i = 0; i< allTeacher.length; i++){
+        var allTags = await tagModel.getAllTagByAccID(allTeacher[i].id);
+        console.log(allTags);
+        allTeacher[i]['tags']=allTags;
+      }
+      res.send(allTeacher);
+    }
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
+
+
+router.get('/getallaccount2/skip=:skip&limit=:limit',function(req, res, next){
+  var Skip = req.params.skip;
+  var Limit = req.params.limit;
+  accountModel.getAllAccount2(Skip, Limit).then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Chưa có tài khoản nào.');
+    }
+  }).catch(err=>{
+    console.log(err);
+    res.send('Đã xảy ra lỗi.');
+  })
+})
+
 
 module.exports = router;

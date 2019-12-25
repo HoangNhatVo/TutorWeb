@@ -93,5 +93,11 @@ module.exports = {
     filterTeacher:(DiaDiem, TienDay, TenTag)=>{
         return orm.selectAll(`call FilterTeacher('${DiaDiem}',${TienDay},'${TenTag}')`);
     },
+    getAllTeacher2:(Offset, Limit)=>{
+        return orm.selectAll(`call GetAllTeacher2(${Offset}, ${Limit})`);
+    },
+    getAllAccount2:(Offset, Limit)=>{
+        return orm.selectAll(`call GetAllAccount2(${Offset}, ${Limit})`);
+    },
 }
 

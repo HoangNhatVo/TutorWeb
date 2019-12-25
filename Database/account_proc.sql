@@ -139,12 +139,31 @@ call GetAllAccount();
 
 DELIMITER $$
 USE `sql12314047`$$
+CREATE PROCEDURE GetAllAccount2(in _offset int(11),in _Limit int(11))
+BEGIN
+	select * from account where xacthuc = true limit _offset, _Limit;
+END;$$
+DELIMITER ;
+call GetAllAccount2(4,5);
+
+
+DELIMITER $$
+USE `sql12314047`$$
 CREATE PROCEDURE GetAllTeacher()
 BEGIN
 	select * from account where vaitro = 2  and xacthuc = true;
 END;$$
 DELIMITER ;
 call GetAllTeacher();
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllTeacher2(in _offset int(11),in _Limit int(11))
+BEGIN
+	select * from account where vaitro = 2  and xacthuc = true limit _offset, _Limit;
+END;$$
+DELIMITER ;
+call GetAllTeacher2();
 
 DELIMITER $$
 USE `sql12314047`$$
