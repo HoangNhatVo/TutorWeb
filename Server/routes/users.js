@@ -151,7 +151,7 @@ router.post('/pay', (req, res) => {
       throw error;
     } else {
       try {
-        await accountModel.create_transaction(IDpayer, IDreciver, hours, '', date)
+        await accountModel.create_transaction(IDpayer, IDreciver, hours, date, date)
       }
       catch (err) {
         console.log(err)
