@@ -27,8 +27,8 @@ router.post('/unlockaccount', function(req, res, next) {
   })
 });
 
-router.get('/Incometeacher',async function(req, res, next) {
-  var idTeacher = req.body.idTeacher
+router.get('/Incometeacher/:idTeacher',async function(req, res, next) {
+  var idTeacher = req.params.idTeacher
   try{
   var IncomeTeacher = await accountModel.GetIncomeByTeacher(idTeacher)
   res.send(IncomeTeacher)
