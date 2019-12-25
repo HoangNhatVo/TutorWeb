@@ -69,8 +69,8 @@ module.exports = {
     get_ChuyenNganh_ByID: (ID) => {
         return orm.selectAll(`call Get_ChuyenNganh_ByID(${ID})`);
     },
-    create_transaction : (IDsend,IDRecive,money,descrip,time) => {
-        return orm.selectAll(`call AddTransaction(${IDsend}, ${IDRecive}, ${money}, '${descrip}', '${time}')`)
+    create_transaction : (IDsend,IDRecive,hours,descrip,time) => {
+        return orm.selectAll(`call AddTransaction(${IDsend}, ${IDRecive}, ${hours}, '${descrip}', '${time}')`)
     },
     GetIncomeByTeacher : (IDUser) => {
         return orm.selectAll(`call GetIncomeById(${IDUser})`)

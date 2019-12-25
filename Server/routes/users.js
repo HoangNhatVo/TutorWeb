@@ -116,9 +116,7 @@ router.post('/updateIntroduce', async function (req, res, next) {
 // });
 
 router.post('/pay', (req, res) => {
-  const moneyhours = req.body.moneyhours;
   const hours = req.body.hours;
-  const money = moneyhours * hours
   const IDpayer = req.body.IDpayer
   const IDreciver = req.body.IDreciver
   const date = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -153,7 +151,7 @@ router.post('/pay', (req, res) => {
       throw error;
     } else {
       try {
-        await accountModel.create_transaction(IDpayer, IDreciver, money, '', date)
+        await accountModel.create_transaction(IDpayer, IDreciver, hours, '', date)
       }
       catch (err) {
         console.log(err)

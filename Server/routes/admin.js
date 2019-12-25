@@ -27,8 +27,8 @@ router.post('/unlockaccount', function(req, res, next) {
   })
 });
 
-router.get('/Incometeacher',async function(req, res, next) {
-  var idTeacher = req.body.idTeacher
+router.get('/Incometeacher/:idTeacher',async function(req, res, next) {
+  var idTeacher = req.params.idTeacher
   try{
   var IncomeTeacher = await accountModel.GetIncomeByTeacher(idTeacher)
   res.send(IncomeTeacher)
@@ -38,7 +38,7 @@ router.get('/Incometeacher',async function(req, res, next) {
   }
 })
 
-router.get('/TopIncomebyDay', async function(req, res){
+router.post('/TopIncomebyDay', async function(req, res){
   var date = req.body.date
   console.log(date)
   try {
@@ -50,7 +50,7 @@ router.get('/TopIncomebyDay', async function(req, res){
   }
 })
 
-router.get('/TopincomebyWeek', async function(req,res){
+router.post('/TopincomebyWeek', async function(req,res){
   var week = req.body.week
   var year = req.body.year
   try{
@@ -62,7 +62,7 @@ router.get('/TopincomebyWeek', async function(req,res){
   }
 })
 
-router.get('/TopincomebyMonth', async function(req,res){
+router.post('/TopincomebyMonth', async function(req,res){
   var month = req.body.month
   var year = req.body.year
   try{
@@ -74,7 +74,7 @@ router.get('/TopincomebyMonth', async function(req,res){
   }
 })
 
-router.get('/TopincomebyQuarter', async function(req,res){
+router.post('/TopincomebyQuarter', async function(req,res){
   var quarter = req.body.quarter
   var year = req.body.year
   try{
@@ -86,7 +86,7 @@ router.get('/TopincomebyQuarter', async function(req,res){
   }
 })
 
-router.get('/TopAll', async function(req,res){
+router.post('/TopAll', async function(req,res){
   try{
     var TopAll = await accountModel.GetTopInComebyAll()
     res.send(TopAll)
