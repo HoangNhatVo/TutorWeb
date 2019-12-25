@@ -597,10 +597,6 @@ call AddTransaction(10,36,4,'new123','2019-12-12 12:12:12');
 select * from giaodich;
 
 
-
-
-
-
 DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetContractByID(in i int(11))
@@ -632,3 +628,38 @@ DELIMITER ;
 call GetContractByID(11);
 
 
+#------------------- Lọc giáo viên
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE FilterTeacher(in diadiem varchar(255), in tienday int(11), in tentag varchar(50))
+BEGIN
+	declare diadiemNew1 varchar(50);
+    declare diadiemNew2 varchar(50);
+	declare tagnew1 varchar(50);
+    declare tagnew2 varchar(50);  
+    
+	set diadiemNew1 = (select concat('%',diadiem));
+    set diadiemNew2 = (select concat(diadiemNew1,'%'));
+    
+
+    set tagnew1 = (select concat('%',tentag));
+    set tagnew2 = (select concat(tagnew1,'%'));
+    if(tienday=0)
+    then
+		select distinct a.*
+		from account a, tag_account ta, tag t
+		where a.vaitro = 2 and a.id = ta.id_account and ta.id_tag = t.id
+			and a.diachi like diadiemNew2 and t.tentag like tagnew2;
+    end if;
+    if(tienday!=0)
+    then
+		select distinct a.*
+		from account a, tag_account ta, tag t
+		where a.vaitro = 2 and a.id = ta.id_account and ta.id_tag = t.id
+			and a.diachi like diadiemNew2 and a.tiendaymotgio = tienday
+			and t.tentag like tagnew2;
+    end if;
+	
+END;$$
+DELIMITER ;
+call FilterTeacher('HCM', 200, '2');
