@@ -362,15 +362,17 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetContractByID(in i int(11))
 BEGIN
-	select hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+	select distinct hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
     hd.sodiem as ScoreContract, hd.danhgia as CMTContract,
     nh.avatar as AvatarStudent, nh.hoten as NameStudent, nh.email as EmailStudent, nh.sdt as PhoneStudent,
-    nd.avatar as AvatarTeacher, nd.hoten as NameTeacher, nd.email as EmailTeacher, nd.sdt as PhoneTeacher
-    from hopdong hd, account nd, account nh
-    where hd.id = i and hd.nguoiday = nd.id and hd.nguoihoc = nh.id;
+    nd.avatar as AvatarTeacher, nd.hoten as NameTeacher, nd.email as EmailTeacher, nd.sdt as PhoneTeacher,
+    c.isRead as IDReadChat
+    from hopdong hd, account nd, account nh, chat c
+    where hd.id = i and hd.nguoiday = nd.id and hd.nguoihoc = nh.id and c.idhopdong = i;
 END;$$
 DELIMITER ;
 call GetContractByID(4);
+
 
 DELIMITER $$
 USE `sql12314047`$$
@@ -438,9 +440,9 @@ call GetAllContractByStudentID(9);
 
 DELIMITER $$
 USE `sql12314047`$$
-CREATE PROCEDURE AddChat(in IDnguoigui int(11), in IDnguoinhan int(11), in nd text, in thoi_gian_chat datetime)
+CREATE PROCEDURE AddChat(in IDnguoigui int(11), in IDnguoinhan int(11), in nd text, in thoi_gian_chat datetime, in idhd int(11))
 BEGIN
-	insert into chat values (null, IDnguoigui, IDnguoinhan, nd, thoi_gian_chat);
+	insert into chat values (null, IDnguoigui, IDnguoinhan, nd, thoi_gian_chat, IDnguoinhan, idhd);
     select c.id as ID, c.noidung as NoiDungChat, c.thoigianchat as ThoiGianChat,
     c.nguoigui as IDNguoiGui, c.nguoinhan as IDNguoiNhan,
     ng.hoten as TenNguoiGui, ng.avatar as AvatarNguoiGui,
@@ -450,7 +452,7 @@ BEGIN
     #----SELECT LAST_INSERT_ID() as id;
 END;$$
 DELIMITER ;
-call AddChat(37,38,'đlgđ','2019-12-22 23:59:59');
+call AddChat(38,37,'123123','2019-12-22 23:59:59',4);
 
 
 DELIMITER $$
@@ -467,7 +469,37 @@ BEGIN
 		and c.nguoigui = ng.id and c.nguoinhan = nn.id;
 END;$$
 DELIMITER ;
-call GetChat(37,38);
+call GetChat(36,38);
+
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetChatByIDContract(in IDContract int(11))
+BEGIN
+	update chat ch set ch.isRead = 0 where ch.idhopdong = IDContract;
+	select c.id as ID, c.noidung as NoiDungChat, c.thoigianchat as  ThoiGianChat,
+    c.idhopdong as IDHopDong,
+    c.nguoigui as IDNguoiGui, c.nguoinhan as IDNguoiNhan,
+    ng.hoten as TenNguoiGui, ng.avatar as AvatarNguoiGui,
+    nn.hoten as TenNguoiNhan, nn.avatar as AvatarNguoiNhan
+    from chat c, account ng, account nn
+    where c.nguoigui = ng.id and  c.idhopdong = IDContract and c.nguoinhan = nn.id;
+END;$$
+DELIMITER ;
+call GetChatByIDContract(4);
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE UpdateIsReadFieldChatByID(in IDChat int(11))
+BEGIN
+	update chat
+    set isRead = 0
+    where id=IDChat;
+END;$$
+DELIMITER ;
+call UpdateIsReadFieldChatByID(12);
 
 #------------------ Đánh giá hợp đồng-----------------------#
 

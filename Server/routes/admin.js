@@ -3,7 +3,7 @@ var router = express.Router();
 const passport = require('passport');
 
 var adminModel = require('../model/admin.model');
-
+var accountModel = require('../model/account.model')
 /* GET users listing. */
 router.post('/lockaccount', function(req, res, next) {
   var idUser = req.body.idUser
@@ -27,7 +27,74 @@ router.post('/unlockaccount', function(req, res, next) {
   })
 });
 
+router.get('/Incometeacher',async function(req, res, next) {
+  var idTeacher = req.body.idTeacher
+  try{
+  var IncomeTeacher = await accountModel.GetIncomeByTeacher(idTeacher)
+  res.send(IncomeTeacher)
+  }
+  catch(err) {
+    console.log(err)
+  }
+})
 
+router.get('/TopIncomebyDay', async function(req, res){
+  var date = req.body.date
+  console.log(date)
+  try {
+    var TopbyDay = await accountModel.GetTopInComebyDay(date)
+    res.send(TopbyDay)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
+
+router.get('/TopincomebyWeek', async function(req,res){
+  var week = req.body.week
+  var year = req.body.year
+  try{
+    var TopbyWeek = await accountModel.GetTopInComebyWeek(week,year)
+    res.send(TopbyWeek)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
+
+router.get('/TopincomebyMonth', async function(req,res){
+  var month = req.body.month
+  var year = req.body.year
+  try{
+    var Topbymonth = await accountModel.GetTopInComebyMonth(month,year)
+    res.send(Topbymonth)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
+
+router.get('/TopincomebyQuarter', async function(req,res){
+  var quarter = req.body.quarter
+  var year = req.body.year
+  try{
+    var Topbyquarter = await accountModel.GetTopInComebyQuarter(quarter,year)
+    res.send(Topbyquarter)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
+
+router.get('/TopAll', async function(req,res){
+  try{
+    var TopAll = await accountModel.GetTopInComebyAll()
+    res.send(TopAll)
+  }
+  catch(err){
+    console.log(err)
+  }
+})
 
 // router.post('/createadmin', passport.authenticate('admin-local-signup', {
 //   // failureRedirect: '/failed',
