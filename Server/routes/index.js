@@ -777,5 +777,29 @@ router.get('/getchat/:ID', function(req, res, next){
     })
 })
 
+router.post('/filterteacher', async function (req, res, next) {
+  var DiaDiem = req.body.diadiem;
+  var TienDay = req.body.tienday;
+  var TenTag = req.body.tentag;
+  if(TienDay==null||TienDay==''||TienDay==undefined){
+    TienDay = 0;
+  }
+  try {
+    var allTeacher = await accountModel.filterTeacher(DiaDiem, TienDay, TenTag);
+    if (allTeacher.length){
+      for(var i = 0; i< allTeacher.length; i++){
+        var allTags = await tagModel.getAllTagByAccID(allTeacher[i].id);
+        console.log(allTags);
+        allTeacher[i]['tags']=allTags;
+      }
+      res.send(allTeacher);
+    }
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
 
 module.exports = router;

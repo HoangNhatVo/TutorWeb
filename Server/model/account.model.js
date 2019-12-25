@@ -89,6 +89,9 @@ module.exports = {
     },
     GetTopInComebyAll : () => {
         return orm.selectAll(`call GetTopIncomeByAll()`)
-    }
+    },
+    filterTeacher:(DiaDiem, TienDay, TenTag)=>{
+        return orm.selectAll(`call FilterTeacher('${DiaDiem}',${TienDay},'${TenTag}')`);
+    },
 }
 
