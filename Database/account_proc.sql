@@ -663,3 +663,24 @@ BEGIN
 END;$$
 DELIMITER ;
 call FilterTeacher('HCM', 200, '2');
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetIsReadByIDContract(in IDContract int(11))
+BEGIN
+	declare count1 int;
+    set count1 = (select count(distinct isRead) from chat where idhopdong = IDContract and isRead>0 and isRead is not null);
+    if(count1 = 0)
+    then
+		select 0;
+    end if;
+	if(count1>0)
+    then
+		select distinct c.isRead
+        from chat c
+        where c.idhopdong = IDContract and c.isRead>0;
+    end if;
+END;$$
+DELIMITER ;
+call GetIsReadByIDContract(19);

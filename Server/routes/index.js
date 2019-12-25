@@ -551,34 +551,45 @@ router.post('/changestatuscontract', function(req, res, next){
     })
 })
 
-router.get('/allcontractbyteacher/:ID',function(req, res, next){
+router.get('/allcontractbyteacher/:ID',async function(req, res, next){
   var TeacherID = req.params.ID;
-  contractModel.getAllContractByTeacherID(TeacherID).then(r=>{
-    if(r.length){
-      res.send(r);
+  try {
+    var allContractTeacher = await contractModel.getAllContractByTeacherID(TeacherID);
+    if (allContractTeacher.length){
+      for(var i = 0; i< allContractTeacher.length; i++){
+        var isRead = await contractModel.getIsReadByIDContract(allContractTeacher[i].IDContract);
+        allContractTeacher[i]['isRead']=isRead[0].isRead;
+      }
+      res.send(allContractTeacher);
     }
-    else{
-      res.send('Không có hợp đồng nào.');
-    }
-  }).catch(err=>{
-  console.log(err);
-  res.send('Đã xảy ra lỗi.');
-  })
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+    res.send('Đã xảy ra lỗi.');
+  }
 })
 
-router.get('/allcontractbystudent/:ID',function(req, res, next){
+router.get('/allcontractbystudent/:ID',async function(req, res, next){
+
   var StudentID = req.params.ID;
-  contractModel.getAllContractByStudentID(StudentID).then(r=>{
-    if(r.length){
-      res.send(r);
+  try {
+    var allContractStudent = await contractModel.getAllContractByStudentID(StudentID);
+    if (allContractStudent.length){
+      for(var i = 0; i< allContractStudent.length; i++){
+        var isRead = await contractModel.getIsReadByIDContract(allContractStudent[i].IDContract);
+        allContractStudent[i]['isRead']=isRead[0].isRead;
+      }
+      res.send(allContractStudent);
     }
-    else{
-      res.send('Không có hợp đồng nào.');
-    }
-  }).catch(err=>{
-  console.log(err);
-  res.send('Đã xảy ra lỗi.');
-  })
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+    res.send('Đã xảy ra lỗi.');
+  }
 })
 
 router.get('/contract/:ID', async function(req, res, next){
