@@ -817,7 +817,7 @@ router.post('/filterteacher', async function (req, res, next) {
 
 
 
-router.get('/allteacher/skip=:skip&limit=:limit', async function (req, res, next) {
+router.get('/allteacher2/skip=:skip&limit=:limit', async function (req, res, next) {
   var Skip = req.params.skip;
   var Limit = req.params.limit;
   try {
