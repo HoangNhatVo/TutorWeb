@@ -123,7 +123,7 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAccountByID(in i int(11))
 BEGIN
-	select * from account where id = i and tinhtrang = 'active' and xacthuc = true;
+	select * from account where id = i and xacthuc = true;
 END;$$
 DELIMITER ;
 call GetAccountByID(9);
@@ -132,7 +132,7 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAllAccount()
 BEGIN
-	select * from account where tinhtrang = 'active' and xacthuc = true;
+	select * from account where xacthuc = true;
 END;$$
 DELIMITER ;
 call GetAllAccount();
@@ -141,7 +141,7 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAllTeacher()
 BEGIN
-	select * from account where vaitro = 2 and tinhtrang = 'active' and xacthuc = true;
+	select * from account where vaitro = 2  and xacthuc = true;
 END;$$
 DELIMITER ;
 call GetAllTeacher();
@@ -150,7 +150,7 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAllAdmin()
 BEGIN
-	select * from account where vaitro = 3 and tinhtrang = 'active' and xacthuc = true;
+	select * from account where vaitro = 3  and xacthuc = true;
 END;$$
 DELIMITER ;
 call GetAllAdmin();
@@ -231,10 +231,13 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetAllTagByAccID(in accID int(11))
 BEGIN
-	select * from tag_account where id_account = accID order by id_tag asc;
+	select ta.id_tag as IDTag, ta.id_account as IDAccount, t.tentag as NameTag
+    from tag_account ta, tag t
+    where ta.id_account = accID and t.id = ta.id_tag
+    order by ta.id_tag asc;
 END;$$
 DELIMITER ;
-call GetAllTagByAccID(39);
+call GetAllTagByAccID(38);
 
 DELIMITER $$
 USE `sql12314047`$$
@@ -360,6 +363,7 @@ USE `sql12314047`$$
 CREATE PROCEDURE GetContractByID(in i int(11))
 BEGIN
 	select hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+    hd.sodiem as ScoreContract, hd.danhgia as CMTContract,
     nh.avatar as AvatarStudent, nh.hoten as NameStudent, nh.email as EmailStudent, nh.sdt as PhoneStudent,
     nd.avatar as AvatarTeacher, nd.hoten as NameTeacher, nd.email as EmailTeacher, nd.sdt as PhoneTeacher
     from hopdong hd, account nd, account nh
@@ -453,10 +457,14 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetChat(in IDnguoi1 int(11), in IDnguoi2 int(11))
 BEGIN
-	select * 
-    from chat c
-    where c.nguoigui = IDnguoi1 and  c.nguoinhan = IDnguoi2 
-		or c.nguoigui = IDnguoi2 and c.nguoinhan = IDnguoi1;
+	select c.id as ID, c.noidung as NoiDungChat, c.thoigianchat as  ThoiGianChat,
+    c.nguoigui as IDNguoiGui, c.nguoinhan as IDNguoiNhan,
+    ng.hoten as TenNguoiGui, ng.avatar as AvatarNguoiGui,
+    nn.hoten as TenNguoiNhan, nn.avatar as AvatarNguoiNhan
+    from chat c, account ng, account nn
+    where (c.nguoigui = IDnguoi1 and  c.nguoinhan = IDnguoi2 
+		or c.nguoigui = IDnguoi2 and c.nguoinhan = IDnguoi1)
+		and c.nguoigui = ng.id and c.nguoinhan = nn.id;
 END;$$
 DELIMITER ;
 call GetChat(37,38);
@@ -485,3 +493,69 @@ BEGIN
 END;$$
 DELIMITER ;
 call AddScoreContractByID(2,5);
+
+
+#------------------ Khiếu nại hợp đồng-----------------------#
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddKNHD(in ID_nguoi_KN int(11), in ID_HD int(11), in noi_dung text, in thoi_gian_KN datetime)
+BEGIN
+	insert into khieunaihopdong values(null, ID_HD, ID_nguoi_KN, noi_dung,thoi_gian_KN);
+END;$$
+DELIMITER ;
+call AddKNHD(37, 1, 'abc','2019-12-12 12:12:12');
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllKNHD()
+BEGIN
+	select kn.id as IDKNHD, kn.noidung as NoiDungKN, kn.thoigiankhieunai as ThoiGianKN,
+			hd.id as IDHD, hd.tenhopdong as TenHD,
+            a.hoten as TenNguoiKN, a.avatar as AvatarNguoiKN, v.ten as VaiTroNguoiKN
+    from hopdong hd, khieunaihopdong kn, account a, vaitro v
+    where kn.sohopdong=hd.id and kn.nguoikhieunai = a.id and v.id = a.vaitro;
+END;$$
+DELIMITER ;
+call GetAllKNHD();
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllKNHDByIDHD(in IDHD int(11))
+BEGIN
+	select kn.id as IDKNHD, kn.noidung as NoiDungKN, kn.thoigiankhieunai as ThoiGianKN,
+			hd.id as IDHD, hd.tenhopdong as TenHD,
+            a.hoten as TenNguoiKN, a.avatar as AvatarNguoiKN, v.ten as VaiTroNguoiKN
+    from hopdong hd, khieunaihopdong kn, account a, vaitro v
+    where kn.sohopdong=IDHD and hd.id = IDHD and kn.nguoikhieunai = a.id and v.id = a.vaitro;
+END;$$
+DELIMITER ;
+call GetAllKNHDByIDHD(4);
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllCMTOfTeacherByID(in IDTeacher int(11))
+BEGIN
+	select hd.id as IDHopDong, nh.id as IDNguoiDanhGia, nh.hoten as TenNguoiDanhGia, nh.avatar as AvatarNguoiDanhGia, 
+    hd.sodiem as SoSao, hd.danhgia as Comment
+    from hopdong hd, account nd, account nh
+    where hd.nguoiday = IDTeacher and hd.nguoihoc = nh.id and nd.id = IDTeacher
+		and ((hd.danhgia != '' and hd.danhgia is not null)or(hd.sodiem is not null and hd.sodiem>0));
+END;$$
+DELIMITER ;
+call GetAllCMTOfTeacherByID(37);
+
+#---------------------------------- giaodich
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddTransaction(in IDNguoiGui int(11), in IDNguoiNhan int(11), in SoTien int(11), 
+									in Mota varchar(255), in ThoiGianGiaoDich datetime)
+BEGIN
+	insert into giaodich values(null, IDNguoiGui, IDNguoiNhan,2,SoTien, Mota, ThoiGianGiaoDich);
+END;$$
+DELIMITER ;
+call AddTransaction(10,33,100000,'abc','2019-12-12 12:12:12');
+
+
