@@ -41,21 +41,13 @@ router.get('/Incometeacher',async function(req, res, next) {
 router.get('/TopIncomebyDay', async function(req, res){
   var date = req.body.date
   console.log(date)
-  // try {
-  //   var TopbyDay = await accountModel.GetTopInComebyDay(date)
-  //   res.send(TopbyDay)
-  // }
-  // catch(err){
-  //   console.log(err)
-  // }
-  accountModel.GetTopInComebyDay(date)
-  .then(result =>{
-    console.log(result)
-    res.send(result)
-  })
-  .catch(err =>{
+  try {
+    var TopbyDay = await accountModel.GetTopInComebyDay(date)
+    res.send(TopbyDay)
+  }
+  catch(err){
     console.log(err)
-  })
+  }
 })
 
 router.get('/TopincomebyWeek', async function(req,res){
