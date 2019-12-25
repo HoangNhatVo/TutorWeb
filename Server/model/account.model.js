@@ -76,7 +76,7 @@ module.exports = {
         return orm.selectAll(`call GetIncomeById(${IDUser})`)
     },
     GetTopInComebyDay : (date) =>{
-        return orm.selectAll(`call GetTopIncomeByDay('${date}')`)
+        return orm.selectAll(`call GetTopIncomeByDay(${date})`)
     },
     GetTopInComebyWeek : (week,year) => {
         return orm.selectAll(`call GetTopIncomeByWeek(${week}, ${year})`)
