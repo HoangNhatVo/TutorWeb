@@ -70,7 +70,25 @@ module.exports = {
         return orm.selectAll(`call Get_ChuyenNganh_ByID(${ID})`);
     },
     create_transaction : (IDsend,IDRecive,money,descrip,time) => {
-        return orm.selectAll(`call AddTransaction(${IDsend}, ${IDRecive}, ${money}, ${descrip}, ${time})`)
+        return orm.selectAll(`call AddTransaction(${IDsend}, ${IDRecive}, ${money}, '${descrip}', '${time}')`)
+    },
+    GetIncomeByTeacher : (IDUser) => {
+        return orm.selectAll(`call GetIncomeById(${IDUser})`)
+    },
+    GetTopInComebyDay : (date) =>{
+        return orm.selectAll(`call GetTopIncomeByDay('${date}')`)
+    },
+    GetTopInComebyWeek : (week,year) => {
+        return orm.selectAll(`call GetTopIncomeByWeek(${week}, ${year})`)
+    },
+    GetTopInComebyMonth : (month,year) => {
+        return orm.selectAll(`call GetTopIncomeByMonth(${month}, ${year})`)
+    },
+    GetTopInComebyQuarter : (qq,year) => {
+        return orm.selectAll(`call GetTopIncomeByQuarter(${qq}, ${year})`)
+    },
+    GetTopInComebyAll : () => {
+        return orm.selectAll(`call GetTopIncomeByAll()`)
     }
 }
 
