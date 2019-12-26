@@ -190,4 +190,18 @@ router.get('/success', (req, res) => {
 });
 
 router.get('/cancel', (req, res) => res.send('Cancelled'));
+
+router.post('/payment' , (req, res) => {
+  const hours = req.body.hours;
+  const IDpayer = req.body.IDpayer
+  const IDreciver = req.body.IDreciver
+  const date = moment().format('YYYY-MM-DD HH:mm:ss');
+  accountModel.create_transaction(IDpayer, IDreciver, hours, date, date)
+  .then(r =>{
+    res.send("thanh toán thành công")
+  })
+  .catch(err => {
+    console.log(err)
+  })
+})
 module.exports = router;
