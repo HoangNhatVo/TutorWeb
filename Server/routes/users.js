@@ -204,4 +204,32 @@ router.post('/payment' , (req, res) => {
     console.log(err)
   })
 })
+
+router.post('/recharge', (req, res) => {
+  const Iduser = req.body.Iduser
+  const seri = req.body.seri
+  if(seri.length < 5){
+    res.send('Số seri không hợp lệ')
+  }
+  else {
+    accountModel.RechargeMoney(Iduser)
+    .then(r=>{
+      res.send('Thành công')
+    })
+    .catch(err =>{
+      console.log(err)
+    })
+  }
+})
+
+router.get('/moneyStudent/:ID', (req, res) => {
+  const Iduser = req.params.ID
+  accountModel.GetIncomeStudent(Iduser)
+  .then(r=> {
+    res.send(r)
+  })
+  .catch(err=>{
+    console.log(err)
+  })
+})
 module.exports = router;
