@@ -38,5 +38,9 @@ module.exports = {
     },
     getAllKNHDByIDHD: (IDHD) => {
         return orm.selectAll(`call GetAllKNHDByIDHD(${IDHD})`);
+    }, 
+    getIsReadByIDContract: (IDContract) => {
+        return orm.selectAll(`call GetIsReadByIDContract(${IDContract})`);
     },  
 }
+

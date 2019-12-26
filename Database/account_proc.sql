@@ -139,12 +139,31 @@ call GetAllAccount();
 
 DELIMITER $$
 USE `sql12314047`$$
+CREATE PROCEDURE GetAllAccount2(in _offset int(11),in _Limit int(11))
+BEGIN
+	select * from account where xacthuc = true limit _offset, _Limit;
+END;$$
+DELIMITER ;
+call GetAllAccount2(4,5);
+
+
+DELIMITER $$
+USE `sql12314047`$$
 CREATE PROCEDURE GetAllTeacher()
 BEGIN
 	select * from account where vaitro = 2  and xacthuc = true;
 END;$$
 DELIMITER ;
 call GetAllTeacher();
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetAllTeacher2(in _offset int(11),in _Limit int(11))
+BEGIN
+	select * from account where vaitro = 2  and xacthuc = true limit _offset, _Limit;
+END;$$
+DELIMITER ;
+call GetAllTeacher2();
 
 DELIMITER $$
 USE `sql12314047`$$
@@ -320,7 +339,8 @@ DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE AddContract(in ten varchar(255), in nguoi_day int(11), in nguoi_hoc int(11), in tgianky date)
 BEGIN
-	insert into hopdong values(null, ten, nguoi_day, nguoi_hoc, tgianky, 'Chưa duyệt');
+	insert into hopdong(id, tenhopdong, nguoiday, nguoihoc, thoigianky, trangthaihopdong)
+    values(null, ten, nguoi_day, nguoi_hoc, tgianky, 'Chưa duyệt');
     SELECT LAST_INSERT_ID() as id;
     #SELECT * FROM hopdong WHERE id = SCOPE_IDENTITY();
 END;$$
@@ -358,19 +378,24 @@ END;$$
 DELIMITER ;
 call GetAllContractByTeacherID(37);
 
+
+####------------------ CŨ - xài proc dưới page này ----------#
 DELIMITER $$
 USE `sql12314047`$$
 CREATE PROCEDURE GetContractByID(in i int(11))
 BEGIN
-	select hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+	select distinct hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
     hd.sodiem as ScoreContract, hd.danhgia as CMTContract,
     nh.avatar as AvatarStudent, nh.hoten as NameStudent, nh.email as EmailStudent, nh.sdt as PhoneStudent,
-    nd.avatar as AvatarTeacher, nd.hoten as NameTeacher, nd.email as EmailTeacher, nd.sdt as PhoneTeacher
-    from hopdong hd, account nd, account nh
+    nd.avatar as AvatarTeacher, nd.hoten as NameTeacher, nd.email as EmailTeacher, nd.sdt as PhoneTeacher,
+    c.isRead as IDReadChat
+    from hopdong hd, account nd, account nh, chat c join hopdong h on c.idhopdong = i and h.id = i
     where hd.id = i and hd.nguoiday = nd.id and hd.nguoihoc = nh.id;
 END;$$
 DELIMITER ;
-call GetContractByID(4);
+call GetContractByID(2);
+####------------------ --------------------------------------- ----------#
+
 
 DELIMITER $$
 USE `sql12314047`$$
@@ -438,9 +463,9 @@ call GetAllContractByStudentID(9);
 
 DELIMITER $$
 USE `sql12314047`$$
-CREATE PROCEDURE AddChat(in IDnguoigui int(11), in IDnguoinhan int(11), in nd text, in thoi_gian_chat datetime)
+CREATE PROCEDURE AddChat(in IDnguoigui int(11), in IDnguoinhan int(11), in nd text, in thoi_gian_chat datetime, in idhd int(11))
 BEGIN
-	insert into chat values (null, IDnguoigui, IDnguoinhan, nd, thoi_gian_chat);
+	insert into chat values (null, IDnguoigui, IDnguoinhan, nd, thoi_gian_chat, IDnguoinhan, idhd);
     select c.id as ID, c.noidung as NoiDungChat, c.thoigianchat as ThoiGianChat,
     c.nguoigui as IDNguoiGui, c.nguoinhan as IDNguoiNhan,
     ng.hoten as TenNguoiGui, ng.avatar as AvatarNguoiGui,
@@ -450,7 +475,7 @@ BEGIN
     #----SELECT LAST_INSERT_ID() as id;
 END;$$
 DELIMITER ;
-call AddChat(37,38,'đlgđ','2019-12-22 23:59:59');
+call AddChat(38,37,'123123','2019-12-22 23:59:59',4);
 
 
 DELIMITER $$
@@ -467,7 +492,37 @@ BEGIN
 		and c.nguoigui = ng.id and c.nguoinhan = nn.id;
 END;$$
 DELIMITER ;
-call GetChat(37,38);
+call GetChat(36,38);
+
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetChatByIDContract(in IDContract int(11))
+BEGIN
+	update chat ch set ch.isRead = 0 where ch.idhopdong = IDContract;
+	select c.id as ID, c.noidung as NoiDungChat, c.thoigianchat as  ThoiGianChat,
+    c.idhopdong as IDHopDong,
+    c.nguoigui as IDNguoiGui, c.nguoinhan as IDNguoiNhan,
+    ng.hoten as TenNguoiGui, ng.avatar as AvatarNguoiGui,
+    nn.hoten as TenNguoiNhan, nn.avatar as AvatarNguoiNhan
+    from chat c, account ng, account nn
+    where c.nguoigui = ng.id and  c.idhopdong = IDContract and c.nguoinhan = nn.id;
+END;$$
+DELIMITER ;
+call GetChatByIDContract(4);
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE UpdateIsReadFieldChatByID(in IDChat int(11))
+BEGIN
+	update chat
+    set isRead = 0
+    where id=IDChat;
+END;$$
+DELIMITER ;
+call UpdateIsReadFieldChatByID(12);
 
 #------------------ Đánh giá hợp đồng-----------------------#
 
@@ -545,17 +600,106 @@ BEGIN
 END;$$
 DELIMITER ;
 call GetAllCMTOfTeacherByID(37);
-
 #---------------------------------- giaodich
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddTransaction(in IDNguoiGui int(11), in IDNguoiNhan int(11), in SoGio int(11), 
+									in Mota varchar(255), in ThoiGianGiaoDich datetime)
+BEGIN
+	declare sotien int;
+    declare sotiensaucung int;
+    set sotien = (select tiendaymotgio from account where id = IDNguoiNhan);
+	insert into giaodich values(null, IDNguoiGui, IDNguoiNhan,2,SoGio*sotien, Mota, ThoiGianGiaoDich);
+END;$$
+DELIMITER ;
+call AddTransaction(10,36,4,'new123','2019-12-12 12:12:12');
+select * from giaodich;
+
 
 DELIMITER $$
 USE `sql12314047`$$
-CREATE PROCEDURE AddTransaction(in IDNguoiGui int(11), in IDNguoiNhan int(11), in SoTien int(11), 
-									in Mota varchar(255), in ThoiGianGiaoDich datetime)
+CREATE PROCEDURE GetContractByID(in i int(11))
 BEGIN
-	insert into giaodich values(null, IDNguoiGui, IDNguoiNhan,2,SoTien, Mota, ThoiGianGiaoDich);
+	declare count1 int;
+    set count1 =(select count(distinct isRead) from chat where idhopdong = i and isRead>0 and isRead is not null);
+    if( count1=0 )
+	then 
+		select distinct hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+		hd.sodiem as ScoreContract, hd.danhgia as CMTContract,
+		nh.avatar as AvatarStudent, nh.hoten as NameStudent, nh.email as EmailStudent, nh.sdt as PhoneStudent,
+		nd.avatar as AvatarTeacher, nd.hoten as NameTeacher, nd.email as EmailTeacher, nd.sdt as PhoneTeacher,
+		0 as IDReadChat
+		from hopdong hd, account nd, account nh
+		where hd.id = i and hd.nguoiday = nd.id and hd.nguoihoc = nh.id;
+    end if;
+    if( count1>0)
+	then
+		select distinct hd.id as IDContract, hd.tenhopdong as NameContract, hd.nguoiday as IDTeacher, hd.nguoihoc as IDStudent, hd.thoigianky as TimeAsigned, hd.trangthaihopdong as StatusContract,
+		hd.sodiem as ScoreContract, hd.danhgia as CMTContract,
+		nh.avatar as AvatarStudent, nh.hoten as NameStudent, nh.email as EmailStudent, nh.sdt as PhoneStudent,
+		nd.avatar as AvatarTeacher, nd.hoten as NameTeacher, nd.email as EmailTeacher, nd.sdt as PhoneTeacher,
+		c.isRead as IDReadChat
+		from hopdong hd, account nd, account nh, chat c
+		where hd.id = i and hd.nguoiday = nd.id and hd.nguoihoc = nh.id and c.idhopdong = i and c.isRead>0;
+	end if;
 END;$$
 DELIMITER ;
-call AddTransaction(10,33,100000,'abc','2019-12-12 12:12:12');
+call GetContractByID(11);
 
 
+#------------------- Lọc giáo viên
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE FilterTeacher(in diadiem varchar(255), in tienday int(11), in tentag varchar(50))
+BEGIN
+	declare diadiemNew1 varchar(50);
+    declare diadiemNew2 varchar(50);
+	declare tagnew1 varchar(50);
+    declare tagnew2 varchar(50);  
+    
+	set diadiemNew1 = (select concat('%',diadiem));
+    set diadiemNew2 = (select concat(diadiemNew1,'%'));
+    
+
+    set tagnew1 = (select concat('%',tentag));
+    set tagnew2 = (select concat(tagnew1,'%'));
+    if(tienday=0)
+    then
+		select distinct a.*
+		from account a, tag_account ta, tag t
+		where a.vaitro = 2 and a.id = ta.id_account and ta.id_tag = t.id
+			and a.diachi like diadiemNew2 and t.tentag like tagnew2;
+    end if;
+    if(tienday!=0)
+    then
+		select distinct a.*
+		from account a, tag_account ta, tag t
+		where a.vaitro = 2 and a.id = ta.id_account and ta.id_tag = t.id
+			and a.diachi like diadiemNew2 and a.tiendaymotgio = tienday
+			and t.tentag like tagnew2;
+    end if;
+	
+END;$$
+DELIMITER ;
+call FilterTeacher('HCM', 200, '2');
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetIsReadByIDContract(in IDContract int(11))
+BEGIN
+	declare count1 int;
+    set count1 = (select count(distinct isRead) from chat where idhopdong = IDContract and isRead>0 and isRead is not null);
+    if(count1 = 0)
+    then
+		select 0;
+    end if;
+	if(count1>0)
+    then
+		select distinct c.isRead
+        from chat c
+        where c.idhopdong = IDContract and c.isRead>0;
+    end if;
+END;$$
+DELIMITER ;
+call GetIsReadByIDContract(19);

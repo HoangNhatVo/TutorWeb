@@ -218,6 +218,8 @@ router.get('/allTeacher', async function (req, res, next) {
   }
 })
 
+
+
 router.get('/alladmin', async function (req, res, next) {
   try {
     var allAdmin = await accountModel.getAllAdmin()
@@ -551,34 +553,45 @@ router.post('/changestatuscontract', function(req, res, next){
     })
 })
 
-router.get('/allcontractbyteacher/:ID',function(req, res, next){
+router.get('/allcontractbyteacher/:ID',async function(req, res, next){
   var TeacherID = req.params.ID;
-  contractModel.getAllContractByTeacherID(TeacherID).then(r=>{
-    if(r.length){
-      res.send(r);
+  try {
+    var allContractTeacher = await contractModel.getAllContractByTeacherID(TeacherID);
+    if (allContractTeacher.length){
+      for(var i = 0; i< allContractTeacher.length; i++){
+        var isRead = await contractModel.getIsReadByIDContract(allContractTeacher[i].IDContract);
+        allContractTeacher[i]['isRead']=isRead[0].isRead;
+      }
+      res.send(allContractTeacher);
     }
-    else{
-      res.send('Không có hợp đồng nào.');
-    }
-  }).catch(err=>{
-  console.log(err);
-  res.send('Đã xảy ra lỗi.');
-  })
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+    res.send('Đã xảy ra lỗi.');
+  }
 })
 
-router.get('/allcontractbystudent/:ID',function(req, res, next){
+router.get('/allcontractbystudent/:ID',async function(req, res, next){
+
   var StudentID = req.params.ID;
-  contractModel.getAllContractByStudentID(StudentID).then(r=>{
-    if(r.length){
-      res.send(r);
+  try {
+    var allContractStudent = await contractModel.getAllContractByStudentID(StudentID);
+    if (allContractStudent.length){
+      for(var i = 0; i< allContractStudent.length; i++){
+        var isRead = await contractModel.getIsReadByIDContract(allContractStudent[i].IDContract);
+        allContractStudent[i]['isRead']=isRead[0].isRead;
+      }
+      res.send(allContractStudent);
     }
-    else{
-      res.send('Không có hợp đồng nào.');
-    }
-  }).catch(err=>{
-  console.log(err);
-  res.send('Đã xảy ra lỗi.');
-  })
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+    res.send('Đã xảy ra lỗi.');
+  }
 })
 
 router.get('/contract/:ID', async function(req, res, next){
@@ -731,8 +744,9 @@ router.post('/chat', function(req, res, next){
   var IDNguoiGui = req.body.idnguoigui;
   var IDNguoiNhan = req.body.idnguoinhan;
   var NoiDung = req.body.noidung;
+  var IDHD = req.body.idhd;
   var ThoiGianChat = moment().format('YYYY-MM-DD HH:mm:ss');
-  chatModel.addChat(IDNguoiGui, IDNguoiNhan, NoiDung, ThoiGianChat).then(r=>{
+  chatModel.addChat(IDNguoiGui, IDNguoiNhan, NoiDung, ThoiGianChat,IDHD).then(r=>{
     if(r.length){
       res.send(r);
     }
@@ -745,10 +759,25 @@ router.post('/chat', function(req, res, next){
     })
 })
 
-router.get('/getchat/user1=:ID1&user2=:ID2', function(req, res, next){
-  var IDUser1 = req.params.ID1;
-  var IDUser2 = req.params.ID2;
-  chatModel.getChat(IDUser1, IDUser2) .then(r=>{
+// router.get('/getchat/user1=:ID1&user2=:ID2', function(req, res, next){
+//   var IDUser1 = req.params.ID1;
+//   var IDUser2 = req.params.ID2;
+//   chatModel.getChat(IDUser1, IDUser2) .then(r=>{
+//     if(r.length){
+//       res.send(r);
+//     }
+//     else{
+//       res.send('Không có đoạn chat nào.')
+//     }
+//   }).catch(err=>{
+//       console.log(err);
+//       res.send('Đã xảy ra lỗi.');
+//     })
+// })
+
+router.get('/getchat/:ID', function(req, res, next){
+  var IDContract = req.params.ID;
+  chatModel.getChatByIDContract(IDContract) .then(r=>{
     if(r.length){
       res.send(r);
     }
@@ -760,5 +789,71 @@ router.get('/getchat/user1=:ID1&user2=:ID2', function(req, res, next){
       res.send('Đã xảy ra lỗi.');
     })
 })
+
+router.post('/filterteacher', async function (req, res, next) {
+  var DiaDiem = req.body.diadiem;
+  var TienDay = req.body.tienday;
+  var TenTag = req.body.tentag;
+  if(TienDay==null||TienDay==''||TienDay==undefined){
+    TienDay = 0;
+  }
+  try {
+    var allTeacher = await accountModel.filterTeacher(DiaDiem, TienDay, TenTag);
+    if (allTeacher.length){
+      for(var i = 0; i< allTeacher.length; i++){
+        var allTags = await tagModel.getAllTagByAccID(allTeacher[i].id);
+        console.log(allTags);
+        allTeacher[i]['tags']=allTags;
+      }
+      res.send(allTeacher);
+    }
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
+
+
+
+router.get('/allteacher2/skip=:skip&limit=:limit', async function (req, res, next) {
+  var Skip = req.params.skip;
+  var Limit = req.params.limit;
+  try {
+    var allTeacher = await accountModel.getAllTeacher2(Skip,Limit);
+    if (allTeacher.length){
+      for(var i = 0; i< allTeacher.length; i++){
+        var allTags = await tagModel.getAllTagByAccID(allTeacher[i].id);
+        console.log(allTags);
+        allTeacher[i]['tags']=allTags;
+      }
+      res.send(allTeacher);
+    }
+    else
+      res.send([])
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
+
+
+router.get('/getallaccount2/skip=:skip&limit=:limit',function(req, res, next){
+  var Skip = req.params.skip;
+  var Limit = req.params.limit;
+  accountModel.getAllAccount2(Skip, Limit).then(r=>{
+    if(r.length){
+      res.send(r);
+    }
+    else{
+      res.send('Chưa có tài khoản nào.');
+    }
+  }).catch(err=>{
+    console.log(err);
+    res.send('Đã xảy ra lỗi.');
+  })
+})
+
 
 module.exports = router;
