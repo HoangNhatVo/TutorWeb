@@ -9,7 +9,7 @@ import {
   Button
 } from "@material-ui/core";
 import { Avatar } from "./common";
-import { payContract } from "../actions";
+import { payContract, getProfile } from "../actions";
 import { connect } from "react-redux";
 import { withSnackbar } from "notistack";
 
@@ -64,7 +64,8 @@ class DialogPay extends Component {
                     enqueueSnackbar("Thanh toán thành công", {
                       variant: "success"
                     });
-                    this.setState({ hours: 0 });
+                    this.props.getProfile();
+                    this.handleClose();
                   },
                   err: mes => {
                     enqueueSnackbar(mes, {
@@ -87,5 +88,5 @@ export default connect(
   ({ teacher }) => ({
     pay: teacher.pay
   }),
-  { payContract }
+  { payContract, getProfile }
 )(withSnackbar(DialogPay));

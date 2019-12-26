@@ -288,11 +288,13 @@ class UserSignUp extends Component {
               {message && (
                 <Typography
                   variant="body2"
-                  color="secondary"
+                  style={{ color: message === "Thành công" ? "green" : "red" }}
                   className="mt1"
                   align="center"
                 >
-                  {message}
+                  {message === "Thành công"
+                    ? "Truy cập eamil để kích hoạt tài khoản"
+                    : message}
                 </Typography>
               )}
 
@@ -314,7 +316,9 @@ class UserSignUp extends Component {
                     !gender ||
                     !address ||
                     !city ||
-                    !phone
+                    !phone ||
+                    !validator.isMobilePhone(phone) ||
+                    !validator.isEmail(email)
                   )
                     return;
 
@@ -535,11 +539,13 @@ class UserSignUp extends Component {
               {message && (
                 <Typography
                   variant="body2"
-                  color="secondary"
+                  style={{ color: message === "Thành công" ? "green" : "red" }}
                   className="mt1"
                   align="center"
                 >
-                  {message}
+                  {message === "Thành công"
+                    ? "Truy cập eamil để kích hoạt tài khoản"
+                    : message}
                 </Typography>
               )}
 
@@ -560,6 +566,8 @@ class UserSignUp extends Component {
                     !dob ||
                     !gender ||
                     !address ||
+                    !validator.isMobilePhone(phone) ||
+                    !validator.isEmail(email) ||
                     !city ||
                     !phone ||
                     !description ||

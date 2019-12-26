@@ -54,6 +54,8 @@ export const IS_GETTING_MY_CONTRACT = "IS_GETTING_MY_CONTRACT";
 
 export const RESET = "RESET";
 
+export const RECHARGE = "RECHARGE";
+
 export const ENDING_CONTRACT = "ENDING_CONTRACT";
 export const CHAT = "CHAT";
 export const CHATTING = "CHATTING";

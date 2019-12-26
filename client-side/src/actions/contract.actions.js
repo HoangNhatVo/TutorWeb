@@ -104,14 +104,20 @@ export const rejectContract = idcontract => async dispatch => {
 export const payContract = (hours, IDreciver, cbs) => async dispatch => {
   dispatch(payingContract());
 
-  const response = await api.post("/payment", {
+  const response = await api.post("/user/payment", {
     hours,
     IDpayer: cookies.get("id"),
     IDreciver
   });
 
+  // const response = await api.post("/user/pay", {
+  //   hours,
+  //   IDpayer: cookies.get("id"),
+  //   IDreciver
+  // });
+
   dispatch(payContractOk(response.data));
-  if (cbs.suc) cbs.sub();
+  if (cbs.suc) cbs.suc();
 };
 
 export const acceptContract = idcontract => async dispatch => {

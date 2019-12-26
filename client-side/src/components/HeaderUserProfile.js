@@ -18,12 +18,14 @@ import {
 } from "@material-ui/icons";
 import history from "../utils/history";
 import cookies from "../utils/cookies";
+import DialogRecharge from "./DialogRecharge";
 
 class HeaderUserProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      anchorEl: null
+      anchorEl: null,
+      open: false
     };
   }
 
@@ -36,6 +38,9 @@ class HeaderUserProfile extends Component {
   }
 
   handleCloseMenu = () => this.setState({ anchorEl: null });
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
   render() {
     const { signOut, userData } = this.props;
@@ -45,10 +50,9 @@ class HeaderUserProfile extends Component {
     const role = Number(cookies.get("role"));
     const url =
       role === 1 ? "/student" : role === 2 ? "/teacher" : "/admin/income";
-
     return (
       <>
-        {role === 2 && (
+        {(role === 2 || role === 1) && (
           <Link
             to={"/wallet"}
             style={{
@@ -56,15 +60,25 @@ class HeaderUserProfile extends Component {
               color: "white",
               marginRight: "2rem"
             }}
-            onClick={e => e.preventDefault()}
+            onClick={e => {
+              e.preventDefault();
+              this.setState({ open: true });
+            }}
             className="df aic"
           >
             <Money fontSize="small" style={{ marginRight: 4 }} />
             <Typography variant="body1">{`Tài khoản: ${(userData &&
               userData.income &&
+              userData.income[0] &&
               userData.income[0].Income) ||
               "Đang tải"}`}</Typography>
           </Link>
+        )}
+        {role === 1 && (
+          <DialogRecharge
+            open={this.state.open}
+            changeOpen={this.handleClose}
+          />
         )}
         <Link
           to={url}
@@ -76,7 +90,9 @@ class HeaderUserProfile extends Component {
           className="df aic"
         >
           <Home fontSize="small" style={{ marginRight: 4 }} />
-          <Typography variant="body1">{Number(cookies.get("role")) !== 3 ? "Hợp đồng" : "Dashboard"}</Typography>
+          <Typography variant="body1">
+            {Number(cookies.get("role")) !== 3 ? "Hợp đồng" : "Dashboard"}
+          </Typography>
         </Link>
         <div
           className="df aic"

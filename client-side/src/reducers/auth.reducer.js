@@ -15,6 +15,9 @@ const initState = {
     updatingAvatar: false,
     updatingTags: false,
     updatingPassword: false
+  },
+  recharge: {
+    isRecharging: false
   }
 };
 
@@ -157,6 +160,22 @@ export default (state = initState, { type, payload }) => {
         userData: {
           ...state.userData,
           updatingTags: true
+        }
+      };
+    case types.RECHARGE:
+      return {
+        ...state,
+        recharge: {
+          ...state.recharge,
+          ...payload
+        },
+        userData: {
+          ...state.userData,
+          income:
+            state.userData.income &&
+            state.userData.income.map(i => ({
+              Income: (i.Income += payload.true ? 100000 : 0)
+            }))
         }
       };
     case types.UPDATE_TAGS_RESPONSE:

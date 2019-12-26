@@ -217,7 +217,11 @@ export const signIn = (username, password) => async dispatch => {
       // vi truong tra ve luc dang nhap khac voi truong get profile nen bat dac di~ :))
       const response2 = await api.get(`/profile/${cookies.get("id")}`);
       const response3 = await api.get(
-        `/admin/Incometeacher/${cookies.get("id")}`
+        `${
+          Number(cookies.get("role")) === 1
+            ? "/user/moneyStudent"
+            : "/admin/Incometeacher"
+        }/${cookies.get("id")}`
       );
 
       if (response2) {
@@ -255,7 +259,13 @@ export const getProfile = () => async dispatch => {
   dispatch(isGettingProfile());
 
   const response = await api.get(`/profile/${cookies.get("id")}`);
-  const response3 = await api.get(`/admin/Incometeacher/${cookies.get("id")}`);
+  const response3 = await api.get(
+    `${
+      Number(cookies.get("role")) === 1
+        ? "/user/moneyStudent"
+        : "/admin/Incometeacher"
+    }/${cookies.get("id")}`
+  );
   if (response) {
     if (response.data && typeof response.data.user === "object") {
       const userData = response.data.user;
@@ -377,4 +387,23 @@ export const signOut = () => async dispatch => {
   dispatch({ type: types.RESET });
 
   history.push("/sign-in");
+};
+
+export const recharge = (seri, cbs) => async dispatch => {
+  dispatch({ type: types.RECHARGE, payload: { isRecharging: true } });
+
+  const response = await api.post("/user/recharge", {
+    Iduser: cookies.get("id"),
+    seri
+  });
+  if (response && response.data === "Thành công") {
+    dispatch({
+      type: types.RECHARGE,
+      payload: { isRecharging: false, true: true }
+    });
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    dispatch({ type: types.RECHARGE, payload: { isRecharging: false } });
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
 };
