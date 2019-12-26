@@ -89,6 +89,12 @@ module.exports = {
     },
     GetTopInComebyAll : () => {
         return orm.selectAll(`call GetTopIncomeByAll()`)
+    },
+    RechargeMoney : (IDuser) =>{
+        return orm.selectAll(`call PayIn(${IDuser})`)
+    },
+    GetIncomeStudent : (Iduser) => {
+        return orm.selectAll(`call GetIncomeStudent(${Iduser})`)
     }
 }
 
