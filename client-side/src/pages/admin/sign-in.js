@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Typography, TextField, Button } from "@material-ui/core";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { signIn } from "../../actions";
 
 class AdminSignIn extends Component {
@@ -9,7 +10,8 @@ class AdminSignIn extends Component {
     this.state = {
       role: "",
       username: "",
-      password: ""
+      password: "",
+      isCheckOn: false
     };
   }
 
@@ -18,10 +20,11 @@ class AdminSignIn extends Component {
   };
 
   render() {
-    const { username, password } = this.state;
+    const { username, password, isCheckOn } = this.state;
+    const { message } = this.props;
 
     return (
-      <Container maxWidth="sm" className="df fc f1">
+      <Container maxWidth="sm" className="df fdc f1">
         <header className="df mt2">
           <img src="/logo.svg" style={{ width: 120, height: 120 }} alt="logo" />
           <Typography
@@ -39,6 +42,8 @@ class AdminSignIn extends Component {
             variant="outlined"
             autoFocus
             required
+            helperText={isCheckOn && !username && "Không được để trống"}
+            error={isCheckOn && !username}
             value={username}
             onChange={this.changeState("username")}
             className="mt1"
@@ -48,12 +53,30 @@ class AdminSignIn extends Component {
             label="Mật khẩu"
             variant="outlined"
             value={password}
+            helperText={isCheckOn && !password && "Không được để trống"}
+            error={isCheckOn && !password}
             required
             type="password"
             onChange={this.changeState("password")}
             className="mt1"
           />
-
+          <Link
+            to="/reset-password"
+            className="mt1"
+            style={{ display: "inline-block", color: "blue" }}
+          >
+            Quên mật khẩu?
+          </Link>
+          {message && (
+            <Typography
+              variant="body2"
+              color="secondary"
+              className="mt1"
+              align="center"
+            >
+              {message}
+            </Typography>
+          )}
           <Button
             variant="contained"
             color="primary"
@@ -64,6 +87,7 @@ class AdminSignIn extends Component {
             fullWidth
             onClick={e => {
               e.preventDefault();
+              this.setState({ isCheckOn: true });
               if (!username || !password) return;
               this.props.signIn(username, password);
             }}
@@ -78,7 +102,8 @@ class AdminSignIn extends Component {
 
 export default connect(
   ({ auth }) => ({
-    isSigningIn: auth.signIn.isSigningIn
+    isSigningIn: auth.signIn.isSigningIn,
+    message: auth.signIn.message
   }),
   { signIn }
 )(AdminSignIn);

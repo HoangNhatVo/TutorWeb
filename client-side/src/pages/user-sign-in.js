@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { Container, Typography, TextField, Button } from "@material-ui/core";
 import { HeaderOut, Footer } from "../components";
-import api from "../utils/axios";
+// import api from "../utils/axios";
 import { connect } from "react-redux";
 import { signIn } from "../actions";
+import { Link } from "react-router-dom";
 
 class UserSignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
+      isCheckOn: false,
       password: ""
     };
   }
@@ -18,19 +20,18 @@ class UserSignIn extends Component {
     this.setState({ [field]: event.target.value });
   };
 
-  googleSignIn = async () => {
-    const response = await api.get("/google");
-    console.log(response);
-  };
+  // googleSignIn = async () => {
+  //   const response = await api.get("/google");
+  // };
 
   render() {
-    const { username, password } = this.state;
+    const { username, password, isCheckOn } = this.state;
     const { signIn, isSigningIn, message } = this.props;
 
     return (
-      <div className="df fc" style={{ minHeight: "100vh" }}>
+      <div className="df fdc" style={{ minHeight: "100vh" }}>
         <HeaderOut hasNoAccount />
-        <Container maxWidth="sm" className="df fc f1">
+        <Container maxWidth="sm" className="df fdc f1">
           <header className="df mt2">
             <img
               src="/logo.svg"
@@ -53,6 +54,8 @@ class UserSignIn extends Component {
           </header>
           <form>
             <TextField
+              helperText={isCheckOn && !username && "Không được để trống"}
+              error={isCheckOn && !username}
               fullWidth
               label="Tài khoản"
               variant="outlined"
@@ -63,6 +66,8 @@ class UserSignIn extends Component {
               className="mt1"
             />
             <TextField
+              helperText={isCheckOn && !password && "Không được để trống"}
+              error={isCheckOn && !password}
               fullWidth
               label="Mật khẩu"
               variant="outlined"
@@ -72,7 +77,13 @@ class UserSignIn extends Component {
               onChange={this.changeState("password")}
               className="mt1"
             />
-
+            <Link
+              to="/reset-password"
+              className="mt1"
+              style={{ display: "inline-block", color: "blue" }}
+            >
+              Quên mật khẩu?
+            </Link>
             {message && (
               <Typography
                 variant="body2"
@@ -94,6 +105,7 @@ class UserSignIn extends Component {
               fullWidth
               onClick={e => {
                 e.preventDefault();
+                this.setState({ isCheckOn: true });
                 if (!username || !password) return;
                 signIn(username, password);
               }}

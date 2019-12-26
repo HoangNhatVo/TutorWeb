@@ -1,65 +1,88 @@
 import * as types from "../../types";
 import api from "../../utils/axios";
 
-const getAllTagsOk = tags => ({
-  type: types.GET_TAGS_SUCCESSFULLY,
-  payload: tags
-});
-
-const isGettingTags = value => ({
-  type: types.IS_GETTING_TAGS,
-  payload: value
-});
-
 const isDeletingTag = idTag => ({
-  type: types.IS_DELETING_TAGS,
+  type: types.IS_DELETING_TAG,
   payload: idTag
 });
 
 const deleteTagOk = idTag => ({
-  type: types.DELETE_TAGS_SUCCESSFULLY,
+  type: types.DELETE_TAG_SUCCESSFULLY,
   payload: idTag
 });
 
 const isUpdatingTag = idTag => ({
-  type: types.IS_UPDATING_TAGS,
+  type: types.IS_UPDATING_TAG,
   payload: idTag
 });
 
 const updateTagFailed = idTag => ({
-  type: types.UPDATE_TAGS_FAILED,
+  type: types.UPDATE_TAG_FAILED,
   payload: idTag
 });
 
 const updateTagOk = (id, tagnameupdate) => ({
-  type: types.UPDATE_TAGS_SUCCESSFULLY,
+  type: types.UPDATE_TAG_SUCCESSFULLY,
   payload: {
     id,
     tagnameupdate
   }
 });
 
-export const getAllTags = () => async dispatch => {
-  dispatch(isGettingTags(true));
+const getTagsOk = tags => ({
+  type: types.GET_TAGS_OK,
+  payload: { tags }
+});
 
+const addingTag = () => ({
+  type: types.IS_ADDING_TAG
+});
+
+const addTagOk = (id, tentag) => ({
+  type: types.ADD_TAG_SUCCESSFULLY,
+  payload: { id, tentag: `#${tentag}` }
+});
+
+export const getTags = () => async dispatch => {
   const tags = await api.get("/alltag");
-
-  dispatch(getAllTagsOk(tags && tags.data));
+  dispatch(getTagsOk(tags && tags.data));
 };
 
-export const deleteTag = id => async dispatch => {
+export const deleteTag = (id, cbs) => async dispatch => {
   dispatch(isDeletingTag(id));
 
   const response = await api.post("/deletetag", { id });
 
-  if (response.data === "Thành công") dispatch(deleteTagOk(id));
+  if (response.data === "Thành công") {
+    dispatch(deleteTagOk(id));
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
 };
 
-export const updateTag = (id, tagnameupdate) => async dispatch => {
+export const updateTag = (id, tagnameupdate, cbs) => async dispatch => {
   dispatch(isUpdatingTag(id));
 
   const response = await api.post("/updatetagname", { id, tagnameupdate });
+  if (response.data === "Thành công") {
+    dispatch(updateTagOk(id, tagnameupdate));
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    dispatch(updateTagFailed(id));
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
+};
 
-  if (response.data === "Thành công") dispatch(updateTagOk(id, tagnameupdate));
-  else dispatch(updateTagFailed(id));
+export const addTag = (tagname, cbs) => async dispatch => {
+  dispatch(addingTag());
+
+  const response = await api.post("/addtag", { tagname });
+
+  if (typeof response.data === 'number') {
+    dispatch(addTagOk(response.data, tagname));
+    if (cbs && cbs.suc) cbs.suc();
+  } else {
+    if (cbs && cbs.err) cbs.err(response.data);
+  }
 };

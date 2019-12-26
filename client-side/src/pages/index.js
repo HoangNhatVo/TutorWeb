@@ -7,12 +7,21 @@ import Moderators from "./admin/moderators";
 import Users from "./admin/users";
 import Tags from "./admin/tags";
 import AdminSignIn from "./admin/sign-in";
+import Contracts from "./admin/contracts";
+import Income from "./admin/income";
+import Reclamations from "./admin/reclamations";
+
 import Verify from "./verify";
 import Home from "./home";
 
-import ListTeacher from "./list-teacher";
+import ResetPassword from "./reset-password";
+import ResetPasswordToken from "./reset-password-token";
+
 import UserProfileEdit from "./user-profile-edit";
 import UserProfileShow from "./user-profile-show";
+
+import ContractsEdit from "./contracts/edit";
+import ContractsView from "./contracts/view";
 
 export {
   UserSignUp,
@@ -20,12 +29,18 @@ export {
   UserSignIn,
   UserProfileEdit,
   UserProfileShow,
-  ListTeacher,
+  ResetPasswordToken,
   TeacherHome,
   StudentHome,
+  ResetPassword,
   Moderators,
   Verify,
   Home,
   Users,
-  Tags
+  Income,
+  Contracts,
+  Reclamations,
+  Tags,
+  ContractsEdit,
+  ContractsView
 };

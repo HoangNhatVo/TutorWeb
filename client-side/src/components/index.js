@@ -3,10 +3,12 @@ import HeaderOut from "./HeaderOut";
 import HeaderIn from "./HeaderIn";
 import Footer from "./Footer";
 import BreadCrums from "./BreadCrums";
+import DialogPay from "./DialogPay";
 
 import Menu from "./Menu";
 import Banner from "./Banner";
-import TeacherCard from "./TecherCard";
+import TeacherCard from "./TeacherCard";
+import ContractItem from "./ContractItem";
 
 export * from "./common";
 export {
@@ -17,5 +19,7 @@ export {
   HeaderOut,
   Menu,
   Banner,
-  TeacherCard
+  TeacherCard,
+  DialogPay,
+  ContractItem
 };

@@ -27,9 +27,9 @@ class HeaderOut extends Component {
             {isSignedIn ? (
               <HeaderUserProfile />
             ) : (
-              <div className="df ac">
+              <div className="df aic">
                 <Typography variant="body2" className="f1">
-                  Đã có tài khoản?
+                  {hasAccount ? "Đã " : "Chưa "}có tài khoản?
                 </Typography>
                 {hasAccount && (
                   <Button
