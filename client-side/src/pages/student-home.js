@@ -11,15 +11,14 @@ import { connect } from "react-redux";
 
 class StudentHome extends Component {
   componentDidMount() {
-    const { myContracts, specializes } = this.props;
+    const { specializes } = this.props;
     if (!this.props.isOk) this.props.getTeachers();
     if (specializes && !specializes.isOk) this.props.getSpecializes();
-    if (myContracts && !myContracts.isOk) this.props.getCurrentContractList();
+    this.props.getCurrentContractList();
   }
 
   render() {
     const { teachers, isLoadingTeachers, myContracts } = this.props;
-    console.log("view myContracts", myContracts);
 
     const pendingList = myContracts.contracts.filter(
       contract => contract.StatusContract === "Chưa duyệt"
@@ -49,7 +48,7 @@ class StudentHome extends Component {
                   isStudent
                   pending
                   contract={contract}
-                  key={contract.NameContract}
+                  key={contract.IDContract}
                 />
               ))}
             </Grid>
@@ -72,7 +71,7 @@ class StudentHome extends Component {
                   isStudent
                   doing
                   contract={contract}
-                  key={contract.NameContract}
+                  key={contract.IDContract}
                 />
               ))}
             </Grid>
@@ -95,7 +94,7 @@ class StudentHome extends Component {
                   isStudent
                   ended
                   contract={contract}
-                  key={contract.NameContract}
+                  key={contract.IDContract}
                 />
               ))}
             </Grid>

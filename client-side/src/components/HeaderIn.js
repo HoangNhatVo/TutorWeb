@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { AppBar, Toolbar, Typography, Container } from "@material-ui/core";
 import HeaderUserProfile from "./HeaderUserProfile";
 import history from "../utils/history";
+import cookies from "../utils/cookies";
 
 class HeaderIn extends Component {
   toHome = () => {
-    history.push("/");
+    history.push(Number(cookies.get("role")) === 3 ? "/admin/income" : "/");
   };
 
   render() {

@@ -216,6 +216,10 @@ export const signIn = (username, password) => async dispatch => {
 
       // vi truong tra ve luc dang nhap khac voi truong get profile nen bat dac di~ :))
       const response2 = await api.get(`/profile/${cookies.get("id")}`);
+      const response3 = await api.get(
+        `/admin/Incometeacher/${cookies.get("id")}`
+      );
+
       if (response2) {
         if (response2.data && typeof response2.data.user === "object") {
           const userData = response2.data.user;
@@ -223,8 +227,9 @@ export const signIn = (username, password) => async dispatch => {
             getProfileSuccessfully({
               ...userData,
               tags: response2.data.tag
-                ? response2.data.tag.map(tag => tag.id_tag)
-                : []
+                ? response2.data.tag.map(tag => tag.IDTag)
+                : [],
+              income: response3.data
             })
           );
         } else dispatch(getProfileSuccessfully(response2.data));
@@ -233,7 +238,15 @@ export const signIn = (username, password) => async dispatch => {
       const role = userData.vaitro;
       if (role === 1) history.push("/student");
       else if (role === 2) history.push("/teacher");
-      else if (role === 3) history.push("/admin/moderators");
+      else if (role === 3) {
+        cookies.remove("token");
+        cookies.remove("role");
+        cookies.remove("id");
+        cookies.set("role", userData.vaitro);
+        cookies.set("id", userData.id);
+        cookies.set("token", "3");
+        history.push("/admin/income");
+      } else history.push("/");
     }
   }
 };
@@ -242,6 +255,7 @@ export const getProfile = () => async dispatch => {
   dispatch(isGettingProfile());
 
   const response = await api.get(`/profile/${cookies.get("id")}`);
+  const response3 = await api.get(`/admin/Incometeacher/${cookies.get("id")}`);
   if (response) {
     if (response.data && typeof response.data.user === "object") {
       const userData = response.data.user;
@@ -249,8 +263,9 @@ export const getProfile = () => async dispatch => {
         getProfileSuccessfully({
           ...userData,
           tags: response.data.tag
-            ? response.data.tag.map(tag => tag.id_tag)
-            : []
+            ? response.data.tag.map(tag => tag.IDTag)
+            : [],
+          income: response3.data
         })
       );
     } else dispatch(getProfileSuccessfully(response.data));
@@ -355,10 +370,11 @@ export const updateAvatar = (base64, cbs) => dispatch => {
 };
 
 export const signOut = () => async dispatch => {
-  dispatch({ type: types.RESET });
-
   cookies.remove("token");
   cookies.remove("role");
   cookies.remove("id");
+
+  dispatch({ type: types.RESET });
+
   history.push("/sign-in");
 };

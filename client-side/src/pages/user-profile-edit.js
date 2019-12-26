@@ -26,6 +26,7 @@ import {
 } from "../actions";
 import { getRole } from "../utils";
 import { withSnackbar } from "notistack";
+import cookies from "../utils/cookies";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -303,76 +304,80 @@ class UserProfileEdit extends Component {
               </Button>
             </Paper>
 
-            <Paper
-              style={{
-                borderRadius: 4,
-                padding: "1rem"
-              }}
-              className="mt1 mb1"
-              elevation={2}
-            >
-              <Typography
-                style={{ fontWeight: 600, color: "gray" }}
-                variant="body2"
-                className="mb1"
+            {Number(cookies.get("id")) === 2 && (
+              <Paper
+                style={{
+                  borderRadius: 4,
+                  padding: "1rem"
+                }}
+                className="mt1 mb1"
+                elevation={2}
               >
-                Tag kỹ năng
-              </Typography>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel id="demo-mutiple-chip-label">
-                  Tags của bạn
-                </InputLabel>
-                <Select
-                  labelId="demo-mutiple-chip-label"
-                  id="demo-mutiple-chip"
-                  multiple
-                  value={userTags}
-                  onChange={event => {
-                    this.setState({ userTags: event.target.value });
-                  }}
-                  input={
-                    <OutlinedInput labelWidth={90} id="select-multiple-chip" />
-                  }
-                  renderValue={selected => (
-                    <div>
-                      {selected.map(tag => (
-                        <Chip key={tag} label={getTagName(tags, tag)} />
-                      ))}
-                    </div>
-                  )}
-                  MenuProps={MenuProps}
+                <Typography
+                  style={{ fontWeight: 600, color: "gray" }}
+                  variant="body2"
+                  className="mb1"
                 >
-                  {tags.map(tag => (
-                    <MenuItem key={tag.id} value={tag.id}>
-                      {tag.tentag}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <Button
-                variant="contained"
-                color="primary"
-                className="mt1"
-                size="small"
-                onClick={() =>
-                  this.props.updateTags(userTags, {
-                    suc: () => {
-                      enqueueSnackbar("Cập nhật thành công", {
-                        variant: "success"
-                      });
-                    },
-                    err: mes => {
-                      enqueueSnackbar(mes, {
-                        variant: "error"
-                      });
+                  Tag kỹ năng
+                </Typography>
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel id="demo-mutiple-chip-label">
+                    Tags của bạn
+                  </InputLabel>
+                  <Select
+                    labelId="demo-mutiple-chip-label"
+                    id="demo-mutiple-chip"
+                    multiple
+                    value={userTags}
+                    onChange={event => {
+                      this.setState({ userTags: event.target.value });
+                    }}
+                    input={
+                      <OutlinedInput
+                        labelWidth={90}
+                        id="select-multiple-chip"
+                      />
                     }
-                  })
-                }
-              >
-                Cập nhật
-              </Button>
-            </Paper>
-
+                    renderValue={selected => (
+                      <div>
+                        {selected.map(tag => (
+                          <Chip key={tag} label={getTagName(tags, tag)} />
+                        ))}
+                      </div>
+                    )}
+                    MenuProps={MenuProps}
+                  >
+                    {tags.map(tag => (
+                      <MenuItem key={tag.id} value={tag.id}>
+                        {tag.tentag}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className="mt1"
+                  size="small"
+                  onClick={() =>
+                    this.props.updateTags(userTags, {
+                      suc: () => {
+                        enqueueSnackbar("Cập nhật thành công", {
+                          variant: "success"
+                        });
+                      },
+                      err: mes => {
+                        enqueueSnackbar(mes, {
+                          variant: "error"
+                        });
+                      }
+                    })
+                  }
+                >
+                  Cập nhật
+                </Button>
+              </Paper>
+            )}
             <Paper
               style={{
                 borderRadius: 4,

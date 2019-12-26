@@ -11,6 +11,7 @@ class UserSignIn extends Component {
     super(props);
     this.state = {
       username: "",
+      isCheckOn: false,
       password: ""
     };
   }
@@ -24,7 +25,7 @@ class UserSignIn extends Component {
   // };
 
   render() {
-    const { username, password } = this.state;
+    const { username, password, isCheckOn } = this.state;
     const { signIn, isSigningIn, message } = this.props;
 
     return (
@@ -53,6 +54,8 @@ class UserSignIn extends Component {
           </header>
           <form>
             <TextField
+              helperText={isCheckOn && !username && "Không được để trống"}
+              error={isCheckOn && !username}
               fullWidth
               label="Tài khoản"
               variant="outlined"
@@ -63,6 +66,8 @@ class UserSignIn extends Component {
               className="mt1"
             />
             <TextField
+              helperText={isCheckOn && !password && "Không được để trống"}
+              error={isCheckOn && !password}
               fullWidth
               label="Mật khẩu"
               variant="outlined"
@@ -100,6 +105,7 @@ class UserSignIn extends Component {
               fullWidth
               onClick={e => {
                 e.preventDefault();
+                this.setState({ isCheckOn: true });
                 if (!username || !password) return;
                 signIn(username, password);
               }}

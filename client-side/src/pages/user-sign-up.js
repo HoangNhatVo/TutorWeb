@@ -15,6 +15,7 @@ import moment from "moment";
 import { HeaderOut, Footer } from "../components";
 import { connect } from "react-redux";
 import { getSpecializes, signUpStudent, signUpTeacher } from "../actions";
+import validator from "validator";
 
 const MyChip = styled(Chip)({
   padding: "3rem",
@@ -49,7 +50,9 @@ class UserSignUp extends Component {
       subject: "",
       description: "",
       specialization: 1,
-      wage: 0
+      wage: 0,
+      isCheckOnTeacher: false,
+      isCheckOnStudent: false
     };
   }
 
@@ -79,7 +82,9 @@ class UserSignUp extends Component {
       subject,
       description,
       specialization,
-      wage
+      wage,
+      isCheckOnTeacher,
+      isCheckOnStudent
     } = this.state;
 
     const {
@@ -147,6 +152,10 @@ class UserSignUp extends Component {
             <form>
               <TextField
                 fullWidth
+                helperText={
+                  isCheckOnStudent && !username && "Không được để trống"
+                }
+                error={isCheckOnStudent && !username}
                 label="Tài khoản"
                 variant="outlined"
                 value={username}
@@ -155,6 +164,10 @@ class UserSignUp extends Component {
               />
               <TextField
                 fullWidth
+                helperText={
+                  isCheckOnStudent && !password && "Không được để trống"
+                }
+                error={isCheckOnStudent && !password}
                 label="Mật khẩu"
                 variant="outlined"
                 value={password}
@@ -170,6 +183,10 @@ class UserSignUp extends Component {
               <TextField
                 fullWidth
                 label="Họ tên"
+                helperText={
+                  isCheckOnStudent && !fullname && "Không được để trống"
+                }
+                error={isCheckOnStudent && !fullname}
                 variant="outlined"
                 value={fullname}
                 onChange={this.changeState("fullname")}
@@ -178,6 +195,15 @@ class UserSignUp extends Component {
               <TextField
                 fullWidth
                 label="Email"
+                helperText={
+                  (isCheckOnStudent && !email && "Không được để trống") ||
+                  (isCheckOnStudent &&
+                    !validator.isEmail(email) &&
+                    "Email không hợp lệ")
+                }
+                error={
+                  isCheckOnStudent && (!email || !validator.isEmail(email))
+                }
                 variant="outlined"
                 value={email}
                 type="email"
@@ -186,6 +212,8 @@ class UserSignUp extends Component {
               />
               <div className="df jcsb">
                 <TextField
+                  helperText={isCheckOnStudent && !dob && "Không được để trống"}
+                  error={isCheckOnStudent && !dob}
                   label="Ngày sinh"
                   variant="outlined"
                   value={dob}
@@ -197,6 +225,10 @@ class UserSignUp extends Component {
                 <TextField
                   label="Giới tính"
                   variant="outlined"
+                  helperText={
+                    isCheckOnStudent && !gender && "Không được để trống"
+                  }
+                  error={isCheckOnStudent && !gender}
                   value={gender}
                   select
                   style={{ width: "48%" }}
@@ -215,6 +247,16 @@ class UserSignUp extends Component {
                 fullWidth
                 label="Số điện thoại"
                 variant="outlined"
+                helperText={
+                  (isCheckOnStudent && !phone && "Không được để trống") ||
+                  (isCheckOnStudent &&
+                    !validator.isMobilePhone(phone) &&
+                    "Số điện thoại không hợp lệ")
+                }
+                error={
+                  isCheckOnStudent &&
+                  (!phone || !validator.isMobilePhone(phone))
+                }
                 value={phone}
                 type="phone"
                 onChange={this.changeState("phone")}
@@ -223,6 +265,10 @@ class UserSignUp extends Component {
               <TextField
                 fullWidth
                 label="Địa chỉ"
+                helperText={
+                  isCheckOnStudent && !address && "Không được để trống"
+                }
+                error={isCheckOnStudent && !address}
                 variant="outlined"
                 value={address}
                 onChange={this.changeState("address")}
@@ -231,6 +277,8 @@ class UserSignUp extends Component {
               <TextField
                 fullWidth
                 label="Thành phố"
+                helperText={isCheckOnStudent && !city && "Không được để trống"}
+                error={isCheckOnStudent && !city}
                 variant="outlined"
                 value={city}
                 onChange={this.changeState("city")}
@@ -256,6 +304,7 @@ class UserSignUp extends Component {
                 fullWidth
                 disabled={isSigningUp}
                 onClick={() => {
+                  this.setState({ isCheckOnStudent: true });
                   if (
                     !username ||
                     !password ||
@@ -291,6 +340,10 @@ class UserSignUp extends Component {
             <form>
               <TextField
                 fullWidth
+                helperText={
+                  isCheckOnTeacher && !username && "Không được để trống"
+                }
+                error={isCheckOnTeacher && !username}
                 label="Tài khoản"
                 variant="outlined"
                 value={username}
@@ -300,6 +353,10 @@ class UserSignUp extends Component {
               <TextField
                 fullWidth
                 label="Mật khẩu"
+                helperText={
+                  isCheckOnTeacher && !password && "Không được để trống"
+                }
+                error={isCheckOnTeacher && !password}
                 variant="outlined"
                 value={password}
                 required
@@ -313,6 +370,10 @@ class UserSignUp extends Component {
               </Typography>
               <TextField
                 fullWidth
+                helperText={
+                  isCheckOnTeacher && !fullname && "Không được để trống"
+                }
+                error={isCheckOnTeacher && !fullname}
                 label="Họ tên"
                 variant="outlined"
                 value={fullname}
@@ -321,6 +382,8 @@ class UserSignUp extends Component {
               />
               <TextField
                 fullWidth
+                helperText={isCheckOnTeacher && !email && "Không được để trống"}
+                error={isCheckOnTeacher && !email}
                 label="Email"
                 variant="outlined"
                 value={email}
@@ -332,6 +395,8 @@ class UserSignUp extends Component {
                 <TextField
                   label="Ngày sinh"
                   variant="outlined"
+                  helperText={isCheckOnTeacher && !dob && "Không được để trống"}
+                  error={isCheckOnTeacher && !dob}
                   value={dob}
                   style={{ width: "48%" }}
                   type="date"
@@ -342,6 +407,10 @@ class UserSignUp extends Component {
                   label="Giới tính"
                   variant="outlined"
                   value={gender}
+                  helperText={
+                    isCheckOnTeacher && !gender && "Không được để trống"
+                  }
+                  error={isCheckOnTeacher && !gender}
                   select
                   style={{ width: "48%" }}
                   onChange={this.changeState("gender")}
@@ -356,6 +425,16 @@ class UserSignUp extends Component {
               </div>
               <TextField
                 fullWidth
+                helperText={
+                  (isCheckOnTeacher && !phone && "Không được để trống") ||
+                  (isCheckOnTeacher &&
+                    !validator.isMobilePhone(phone) &&
+                    "Số điện thoại không hợp lệ")
+                }
+                error={
+                  isCheckOnTeacher &&
+                  (!phone || !validator.isMobilePhone(phone))
+                }
                 label="Số điện thoại"
                 variant="outlined"
                 value={phone}
@@ -364,6 +443,10 @@ class UserSignUp extends Component {
                 className="mt1"
               />
               <TextField
+                helperText={
+                  isCheckOnTeacher && !address && "Không được để trống"
+                }
+                error={isCheckOnTeacher && !address}
                 label="Địa chỉ"
                 variant="outlined"
                 value={address}
@@ -372,6 +455,8 @@ class UserSignUp extends Component {
                 className="mt1"
               />
               <TextField
+                helperText={isCheckOnTeacher && !city && "Không được để trống"}
+                error={isCheckOnTeacher && !city}
                 fullWidth
                 label="Thành phố"
                 variant="outlined"
@@ -380,6 +465,10 @@ class UserSignUp extends Component {
                 className="mt1"
               />
               <TextField
+                helperText={
+                  isCheckOnTeacher && !description && "Không được để trống"
+                }
+                error={isCheckOnTeacher && !description}
                 fullWidth
                 label="Giới thiệu bản thân"
                 variant="outlined"
@@ -395,6 +484,10 @@ class UserSignUp extends Component {
                 Chuyên môn
               </Typography>
               <TextField
+                helperText={
+                  isCheckOnTeacher && !specialization && "Không được để trống"
+                }
+                error={isCheckOnTeacher && !specialization}
                 label="Chuyên ngành"
                 variant="outlined"
                 value={specialization}
@@ -411,6 +504,10 @@ class UserSignUp extends Component {
                   ))}
               </TextField>
               <TextField
+                helperText={
+                  isCheckOnTeacher && !subject && "Không được để trống"
+                }
+                error={isCheckOnTeacher && !subject}
                 fullWidth
                 label="Môn học"
                 variant="outlined"
@@ -419,6 +516,8 @@ class UserSignUp extends Component {
                 className="mt1"
               />
               <TextField
+                helperText={isCheckOnTeacher && !wage && "Không được để trống"}
+                error={isCheckOnTeacher && !wage}
                 fullWidth
                 InputProps={{
                   endAdornment: (
@@ -452,6 +551,7 @@ class UserSignUp extends Component {
                 fullWidth
                 disabled={isSigningUp}
                 onClick={() => {
+                  this.setState({ isCheckOnTeacher: true });
                   if (
                     !username ||
                     !password ||

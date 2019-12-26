@@ -10,7 +10,8 @@ const initState = {
     isLoading: false,
     isOk: false,
     contracts: []
-  }
+  },
+  pay: {}
 };
 
 export default (state = initState, { type, payload }) => {
@@ -127,24 +128,23 @@ export default (state = initState, { type, payload }) => {
         }
       };
 
-    // case types.PAYING_CONTRACT:
-    //   return {
-    //     ...state,
-    //     contracts: {
-    //       ...state.contracts,
-    //       isGetting: true
-    //     }
-    //   };
-    // case types.PAY_CONTRACT_OK:
-    //   return {
-    //     ...state,
-    //     contracts: {
-    //       ...state.contracts,
-    //       isGetting: false,
-    //       isOk: true,
-    //       contracts: payload
-    //     }
-    //   };
+    case types.PAYING_CONTRACT:
+      return {
+        ...state,
+        pay: {
+          ...state.pay,
+          isPaying: true
+        }
+      };
+    case types.PAY_CONTRACT_OK:
+      return {
+        ...state,
+        pay: {
+          ...state.pay,
+          isPaying: false,
+          response: payload
+        }
+      };
     default:
       return state;
   }

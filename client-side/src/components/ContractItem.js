@@ -7,19 +7,33 @@ import { connect } from "react-redux";
 import { Avatar } from "./common";
 import { Link } from "react-router-dom";
 import history from "../utils/history";
+import DialogPay from "./DialogPay";
+import cookies from "../utils/cookies";
+import { Message } from "@material-ui/icons";
 
 class ContractItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
+  }
+
   render() {
     const {
       contract,
       pending,
       doing,
       ended,
+
       isStudent,
       rejectContract,
       acceptContract,
       endContract
     } = this.props;
+
+    const { open } = this.state;
+
     return (
       <Grid item xs={3}>
         <Paper
@@ -36,6 +50,9 @@ class ContractItem extends Component {
             style={{ textDecoration: "none" }}
           >
             <Typography color="textPrimary" variant="body1">
+              {cookies.get("id") === contract.isRead.toString() && (
+                <Message fontSize="small" color="secondary" className="mr1" />
+              )}
               <b>{contract.NameContract}</b>
             </Typography>
           </Link>
@@ -119,9 +136,29 @@ class ContractItem extends Component {
           {doing && (
             <div className="mt1">
               {isStudent && (
-                <Button variant="contained" className="mr1" color="primary">
-                  Thanh toán
-                </Button>
+                <>
+                  <Button
+                    variant="contained"
+                    className="mr1"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({ open: true });
+                    }}
+                  >
+                    Thanh toán
+                  </Button>
+                  <DialogPay
+                    open={open}
+                    onClose={() => {
+                      this.setState({ open: false });
+                    }}
+                    user={{
+                      id: contract.IDTeacher,
+                      name: contract.NameTeacher,
+                      avatar: contract.AvatarTeacher
+                    }}
+                  />
+                </>
               )}
               <Button
                 onClick={() => {

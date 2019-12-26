@@ -3,6 +3,7 @@ import * as types from "../types";
 const initState = {
   users: {
     isLoading: false,
+    isOk: false,
     users: [],
     message: ""
   },
@@ -32,6 +33,11 @@ const initState = {
     isGetting: false,
     isOk: false,
     admins: []
+  },
+  allReclamations: {},
+  income: {
+    loading: false,
+    list: []
   }
 };
 
@@ -47,6 +53,45 @@ export default (state = initState, { type, payload }) => {
         currentUser: {
           ...state.currentUser,
           isLoading: true
+        }
+      };
+    case types.CHAT:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            isChatting: false,
+            chats:
+              typeof state.currentContract.contractData.chats === "string"
+                ? [{ ...payload }]
+                : state.currentContract.contractData.chats.concat([
+                    { ...payload }
+                  ])
+          }
+        }
+      };
+    case types.CHATTING:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            ...payload
+          }
+        }
+      };
+    case types.RECLAMATE_CONTRACT:
+      return {
+        ...state,
+        currentContract: {
+          ...state.currentContract,
+          contractData: {
+            ...state.currentContract.contractData,
+            ...payload
+          }
         }
       };
     case types.GET_USER_SUCCESSFULLY:
@@ -81,6 +126,7 @@ export default (state = initState, { type, payload }) => {
         ...state,
         users: {
           ...state.users,
+          isLoading: true,
           isOk: payload
         }
       };
@@ -89,7 +135,8 @@ export default (state = initState, { type, payload }) => {
         ...state,
         users: {
           ...state.users,
-          isOk: false,
+          isLoading: false,
+          isOk: true,
           users: payload
         }
       };
@@ -342,6 +389,55 @@ export default (state = initState, { type, payload }) => {
           }
         }
       };
+    case types.GET_ALL_RECLAMATE_CONTRACTS:
+      return {
+        ...state,
+        allReclamations: {
+          ...state.allReclamations,
+          ...payload
+        }
+      };
+    case types.GET_TOP_ALL:
+      return {
+        ...state,
+        income: {
+          ...state.income,
+          ...payload
+        }
+      };
+    case types.GET_TOP_INCOME_BY_DAY:
+      return {
+        ...state,
+        income: {
+          ...state.income,
+          ...payload
+        }
+      };
+    case types.GET_TOP_INCOME_BY_WEEK:
+      return {
+        ...state,
+        income: {
+          ...state.income,
+          ...payload
+        }
+      };
+    case types.GET_TOP_INCOME_BY_MONTH:
+      return {
+        ...state,
+        income: {
+          ...state.income,
+          ...payload
+        }
+      };
+    case types.GET_TOP_INCOME_BY_QUARTER:
+      return {
+        ...state,
+        income: {
+          ...state.income,
+          ...payload
+        }
+      };
+
     default:
       return state;
   }

@@ -20,10 +20,15 @@ const getContractOk = contracts => ({
   payload: contracts
 });
 
-export const getTeachers = () => async dispatch => {
+export const getTeachers = (diadiem, tienday, tentag) => async dispatch => {
   dispatch(isGettingTeachers());
+  let teachers = null;
 
-  const teachers = await api.get("/allTeacher");
+  if (diadiem || tienday || tentag) {
+    teachers = await api.post("/filterteacher", { diadiem, tienday, tentag });
+  } else {
+    teachers = await api.get("/allTeacher");
+  }
 
   dispatch(getTeachersOk(teachers && teachers.data));
 };

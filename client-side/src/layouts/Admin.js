@@ -14,7 +14,9 @@ import {
   StarBorder,
   PersonOutlineOutlined,
   GroupOutlined,
-  Assignment
+  Assignment,
+  Flag,
+  Money
 } from "@material-ui/icons";
 import HeaderUserProfile from "../components/HeaderUserProfile";
 import history from "../utils/history";
@@ -44,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 export default function LayoutAdmin(props) {
   const classes = useStyles();
   const toHome = () => {
-    history.push("/");
+    history.push("/admin/income");
   };
 
   return (
@@ -81,6 +83,11 @@ export default function LayoutAdmin(props) {
         <List>
           {[
             {
+              icon: <Money color="inherit" />,
+              to: "/admin/income",
+              text: "Thu nhập"
+            },
+            {
               icon: <PersonOutlineOutlined color="inherit" />,
               to: "/admin/moderators",
               text: "Thành viên"
@@ -99,6 +106,11 @@ export default function LayoutAdmin(props) {
               icon: <Assignment color="inherit" />,
               to: "/admin/contracts",
               text: "Hợp đồng"
+            },
+            {
+              icon: <Flag color="inherit" />,
+              to: "/admin/reclamations",
+              text: "Khiếu nại"
             }
           ].map(tab => (
             <ListItem

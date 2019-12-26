@@ -10,7 +10,8 @@ class AdminSignIn extends Component {
     this.state = {
       role: "",
       username: "",
-      password: ""
+      password: "",
+      isCheckOn: false
     };
   }
 
@@ -19,7 +20,8 @@ class AdminSignIn extends Component {
   };
 
   render() {
-    const { username, password } = this.state;
+    const { username, password, isCheckOn } = this.state;
+    const { message } = this.props;
 
     return (
       <Container maxWidth="sm" className="df fdc f1">
@@ -40,6 +42,8 @@ class AdminSignIn extends Component {
             variant="outlined"
             autoFocus
             required
+            helperText={isCheckOn && !username && "Không được để trống"}
+            error={isCheckOn && !username}
             value={username}
             onChange={this.changeState("username")}
             className="mt1"
@@ -49,6 +53,8 @@ class AdminSignIn extends Component {
             label="Mật khẩu"
             variant="outlined"
             value={password}
+            helperText={isCheckOn && !password && "Không được để trống"}
+            error={isCheckOn && !password}
             required
             type="password"
             onChange={this.changeState("password")}
@@ -61,6 +67,16 @@ class AdminSignIn extends Component {
           >
             Quên mật khẩu?
           </Link>
+          {message && (
+            <Typography
+              variant="body2"
+              color="secondary"
+              className="mt1"
+              align="center"
+            >
+              {message}
+            </Typography>
+          )}
           <Button
             variant="contained"
             color="primary"
@@ -71,6 +87,7 @@ class AdminSignIn extends Component {
             fullWidth
             onClick={e => {
               e.preventDefault();
+              this.setState({ isCheckOn: true });
               if (!username || !password) return;
               this.props.signIn(username, password);
             }}
@@ -85,7 +102,8 @@ class AdminSignIn extends Component {
 
 export default connect(
   ({ auth }) => ({
-    isSigningIn: auth.signIn.isSigningIn
+    isSigningIn: auth.signIn.isSigningIn,
+    message: auth.signIn.message
   }),
   { signIn }
 )(AdminSignIn);

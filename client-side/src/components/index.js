@@ -3,6 +3,7 @@ import HeaderOut from "./HeaderOut";
 import HeaderIn from "./HeaderIn";
 import Footer from "./Footer";
 import BreadCrums from "./BreadCrums";
+import DialogPay from "./DialogPay";
 
 import Menu from "./Menu";
 import Banner from "./Banner";
@@ -19,5 +20,6 @@ export {
   Menu,
   Banner,
   TeacherCard,
+  DialogPay,
   ContractItem
 };

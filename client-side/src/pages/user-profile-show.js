@@ -63,7 +63,9 @@ class UserProfileShow extends Component {
       sdt,
       tiendaymotgio,
       monhoc,
-      chuyennganh
+      chuyennganh,
+      tags,
+      comments
     } = currentUser;
 
     return (
@@ -233,9 +235,14 @@ class UserProfileShow extends Component {
                 </Grid>
                 <Grid item style={{ alignSelf: "center" }} xs={10}>
                   <div className="df">
-                    {["Tin hoc", "photoshop"].map(tag => (
-                      <Chip className="mr1" key={tag} label={tag} />
-                    ))}
+                    {tags &&
+                      tags.map(tag => (
+                        <Chip
+                          className="mr1"
+                          key={tag.IDTag}
+                          label={tag.NameTag}
+                        />
+                      ))}
                   </div>
                 </Grid>
               </Grid>
@@ -257,24 +264,60 @@ class UserProfileShow extends Component {
                 Lịch sử dạy học
               </Typography>
 
-              {[1, 2, 3, 4, 5].map(list => (
-                <div className="df mb1" key={list}>
-                  <Avatar src={null} name="Hao" alt="" />
-                  <div className="f1 ml1">
-                    <Typography
-                      style={{ fontWeight: 400, color: "black" }}
-                      variant="body1"
-                      gutterBottom
+              {(!comments ||
+                (comments && comments.length === 0) ||
+                typeof comments === "string") && (
+                <Typography
+                  style={{ fontWeight: 400, color: "black" }}
+                  variant="body1"
+                  component="i"
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  {comments}
+                </Typography>
+              )}
+              {comments &&
+                comments.length !== 0 &&
+                typeof comments !== "string" &&
+                comments.map(list => {
+                  const score = Number(list.SoSao);
+                  let commentAuto = "Rất tốt";
+                  if (score === 4) commentAuto = "Tốt";
+                  else if (score === 3) commentAuto = "Tạm được";
+                  else if (score === 2) commentAuto = "Tệ";
+                  else if (score === 1) commentAuto = "Rất tệ";
+
+                  return (
+                    <div
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        history.push(`/contract/${list.IDHopDong}`)
+                      }
+                      className="df mb1"
+                      key={list.IDHopDong}
                     >
-                      Hoàng An Văn
-                    </Typography>
-                    <Typography color="textSecondary" variant="body2">
-                      Nhận xét: Rất tốt
-                    </Typography>
-                  </div>
-                  <Rating name="read-only" value={3} readOnly />
-                </div>
-              ))}
+                      <Avatar
+                        src={list.AvatarNguoiDanhGia}
+                        name={list.TenNguoiDanhGia}
+                        alt={list.TenNguoiDanhGia}
+                      />
+                      <div className="f1 ml1">
+                        <Typography
+                          style={{ fontWeight: 400, color: "black" }}
+                          variant="body1"
+                          gutterBottom
+                        >
+                          {list.TenNguoiDanhGia}
+                        </Typography>
+                        <Typography color="textSecondary" variant="body2">
+                          {`Nhận xét: ${list.Comment || commentAuto}`}
+                        </Typography>
+                      </div>
+                      <Rating name="read-only" value={list.SoSao} readOnly />
+                    </div>
+                  );
+                })}
             </Paper>
           </Grid>
         </Grid>

@@ -1,9 +1,19 @@
 import React, { Component } from "react";
 import { HeaderOut, Footer, Menu, Banner, TeacherCard } from "../components";
-import { Container, Typography, Link, Grid } from "@material-ui/core";
-import { getTeachers } from "../actions";
+import {
+  Container,
+  Typography,
+  Link,
+  Grid,
+  MenuItem,
+  TextField,
+  Button,
+  IconButton
+} from "@material-ui/core";
+import { getTeachers, getTags } from "../actions";
 import { connect } from "react-redux";
 import { color } from "../utils";
+import { ChevronLeft, ChevronRight } from "@material-ui/icons";
 
 function ItemHot({ src, body1, body2 }) {
   return (
@@ -36,15 +46,29 @@ function ItemHot({ src, body1, body2 }) {
 }
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      myLocation: "",
+      myWave: "",
+      page: 1,
+      myTag: "",
+      isCheckOn: false
+    };
+  }
+
   componentDidMount() {
     if (this.props.teachers && !this.props.teachers.isOk)
       this.props.getTeachers();
-    // if (this.props.specializes && !this.props.specializes.isOk)
-    //   this.props.getSpecializes();
+    if (!this.props.isTagsGotten) this.props.getTags();
   }
-
+  changeState = field => event => {
+    this.setState({ [field]: event.target.value });
+  };
   render() {
-    const { teachers } = this.props;
+    const { teachers, tags } = this.props;
+    const { myLocation, myWave, myTag, isCheckOn, page } = this.state;
     const { isLoading } = teachers;
 
     return (
@@ -63,19 +87,104 @@ class Home extends Component {
           >
             Gia sư đáng tin cậy
           </Typography>
+          <Grid container justify="center" spacing={2}>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                label="Đia điểm"
+                helperText={isCheckOn && !myLocation && "Không được để trống"}
+                error={isCheckOn && !myLocation}
+                variant="outlined"
+                value={myLocation}
+                onChange={this.changeState("myLocation")}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                fullWidth
+                label="Tiền dạy"
+                helperText={isCheckOn && isNaN(myWave) && "Phải là số."}
+                error={isCheckOn && isNaN(myWave)}
+                variant="outlined"
+                value={myWave}
+                type="number"
+                onChange={this.changeState("myWave")}
+              />
+            </Grid>
 
+            <Grid item xs={3}>
+              <TextField
+                label="Tag"
+                variant="outlined"
+                helperText={isCheckOn && !myTag && "Không được để trống"}
+                error={isCheckOn && !myTag}
+                value={myTag}
+                select
+                fullWidth
+                onChange={this.changeState("myTag")}
+              >
+                {tags.map(option => (
+                  <MenuItem key={option.tentag} value={option.tentag}>
+                    {option.tentag}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item xs={3}>
+              <Button
+                fullWidth
+                style={{ padding: 16 }}
+                className="mb1"
+                variant="contained"
+                color="primary"
+                disabled={isLoading}
+                onClick={() => {
+                  if (isNaN(myWave)) return;
+                  this.props.getTeachers(myLocation, myWave, myTag);
+                }}
+              >
+                Truy vấn
+              </Button>
+            </Grid>
+          </Grid>
           {isLoading ? (
             <div>Đang tải...</div>
           ) : (
             <Grid container justify="center" spacing={2}>
-              {teachers.teachers.slice(0, 10).map((teacher, index) => (
-                <Grid key={index} item xs={3}>
-                  <TeacherCard data={teacher} />
-                </Grid>
-              ))}
+              {teachers.teachers
+                .slice((page - 1) * 10, (page + 1) * 10)
+                .map((teacher, index) => (
+                  <Grid key={index} item xs={3}>
+                    <TeacherCard data={teacher} />
+                  </Grid>
+                ))}
             </Grid>
           )}
         </Container>
+
+        <div className="df aic jcc mt1 p1">
+          <IconButton
+            disabled={page === 1}
+            onClick={() =>
+              this.setState(prevState => ({ page: prevState.page - 1 }))
+            }
+            className="mr1"
+          >
+            <ChevronLeft />
+          </IconButton>
+          <IconButton
+            disabled={
+              page * 10 >= (teachers.teachers && teachers.teachers.length)
+            }
+            onClick={() =>
+              this.setState(prevState => ({ page: prevState.page + 1 }))
+            }
+            className="ml1"
+          >
+            <ChevronRight />
+          </IconButton>
+        </div>
 
         <div
           style={{
@@ -189,12 +298,13 @@ class Home extends Component {
 }
 
 export default connect(
-  ({ teacher }) => ({
-    teachers: teacher.teachers
-    // specializes: utils.specializes
+  ({ teacher, admin }) => ({
+    teachers: teacher.teachers,
+    tags: admin.tags.tags,
+    isTagsGotten: admin.tags.isOk
   }),
   {
-    getTeachers
-    // getSpecializes
+    getTeachers,
+    getTags
   }
 )(Home);

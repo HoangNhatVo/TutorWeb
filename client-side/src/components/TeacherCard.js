@@ -21,14 +21,13 @@ const useStyles = makeStyles({
   }
 });
 
-const tags = ["photoshop", "HMVC", "Helloworld", "LyDaiCuong"];
+// const tags = ["photoshop", "HMVC", "Helloworld", "LyDaiCuong"];
 
-const avatarDefault =
-  "https://scontent.fsgn1-1.fna.fbcdn.net/v/t1.0-1/p100x100/67735731_499113454230617_7180310859275567104_n.jpg?_nc_cat=106&_nc_ohc=wfZV2GtbX2AAQm8sVDklsINg5iUsow-WVWd6c0Gpi1Xpr0n149MUjItfA&_nc_ht=scontent.fsgn1-1.fna&oh=5c9b9f5223c8b7808fc4bc4afe1e7004&oe=5E8832C5";
+const avatarDefault = "/logo.svg";
 
 function TeacherCard({ data }) {
   const classes = useStyles();
-  const { id, avatar, hoten, tiendaymotgio, thanhpho, diachi } = data;
+  const { id, avatar, hoten, tiendaymotgio, thanhpho, diachi, tags } = data;
 
   return (
     <Card className={classes.card}>
@@ -88,9 +87,14 @@ function TeacherCard({ data }) {
         className="p1 df jcc"
         style={{ flexWrap: "wrap", height: 106, overflow: "hidden" }}
       >
-        {tags.map(tag => (
-          <Chip style={{ margin: ".25rem 0" }} label={tag} key={tag} />
-        ))}
+        {tags &&
+          tags.map(tag => (
+            <Chip
+              style={{ margin: ".25rem 0" }}
+              label={tag.NameTag}
+              key={tag.IDTag}
+            />
+          ))}
       </div>
 
       <CardActions>

@@ -14,25 +14,22 @@ class Menu extends React.Component {
           style={{ padding: "0 4rem" }}
         >
           <Link href="#" onClick={this.preventDefault}>
-            Web
+            Sản phẩm
           </Link>
           <Link href="#" onClick={this.preventDefault}>
-            We nâng cao
+            Dịch vụ
           </Link>
           <Link href="#" onClick={this.preventDefault}>
-            Mobile
+            Cách thức kết nối
           </Link>
           <Link href="#" onClick={this.preventDefault}>
-            TKGD
+            Liên hệ trợ giúp
           </Link>
           <Link href="#" onClick={this.preventDefault}>
-            KTLT
+            Cộng đồng
           </Link>
           <Link href="#" onClick={this.preventDefault}>
-            Desgin
-          </Link>
-          <Link href="#" onClick={this.preventDefault}>
-            PTTK
+            Báo cáo
           </Link>
         </Container>
       </div>

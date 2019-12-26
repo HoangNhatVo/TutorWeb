@@ -13,8 +13,7 @@ class TeacherHome extends Component {
   }
 
   componentDidMount() {
-    const { myContracts } = this.props;
-    if (myContracts && !myContracts.isOk) this.props.getCurrentContractList();
+    this.props.getCurrentContractList();
   }
 
   render() {

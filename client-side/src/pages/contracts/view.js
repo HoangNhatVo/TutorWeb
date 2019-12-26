@@ -5,9 +5,11 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import {
   getCurrentContract,
+  reclamationContract,
   rejectContract,
   acceptContract,
   endContract,
+  chat,
   rateContract
 } from "../../actions";
 import { Avatar } from "../../components";
@@ -36,7 +38,13 @@ class ContractsView extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { score: "", cmt: "" };
+    this.state = {
+      score: "",
+      cmt: "",
+      reclamation: "",
+      isCheckOn: false,
+      message: ""
+    };
   }
 
   componentDidMount() {
@@ -61,6 +69,7 @@ class ContractsView extends Component {
     const {
       AvatarTeacher,
       IDContract,
+      IDTeacher,
       AvatarStudent,
       EmailStudent,
       EmailTeacher,
@@ -75,11 +84,17 @@ class ContractsView extends Component {
       TimeAsigned,
       isRejecting,
       isRating,
-      cmt: Comment,
-      score: Score
+      isReclamating,
+      noidung: Reclamation,
+      CMTContract: Comment,
+      ScoreContract: Score,
+      isChatting,
+      dkhd,
+      knhd,
+      chats
     } = currentContract.contractData;
 
-    const { score, cmt } = this.state;
+    const { score, cmt, reclamation, isCheckOn, message } = this.state;
 
     const isStudent = Number(cookies.get("role")) === 1;
 
@@ -89,7 +104,6 @@ class ContractsView extends Component {
           <div>Đang tải...</div>
         ) : (
           <Grid container spacing={2} className="mb2 mt2">
-            <Grid item xs={2}></Grid>
             <Grid item xs={8}>
               <Paper
                 style={{
@@ -152,8 +166,24 @@ class ContractsView extends Component {
                   Điều khoản hợp đồng
                 </Typography>
                 <Grid container spacing={2}>
-                  <ItemInfo title="Nguoi day" value="as" />
-                  <ItemInfo title="Nguoi hoc" value="as" />
+                  {dkhd &&
+                    typeof dkhd !== "string" &&
+                    dkhd.map((i, index) => (
+                      <ItemInfo
+                        title={i.benthuchien}
+                        value={i.noidung}
+                        key={index}
+                      />
+                    ))}
+                  {typeof dkhd === "string" && (
+                    <Typography
+                      style={{ color: "gray" }}
+                      component="i"
+                      className="mb1 ml1"
+                    >
+                      {dkhd}
+                    </Typography>
+                  )}
                 </Grid>
               </Paper>
 
@@ -264,67 +294,212 @@ class ContractsView extends Component {
                   >
                     Đã kết thúc
                   </Typography>
-
-                  {Score ? (
-                    <>
-                      <Rating
-                        className="mt1"
-                        name="read-only"
-                        value={Score}
-                        readOnly
-                      />
-                      {Comment && (
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      alignItems: "center"
+                    }}
+                  >
+                    <div style={{ flex: 1 }} className="df fdc aic jcc">
+                      {Score ? (
+                        <>
+                          <Rating
+                            className="mt1"
+                            name="read-only"
+                            value={Score}
+                            readOnly
+                          />
+                          {Comment && (
+                            <Typography
+                              variant="body1"
+                              component="i"
+                              color="primary"
+                              align="center"
+                              className="mt2"
+                            >
+                              Đánh giá: "{Comment}"
+                            </Typography>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <Typography variant="body1" className="mt2">
+                            Đánh giá
+                          </Typography>
+                          <Rating
+                            name="rate"
+                            className="mt1"
+                            value={Number(score)}
+                            onChange={(event, newValue) => {
+                              this.setState({ score: newValue });
+                            }}
+                          />
+                          <TextField
+                            fullWidth
+                            placeholder="Nêu nhận xét của bạn về khóa học..."
+                            value={cmt}
+                            inputProps={{ style: { textAlign: "center" } }}
+                            onChange={e =>
+                              this.setState({ cmt: e.target.value })
+                            }
+                            className="mt1"
+                          />
+                          <Button
+                            onClick={() => {
+                              if (score)
+                                this.props.rateContract(
+                                  this.props.match.params.id,
+                                  cmt,
+                                  score
+                                );
+                            }}
+                            disabled={isRating}
+                            variant="contained"
+                            className="p1 mt1"
+                            color="primary"
+                          >
+                            Đánh giá
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                    <Typography
+                      align="center"
+                      color="textSecondary"
+                      variant="body2"
+                      className="ml1 mr1"
+                    >
+                      Hoặc
+                    </Typography>
+                    <div style={{ flex: 1 }} className="df fdc aic jcc">
+                      {knhd[0] || Reclamation ? (
                         <Typography
                           variant="body1"
                           component="i"
-                          color="primary"
+                          color="secondary"
                           align="center"
                           className="mt2"
                         >
-                          "{Comment}"
+                          Khiếu nại: "{knhd[0].NoiDungKN || Reclamation}"
                         </Typography>
+                      ) : (
+                        <>
+                          <Typography variant="body1" className="mt2">
+                            Khiếu nại
+                          </Typography>
+
+                          <div style={{ height: 34 }} />
+                          <TextField
+                            fullWidth
+                            placeholder="Trình bày lý do khiếu nại..."
+                            value={reclamation}
+                            error={isCheckOn && !reclamation}
+                            helperText={
+                              isCheckOn &&
+                              !reclamation &&
+                              "Hãy điền lý do khiếu nại"
+                            }
+                            inputProps={{ style: { textAlign: "center" } }}
+                            onChange={e =>
+                              this.setState({ reclamation: e.target.value })
+                            }
+                            className="mt1"
+                          />
+                          <Button
+                            onClick={() => {
+                              this.setState({ isCheckOn: true });
+                              if (reclamation)
+                                this.props.reclamationContract(
+                                  cookies.get("id"),
+                                  this.props.match.params.id,
+                                  reclamation
+                                );
+                            }}
+                            disabled={isReclamating}
+                            variant="contained"
+                            className="p1 mt1"
+                            color="secondary"
+                          >
+                            Khiếu nại
+                          </Button>
+                        </>
                       )}
-                    </>
-                  ) : (
-                    <>
-                      <Typography variant="body1" className="mt2">
-                        Đánh giá
-                      </Typography>
-                      <Rating
-                        className="mt1"
-                        value={score}
-                        onChange={(event, newValue) => {
-                          this.setState({ score: newValue });
-                        }}
-                      />
-                      <TextField
-                        fullWidth
-                        placeholder="Nêu nhận xét của bạn về khóa học..."
-                        value={cmt}
-                        inputProps={{ style: { textAlign: "center" } }}
-                        onChange={e => this.setState({ cmt: e.target.value })}
-                        className="mt1"
-                      />
-                      <Button
-                        onClick={() => {
-                          if (score)
-                            this.props.rateContract(
-                              this.props.match.params.id,
-                              cmt,
-                              score
-                            );
-                        }}
-                        disabled={isRating}
-                        variant="contained"
-                        className="p1 mt1"
-                        color="primary"
-                      >
-                        Đánh giá
-                      </Button>
-                    </>
-                  )}
+                    </div>
+                  </div>
                 </div>
               )}
+            </Grid>
+            <Grid item xs={4}>
+              <Paper
+                style={{
+                  borderRadius: 4,
+                  padding: "1rem"
+                }}
+                elevation={2}
+              >
+                <Typography
+                  style={{ fontWeight: 600, color: "gray" }}
+                  variant="body2"
+                  className="mb1"
+                >
+                  Tin nhắn
+                </Typography>
+                {chats && typeof chats === "string" && (
+                  <Typography
+                    style={{ color: "gray" }}
+                    className="mb1"
+                    component="i"
+                  >
+                    {chats}
+                  </Typography>
+                )}
+                {chats &&
+                  typeof chats !== "string" &&
+                  chats.map((i, index) => (
+                    <div className="df mb1" key={index}>
+                      <Avatar
+                        src={i.AvatarNguoiGui}
+                        name={i.TenNguoiGui}
+                        alt={i.TenNguoiGui}
+                      />
+                      <div className="f1 ml1">
+                        <Typography
+                          style={{ fontWeight: 400, color: "black" }}
+                          variant="body1"
+                          gutterBottom
+                        >
+                          {i.TenNguoiGui}
+                        </Typography>
+                        <Typography color="textSecondary" variant="body2">
+                          {i.NoiDungChat}
+                        </Typography>
+                      </div>
+                    </div>
+                  ))}
+
+                <TextField
+                  fullWidth
+                  placeholder="Nhập tin nhắn..."
+                  value={message}
+                  onChange={e => this.setState({ message: e.target.value })}
+                  className="mt1"
+                />
+                <Button
+                  onClick={() => {
+                    if (message) {
+                      this.props.chat(IDTeacher, message, IDContract);
+                      this.setState({ message: "" });
+                    }
+                  }}
+                  disabled={isChatting}
+                  variant="contained"
+                  className="p1 mt1"
+                  color="primary"
+                >
+                  Gửi
+                </Button>
+              </Paper>
             </Grid>
           </Grid>
         )}
@@ -342,6 +517,8 @@ export default connect(
     rejectContract,
     acceptContract,
     endContract,
-    rateContract
+    chat,
+    rateContract,
+    reclamationContract
   }
 )(withRouter(ContractsView));

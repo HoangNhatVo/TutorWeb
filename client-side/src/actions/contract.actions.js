@@ -101,16 +101,17 @@ export const rejectContract = idcontract => async dispatch => {
     dispatch(rejectContractOk(idcontract));
 };
 
-export const payContract = (moneyhours, hours) => async dispatch => {
+export const payContract = (hours, IDreciver, cbs) => async dispatch => {
   dispatch(payingContract());
 
-  const response = await api.post("/user/pay", {
-    moneyhours,
-    hours
+  const response = await api.post("/payment", {
+    hours,
+    IDpayer: cookies.get("id"),
+    IDreciver
   });
 
-  console.log("view response payContract", response);
   dispatch(payContractOk(response.data));
+  if (cbs.suc) cbs.sub();
 };
 
 export const acceptContract = idcontract => async dispatch => {
@@ -140,8 +141,7 @@ export const endContract = idcontract => async dispatch => {
 export const rateContract = (idcontract, cmt, score) => async dispatch => {
   dispatch(isRatingContract(idcontract));
 
-  let r1 = null,
-    r2 = null;
+  let r1 = null;
 
   if (cmt)
     r1 = await api.post("/addcmtcontract", {
@@ -150,12 +150,55 @@ export const rateContract = (idcontract, cmt, score) => async dispatch => {
     });
 
   if (score)
-    r2 = await api.post("/addscorecontract", {
+    await api.post("/addscorecontract", {
       idcontract,
       score
     });
 
-  console.log("view response rateContract", r1, r2);
   if (r1.data === "Thành công")
-    dispatch(rateContractOk({ idcontract, cmt, score }));
+    dispatch(
+      rateContractOk({ idcontract, CMTContract: cmt, ScoreContract: score })
+    );
+};
+
+export const reclamationContract = (
+  idnguoikhieunai,
+  idhopdong,
+  noidung
+) => async dispatch => {
+  dispatch({
+    type: types.RECLAMATE_CONTRACT,
+    payload: { isReclamating: true }
+  });
+
+  const response = await api.post("/addknhd", {
+    idnguoikhieunai,
+    idhopdong,
+    noidung
+  });
+
+  if (response.data === "Thành công")
+    dispatch({
+      type: types.RECLAMATE_CONTRACT,
+      payload: { noidung, isReclamating: false }
+    });
+};
+
+export const chat = (idnguoinhan, noidung, idhd) => async dispatch => {
+  dispatch({
+    type: types.CHATTING,
+    payload: { isChatting: true }
+  });
+
+  const response = await api.post(`/chat`, {
+    idnguoigui: cookies.get("id"),
+    idnguoinhan,
+    noidung,
+    idhd
+  });
+
+  dispatch({
+    type: types.CHAT,
+    payload: { ...response.data[0] }
+  });
 };

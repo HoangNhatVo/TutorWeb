@@ -15,7 +15,7 @@ import api from "../../utils/axios";
 
 class Users extends Component {
   componentDidMount() {
-    this.props.getAllUsers();
+    if (!this.props.isUsersOk) this.props.getAllUsers();
   }
 
   render() {
@@ -100,8 +100,9 @@ class Users extends Component {
 
 export default connect(
   ({ admin }) => ({
-    isLoadingUsers: admin.users.isOk,
-    users: admin.users.users
+    isLoadingUsers: admin.users.isLoading,
+    users: admin.users.users,
+    isUsersOk: admin.users.isOk
   }),
   { getAllUsers, changeStatusUser, changeStatusUserOk }
 )(Users);

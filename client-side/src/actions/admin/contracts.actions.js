@@ -23,6 +23,7 @@ export const getContracts = () => async dispatch => {
   dispatch(isGettingContract());
 
   const contracts = await api.get("/listcontract");
+
   dispatch(getContractOk(contracts.data));
 };
 
@@ -30,6 +31,32 @@ export const getCurrentContract = id => async dispatch => {
   dispatch(isGettingCurrentContract());
 
   const contract = await api.get(`/contract/${id}`);
+  const dkhd = await api.get(`/dkhd/${id}`);
+  const knhd = await api.get(`/knhd/${id}`);
+  const chats = await api.get(`/getchat/${id}`);
+  dispatch(
+    getCurrentContractOk({
+      ...contract.data[0],
+      dkhd: dkhd.data,
+      knhd: knhd.data,
+      chats: chats.data
+    })
+  );
+};
 
-  dispatch(getCurrentContractOk(contract.data[0]));
+export const getAllReclamations = () => async dispatch => {
+  dispatch({
+    type: types.GET_ALL_RECLAMATE_CONTRACTS,
+    payload: { isGetAllReclamations: true }
+  });
+
+  const response = await api.get("/allknhd");
+  dispatch({
+    type: types.GET_ALL_RECLAMATE_CONTRACTS,
+    payload: {
+      isGetAllReclamations: false,
+      isGetAllReclamationsOk: true,
+      allReclamations: response.data
+    }
+  });
 };

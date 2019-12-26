@@ -13,7 +13,8 @@ import {
   AccountCircle,
   Person,
   CallMissedOutgoing,
-  Home
+  Home,
+  Money
 } from "@material-ui/icons";
 import history from "../utils/history";
 import cookies from "../utils/cookies";
@@ -42,10 +43,29 @@ class HeaderUserProfile extends Component {
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const role = Number(cookies.get("role"));
-    const url = role === 1 ? "/student" : role === 2 ? "/teacher" : "/admin";
+    const url =
+      role === 1 ? "/student" : role === 2 ? "/teacher" : "/admin/income";
 
     return (
       <>
+        {role === 2 && (
+          <Link
+            to={"/wallet"}
+            style={{
+              textDecoration: "none",
+              color: "white",
+              marginRight: "2rem"
+            }}
+            onClick={e => e.preventDefault()}
+            className="df aic"
+          >
+            <Money fontSize="small" style={{ marginRight: 4 }} />
+            <Typography variant="body1">{`Tài khoản: ${(userData &&
+              userData.income &&
+              userData.income[0].Income) ||
+              "Đang tải"}`}</Typography>
+          </Link>
+        )}
         <Link
           to={url}
           style={{
@@ -56,7 +76,7 @@ class HeaderUserProfile extends Component {
           className="df aic"
         >
           <Home fontSize="small" style={{ marginRight: 4 }} />
-          <Typography variant="body1">Hợp đồng của bạn</Typography>
+          <Typography variant="body1">{Number(cookies.get("role")) !== 3 ? "Hợp đồng" : "Dashboard"}</Typography>
         </Link>
         <div
           className="df aic"
@@ -80,12 +100,14 @@ class HeaderUserProfile extends Component {
           open={Boolean(open)}
           onClose={this.handleCloseMenu}
         >
-          <MenuItem onClick={() => history.push("/profile")}>
-            <ListItemIcon>
-              <Person fontSize="small" />
-            </ListItemIcon>
-            <Typography variant="inherit">Thông tin cá nhân</Typography>
-          </MenuItem>
+          {Number(cookies.get("role")) !== 3 && (
+            <MenuItem onClick={() => history.push("/profile")}>
+              <ListItemIcon>
+                <Person fontSize="small" />
+              </ListItemIcon>
+              <Typography variant="inherit">Thông tin cá nhân</Typography>
+            </MenuItem>
+          )}
           <MenuItem onClick={signOut}>
             <ListItemIcon>
               <CallMissedOutgoing fontSize="small" />

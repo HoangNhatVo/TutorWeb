@@ -8,6 +8,8 @@ import Users from "./admin/users";
 import Tags from "./admin/tags";
 import AdminSignIn from "./admin/sign-in";
 import Contracts from "./admin/contracts";
+import Income from "./admin/income";
+import Reclamations from "./admin/reclamations";
 
 import Verify from "./verify";
 import Home from "./home";
@@ -35,7 +37,9 @@ export {
   Verify,
   Home,
   Users,
+  Income,
   Contracts,
+  Reclamations,
   Tags,
   ContractsEdit,
   ContractsView
