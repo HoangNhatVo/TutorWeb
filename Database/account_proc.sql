@@ -29,6 +29,7 @@ CREATE PROCEDURE AddStudent(in username varchar(50), in password varchar(100), i
                             in thanhpho varchar(100), in sdt varchar(15),in chuoixacthuc varchar(255))
 BEGIN
 	insert into account values (null, username,password, hoten, email, ngaysinh, gioitinh, 1, diachi,thanhpho, sdt, 'active', null, '','', 1, 0, false, chuoixacthuc);
+    insert into taikhoan values(null, LAST_INSERT_ID(),'',0);
 END;$$
 DELIMITER ;
 
@@ -39,6 +40,7 @@ CREATE PROCEDURE AddTeacher(in username varchar(50), in password varchar(100), i
                             in thanhpho varchar(100), in sdt varchar(15), in baigioithieu text, in monhoc varchar(255), in chuyennganh int(11), in tienday int(11),in chuoixacthuc varchar(255))
 BEGIN
 	insert into account values (null, username,password, hoten, email, ngaysinh, gioitinh, 2, diachi, thanhpho, sdt, 'active', null, baigioithieu,monhoc, chuyennganh, tienday, false, chuoixacthuc);
+	insert into taikhoan values(null, LAST_INSERT_ID(),'',0);
 END;$$
 DELIMITER ;
 
@@ -607,12 +609,17 @@ CREATE PROCEDURE AddTransaction(in IDNguoiGui int(11), in IDNguoiNhan int(11), i
 									in Mota varchar(255), in ThoiGianGiaoDich datetime)
 BEGIN
 	declare sotien int;
-    declare sotiensaucung int;
+    declare STCL int;
     set sotien = (select tiendaymotgio from account where id = IDNguoiNhan);
 	insert into giaodich values(null, IDNguoiGui, IDNguoiNhan,2,SoGio*sotien, Mota, ThoiGianGiaoDich);
+    
+    set STCL = (select sotienconlai from taikhoan where chutaikhoan = IDNguoiGui);
+	update taikhoan
+    set sotienconlai = STCL - SoGio*sotien
+    where chutaikhoan = IDNguoiGui;
 END;$$
 DELIMITER ;
-call AddTransaction(10,36,4,'new123','2019-12-12 12:12:12');
+call AddTransaction(37,38,4,'new123','2019-12-12 12:12:12');
 select * from giaodich;
 
 
@@ -703,3 +710,48 @@ BEGIN
 END;$$
 DELIMITER ;
 call GetIsReadByIDContract(19);
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE PayIn(in IDChuTaiKhoan int(11))
+BEGIN
+	declare sotien int;
+    set sotien = (select sotienconlai from taikhoan where chutaikhoan = IDChuTaiKhoan);
+	update taikhoan
+    set sotienconlai = sotien + 100000
+    where chutaikhoan = IDChuTaiKhoan;
+    
+END;$$
+DELIMITER ;
+
+call PayIn(37);
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE GetMoney(in IDChuTaiKhoan int(11))
+BEGIN
+	select sotienconlai as SoDu
+    from taikhoan
+    where chutaikhoan = IDChuTaiKhoan;
+    
+END;$$
+DELIMITER ;
+call GetMoney(37);
+
+
+
+
+
+
+#------------------------------------------------ 
+
+
+DELIMITER $$
+USE `sql12314047`$$
+CREATE PROCEDURE AddBankAccount(in IDChuTaiKhoan int(11), in TenNganHang varchar(255))
+BEGIN
+	insert into taikhoan values(null, IDChuTaiKhoan, TenNganHang,0);
+END;$$
+DELIMITER ;
+call AddBankAccount(38,'vietcombank');
